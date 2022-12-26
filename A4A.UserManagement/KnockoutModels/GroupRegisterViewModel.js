@@ -1822,8 +1822,7 @@ var councilCommitteeGGAViewModel = function () {
 };
 function DisablePrimary() {
     try {
-        debugger;
-        $('#z-tab3').find('input').prop('disabled, button', true);
+        $('#z-tab3').find('input, button').prop('disabled', true);
         var obj = $("#Prim" + $('#hdnChairComp').val().replace(/\s/g, ''));
         if (undefined !== $('#hdnViceChairComp').val().replace(/\s/g, '') && undefined !== $("#Prim" + $('#hdnViceChairComp').val().replace(/\s/g, '')).val() && $("#Prim" + $('#hdnViceChairComp').val().replace(/\s/g, '')).val().length > 0) {
             $("#Alt" + $('#hdnViceChairComp').val().replace(/\s/g, '')).attr("disabled", "disabled");

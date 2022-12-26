@@ -101,8 +101,7 @@
                                 <th>Province</th>
                                 <th>ZipCode</th>
                                 <th>Country</th>
-                                @*
-                                    <th>Last Updated</th>*@
+                                @*<th>Last Updated</th>*@
                                 <th>Roles</th>
                             </tr>
                         </thead>
@@ -155,7 +154,9 @@
             <div data-bind="with: UMSubscribeModel">
                 <div id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></div>
                 <span class="text-danger margin-topbot10 niceLabel  bold" data-bind='text: $data.errorMessage()'></span>
-                <button class="btn btn-primary" type='submit' onclick="saveA4ACommitteeRoles()">Save Council/Committee Staff Roles</button>
+                <div id="DivSaveCommitteeRoles" class="savecommitteeroles">
+                    <button class="btn btn-primary" type='submit' onclick="saveA4ACommitteeRoles()">Save Council/Committee Staff Roles</button>
+                </div>
                 <br />
                 <br />
                 <span class="bold" style="vertical-align:middle;">Chair:</span>
@@ -216,7 +217,9 @@
     <script type="text/javascript">
         $(document).ready(function () {
             function disabledField(gtype) {
+                debugger;
                 $("input, submit, textarea, select, #a4astaffchosen").prop("disabled", true);
+                $('#DivSaveCommitteeRoles').find("button").hide();
                 $("a4astaffchosen").prop("disabled", true);
                 $('#A4AStaffContainer').find("button").hide();
                 $('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('a').hide();
@@ -228,13 +231,15 @@
             }
 
             $("#btnEdit").click(() => {
-                $("input, submit, textarea, select").prop("disabled", false);
+                debugger;
+                $("input, submit, button, textarea, select").prop("disabled", false);
                 $("#btnEdit").hide();
                 $("a4astaffchosen").prop("disabled", false);
                 $('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('a').show();
                 $("#btnAddGroupTop").show();
                 $('#A4AStaffContainer').find("button").show();
-                $('#z-tab2').find('a').show(); $('#z-tab2').find('input').prop('disabled', false)
+                $('#z-tab2').find('a').show(); $('#z-tab2').find('input').prop('disabled', false);
+                $('#DivSaveCommitteeRoles').find("button").show();
             })
             /* jQuery activation and setting options for second tabs, enabling multiline*/
             var isAdmin = false;
@@ -546,7 +551,6 @@
                                 "mRender": function (data, type, full) {
                                     return '<a  href="/user/show/?uid=' + full.UserId + '"  title="View"><img alt="View"  src="/images/view_20.png" border="0" /></a>';
                                 }
-
                             },
                             {
                                 "aTargets": [5],
