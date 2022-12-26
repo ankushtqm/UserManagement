@@ -1,0 +1,68 @@
+﻿ 
+<div>
+    <div class="text-danger niceLabel margin-topbot10 bold" data-bind="visible: ShowErr, text: 'Please fix all errors before submitting!'"></div><br />
+    <span class="text-success niceLabel margin-topbot10 bold" data-bind="text: InfoMessage"></span>
+    <input type="button" id="btnAddGroupTop" class="btn btn-primary" value="Save Group Details" data-bind="click: addGroup" />
+    <br />
+    <br /> 
+</div> 
+<form id="A4AGroupProperties" role="form" class="form-horizontal"> 
+    <div class="overlay">
+        <div id="loading-img"></div>
+    </div>
+    <div class="form-group">
+        <label for="inpGroupTypes" class="niceLabel col-sm-3">Group Type:</label>
+        <input id="inpGroupType" type="text" class="NoEdit form-control" disabled /> 
+    </div>
+    <div class="form-group">
+        <span for="inpGroupName" class="niceLabel col-sm-3 bold">Group Name:<span class="error">*</span></span>
+        <input id="inpGroupName" class="NoEdit form-control" type="text" data-bind="disabled: edit,value: GroupName,css:{'error':ShowErr}, valueUpdate: 'afterkeydown'" />
+        <span class="validation-error text-danger" data-bind="validationMessage:  $data.GroupName "></span>        
+    </div> 
+    <div class="form-group">
+        <span for="inpLyrisListName" class="niceLabel col-sm-3 bold">Group Email Address:<span class="error">*</span></span>
+        <input id="inpLyrisListName" class="NoEdit form-control" type="text" data-bind="value: LyrisListName,css:{'error':ShowErr}, valueUpdate: 'afterkeydown'" />@@lists.airlines.org
+        <span class="validation-error text-danger" data-bind="validationMessage:  $data.LyrisListName "></span>    
+        <br /><span class="font-small  text-muted"> <i>This field cannot contain spaces or symbol</i></span>
+    </div>   
+    <div class="form-group">
+        <label for="inpGroupSiteUrl" class="niceLabel col-sm-3">Group Site Url:</label>
+        <input id="inpGroupSiteUrl" type="text" class="distribution form-control" data-bind="value:GroupSiteUrl" />
+        <br /><span class="font-small  text-muted"><i>Full URL to group landing page</i></span> 
+    </div>
+    <div class="form-group">
+      <label for="inpParentGroupId" class="niceLabel col-sm-3">Group Roll Up To:</label>
+      <select id="inpParentGroupId" class="form-control"
+              data-bind="options: ParentGroups, optionsText: 'name', optionsValue: 'value', value: ParentGroupId, optionsCaption: 'None'"></select>
+      <br /><span class="font-small  text-muted"><i>Who does this group report</i></span>
+    </div> 
+    <div class="form-group">
+      <span for="inpLiaison1" class="bold niceLabel col-sm-3">Liaison: <span class="error">*</span></span>
+      <select id="inpLiaison1" class="form-control" data-bind="options: Liaisons, optionsText: 'name', optionsValue: 'value', value: Liaison1, optionsCaption: 'Choose..',css:{'error':ShowErr}"></select>
+      <span class="validation-error text-danger" data-bind="validationMessage:  $data.Liaison1 "></span>  
+      <br /><span class="font-small  text-muted"><i>Designated A4A Group Liaison</i></span>  
+    </div> 
+    <div class="form-group">
+      <span for="inpDept" class="bold niceLabel col-sm-3">Department:<span class="error">*</span></span>
+      <select id="inpDept" class="form-control" data-bind="options: Dept, optionsText: 'name', optionsValue: 'value', value: DepartmentId, optionsCaption: 'Choose..'"></select>
+      <br /><span class="font-small  text-muted"><i>Department the group belongs to.</i></span>
+    </div> 
+    <div class="form-group">
+      <label for="rdbGAB" class="niceLabel col-sm-3">Global Address Book:</label>
+      <input type="radio" name="GAB" value="On" data-bind="checked: rdoGAB" /> On
+      <input type="radio" name="GAB" value="Off" data-bind="checked: rdoGAB" /> Off
+      <br /><span class="font-small  text-muted"><i>Email address can be seen on all devices by all staff</i></span> 
+    </div> 
+    <div class="form-group">
+      <label for="inpLyrisSends" class="niceLabel col-sm-3">Lyris Send:</label>
+      <select id="inpLyrisSends" class="form-control" data-bind="options:LyrisSends,optionsText: 'name', optionsValue: 'value', value: LyrisSendId"></select>
+      <br /><span class="font-small  text-muted"><i>Email address can be seen on all devices by all staff</i></span> 
+    </div> 
+    <div class="form-group">
+      <label for="inpMission" class="niceLabel col-sm-3">Mission:</label>
+      <textarea id="inpMission" rows="12" cols="80" class="form-control" data-bind="value:Mission" style="max-width:600px;"></textarea>
+    </div>
+</form>
+<div class="fleft">
+    <input type="button" id="btnAddGroup" class="btn btn-primary" value="Save Group Details" data-bind="click: addGroup" />
+</div>

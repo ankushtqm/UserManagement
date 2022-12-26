@@ -1,0 +1,24 @@
+﻿<form role="form">
+    <div class="form-group">
+        <label for="inpGroupName">Group Name</label>
+        <input id="inpGroupName" type="text" class="form-control" data-bind="value: GroupName" />
+    </div>
+    <div class="form-group">
+        <label for="inpLyrisListName">Lyris List Name</label>
+        <input id="inpLyrisListName" type="text" class="form-control" data-bind="value: LyrisListName" />
+    </div>
+    <div class="form-group">
+        <label for="inpLyrisShortDescription">Lyris ShortDescription</label>
+        <input id="inpLyrisShortDescription" type="text" class="form-control" data-bind="value: Age" />
+    </div>
+    <div class="form-group">
+        <label for="inpGender">Gender</label>
+        <select id="inpGender" class="form-control" data-bind="options: genders, value: Gender"></select>
+    </div>
+    <div class="form-group">
+        <label for="txtDescription">Description</label>
+        <input id="txtDescription" class="form-control" data-bind="value: Description" />
+    </div>
+</form>
+
+<input type="button" id="btnAddStudent" class="btn btn-primary" value="Add Student" data-bind="click: addStudent" />

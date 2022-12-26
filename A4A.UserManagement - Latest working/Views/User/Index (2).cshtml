@@ -1,0 +1,157 @@
+﻿@{
+    ViewBag.Title = "User Register";
+}    
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-debug.js"></script>
+<script src="~/Scripts/knockout.validation.min.js"></script> 
+<script src="~/KnockoutModels/UserRegisterViewModel.js"></script>
+@*<script src="https://use.fontawesome.com/d27d5a71df.js"></script>*@  
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+@section heading{<h4 class="niceLabel-bold" id="Headtitle">New User Wizard</h4>}
+<style>
+    .preloader {
+        background: rgba(255,255,255,0.9);
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9998;
+        opacity: 1;
+        transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        -webkit-transition: all 0.5s ease-in-out;
+    }
+    .preloader img {
+            position: fixed;
+            z-index: 9999;
+            top: 40%;
+            left: 45%;
+    }
+    .error {
+    color: #D8000C;
+    font-weight:bold;
+    border-color:red;
+}
+    div.editable {
+    width: 100em;
+    height: 40em;
+    border: 1px solid #ccc;
+    padding: 5px;
+}
+ .validation-error {
+    color: red;
+}
+</style> 
+<div class="preloader">
+    <div><img src="~/images/Preloader-2.gif" /></div>
+</div>
+<!-- Zozo Tabs Start-->
+<div id="tabbed-nav" data-enhance="false">
+    <!-- Tab Navigation Menu -->
+    <h2><i><span id="spGroupName" class="niceLabel right"></span></i></h2> 
+    <ul>
+        <li id="z-tab0" data-link="1"><a>Contact Details<span>Personal Info</span></a></li> 
+        <li id="z-tab1" data-link="2"><a>Address<span>User work, personal addresses</span></a></li>
+        <li id="z-tab2" data-link="3"><a>Group Membership<span>User Groups</span></a></li>
+        <li id="z-tab3" data-link="4"><a>Email Confimation<span>Edit emails to be sent to the user</span></a></li> 
+    </ul>
+    <!---data-disabled="true"-->
+    <!-- Content container -->
+    <div>
+        <!--TAB 0 --> 
+        <div>
+            <div> 
+                <input type="hidden" id="hdnUserId" />
+                <input type="hidden" id="hdnUserName" />
+                <div data-bind="with: addUserViewModel">
+                    <span class="niceLabel-bold text-warning">Contact Details</span>
+                    <span class="Useredit"></span>
+                    <hr />
+                    @Html.Partial("_UserDetails")
+                </div> 
+            </div> 
+        </div>
+        <!-- TAB 1 -->
+        <div>
+            <div data-bind="with: addUserAddViewModel">
+                <span class="UserTitle niceLabel-bold text-warning">User Addresses</span> 
+                <span class="Useredit"></span>
+                <hr />
+                @Html.Partial("_AddAddress")
+            </div>  
+        </div>
+        <!-- TAB 2 -->
+        <div>
+            <div data-bind="with: addUserViewModel">
+                <span class="UserTitle niceLabel-bold text-warning">User Group</span> 
+                <span class="Useredit"></span>
+               
+                @Html.Partial("_GroupMembership")
+            </div>
+        </div>
+        <!--  TAB 3 -->
+        <div>
+            <div data-bind="with: addUserViewModel"> 
+                <span class="UserTitle niceLabel-bold text-warning">Send Email Confirmation</span> 
+                <span class="Useredit"></span>
+                <hr />
+                    @Html.Partial("_SendEmail")
+                    
+            </div> 
+        </div>   
+    </div>
+</div> 
+
+ 
+@section scripts {
+<script type="text/javascript">
+    $(document).ready(function () { 
+        /* jQuery activation and setting options for second tabs, enabling multiline*/
+       var tabbedNav = $("#tabbed-nav").zozoTabs({
+            position: "top-left",
+            theme: "blue",
+            shadows: true,
+            multiline: true, 
+            deeplinking: true,
+            orientation: "vertical",
+            size: "medium",
+            animation: {
+                easing: "easeInOutExpo",
+                duration: 500,
+                effects: "slideV"
+            }
+       }) 
+       var isAdmin = false;
+       function GoToAptTabs(tab) {
+           tabbedNav.data("zozoTabs").select(tab);
+       }
+       var checkIfEdit = function () { 
+           var uid = parseInt(getUrlParameter('uid'));
+           var tab = parseInt(getUrlParameter('tab')); 
+           var gtype = 0; 
+           if (uid > 0) { 
+               $('#hdnUserId').val(uid);
+               $("#Headtitle").html("Edit User Wizard");
+               userRegisterViewModel.addUserViewModel.UserExists(uid); 
+               $("#inpEmail").prop("disabled", true);
+               GoToAptTabs(0);
+
+               $(".Useredit").append("<br/><a href='/user/show/?uid=" + uid + "' class='niceLabel text-info'>View Contact</a");
+           }
+           setTimeout(function () { $(".preloader").fadeOut("slow"); }, 100); 
+       }
+       var getUrlParameter = function getUrlParameter(sParam) {
+           var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+               sURLVariables = sPageURL.split('&'), sParameterName, i;
+           for (i = 0; i < sURLVariables.length; i++) {
+               sParameterName = sURLVariables[i].split('=');
+               if (sParameterName[0] === sParam) {
+                   return sParameterName[1] === undefined ? true : sParameterName[1];
+               }
+           }
+       }; 
+      checkIfEdit();
+    }); 
+</script>
+ }

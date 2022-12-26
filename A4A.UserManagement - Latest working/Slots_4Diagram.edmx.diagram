@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="fbbf8842d9154c0484929a13e5ca6516" Name="Diagram1">
+        <EntityTypeShape EntityType="ATA_SLOTSModel.Airport" Width="1.5" PointX="6.5" PointY="2.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ATA_SLOTSModel.Company" Width="1.5" PointX="6.625" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ATA_SLOTSModel.DailySlotHolderOperator" Width="1.5" PointX="2.75" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ATA_SLOTSModel.NextUniqueIdHolder" Width="1.5" PointX="4.875" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ATA_SLOTSModel.Slot" Width="1.5" PointX="2.875" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ATA_SLOTSModel.SlotHolder" Width="1.5" PointX="8.375" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ATA_SLOTSModel.SlotOperator" Width="1.5" PointX="4.625" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ATA_SLOTSModel.SlotTransaction" Width="1.5" PointX="1" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ATA_SLOTSModel.StatusCode" Width="1.5" PointX="0.75" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ATA_SLOTSModel.DirtySlotHolderOperator" Width="1.5" PointX="6.625" PointY="0.625" IsExpanded="true" />
+        <AssociationConnector Association="ATA_SLOTSModel.FK_DailySlotHolderOperatorAirport" ManuallyRouted="false" />
+        <AssociationConnector Association="ATA_SLOTSModel.FK_SlotHolderToAirport" ManuallyRouted="false" />
+        <AssociationConnector Association="ATA_SLOTSModel.FK_SlotOperatorToAirport" ManuallyRouted="false" />
+        <AssociationConnector Association="ATA_SLOTSModel.FK_SlotToAirport" ManuallyRouted="false" />
+        <AssociationConnector Association="ATA_SLOTSModel.FK_SlotTransactionToAirport" ManuallyRouted="false" />
+        <AssociationConnector Association="ATA_SLOTSModel.FK_DailySlotHolderOperatorHolderId" ManuallyRouted="false" />
+        <AssociationConnector Association="ATA_SLOTSModel.FK_DailySlotHolderOperatorOperatorId" ManuallyRouted="false" />
+        <AssociationConnector Association="ATA_SLOTSModel.FK_SlotHolderToCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="ATA_SLOTSModel.FK_SlotOperatorToCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="ATA_SLOTSModel.FK_TransactionToGainingCompany" ManuallyRouted="false" />
+        <AssociationConnector Association="ATA_SLOTSModel.FK_SlotHolderToStatusCode" ManuallyRouted="false" />
+        <AssociationConnector Association="ATA_SLOTSModel.FK_SlotOperatorToStatusCode" ManuallyRouted="false" />
+        <AssociationConnector Association="ATA_SLOTSModel.FK_SlotTransactionToStatusCode" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

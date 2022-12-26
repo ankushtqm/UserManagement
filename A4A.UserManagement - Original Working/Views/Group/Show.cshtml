@@ -1,0 +1,426 @@
+﻿@{
+    ViewBag.Title = "View Group";
+} 
+ <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+
+    <style type="text/css">
+        /*Subscribers table padding*/
+        table.dataTable tbody th, table.dataTable tbody td {
+        padding: 4px 5px;
+    }
+        /*--------------------------**/
+        /*body,input,select,textarea,button,.ui-btn{
+            font-size:inherit !important;
+            line-height:inherit;
+        }*/
+       .grid-divider {
+            position: relative;
+            padding: 0;
+        }
+        .grid-divider>[class*='col-'] {
+            position: static;
+        }
+        .grid-divider>[class*='col-']:nth-child(n+2):before {
+            content: "";
+            border-left: 1px solid #ccc;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+        }
+        .col-padding {
+            padding: 0 15px;
+        }
+        /*#tblSubscribers_wrapper {
+        margin-top: -20px !important;
+        }*/
+        table.dataTable thead th,table.dataTable thead td
+        {padding:4px  5px!important;border-bottom:none !important;}
+        table.dataTable.no-footer
+         {border-bottom:none !important}
+        .dataTables_wrapper.no-footer .dataTables_scrollBody {
+            border-bottom: none!important;
+        }
+    </style>
+    <style type="text/css" media="print">
+      @@media print{@@page {size: landscape; margin:0;}}
+      input[type="search"] { display:none;}
+      .dataTables_filter { display:none; }
+      .landScape
+        {
+         width: 100%;
+         height: 100%;
+         margin: 0% 0% 0% 0%;
+         filter: progid:DXImageTransform.Microsoft.BasicImage(Rotation=3);
+        }
+      /*//Datatable Buttons alignment*/
+      div.dt-buttons {
+      margin-top:-40px !important;
+    }
+    </style>
+    <div class="content landScape">
+        @section heading{
+        <span id="Headtitle">Group Details<br /><span class="niceLabel text-success" id="SubTitle"></span></span>}
+        <div id="dlgMission" title="Mission">
+            <p>
+                <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+                <span id="txtMission"></span>
+            </p>
+        </div>
+        <div class="preloader">
+            <div><img src="~/images/Preloader-2.gif" /></div>
+        </div>
+        <div id="errorMessage" class="text-danger font-large" ></div>
+        <div class="sub-container ">
+            <div class="row  " style="border-bottom:1px solid black;"></div>
+                <div class="row grid-divider dark-info" style="line-height: 1.2;">
+                    <div class="col-md-8">
+                        <span id="txtGroupName" class="niceLabel-bold color-white"></span>
+                        <a id="opener"><img src="~/images/Help-icon.png" style="height: 17px;" /></a>
+                        <link media="print" rel="Alternate" href="print.pdf">
+                    </div>
+                    <div class="col-md-1 nopadding hidden-print">
+                        <div id="divLinks" style="padding-left:10px;margin-top:5px;font-size:1em;">
+                        </div>
+                    </div>
+                    <div class="col-md-2 nopadding ">
+                        <div style="padding-left:10px;margin-top:5px;font-size:1em;">
+                            <span class="niceLabel color-white"><b>Total Subscribers</b></span><br />
+                            <span id="txtTotSub" class="niceLabel color-white"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-1 nopadding">
+                        <div style="padding-left:10px;margin-top:5px;font-size:1em;">
+                            <span class="niceLabel color-white"><b>Liaison</b></span><br />
+                            <span id="txtLiaison" class="niceLabel color-white"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row grid-divider info"> 
+                     <div class="niceLabel-italic-blue   col-xs-4">Group Properties</div>
+                     <div class="niceLabel-italic-blue   col-xs-4">&nbsp;&nbsp;A4A Subscribers</div>
+                     <div class="niceLabel-italic-blue   col-xs-4">&nbsp;&nbsp;History</div>
+                </div>
+                <div class="row grid-divider" style="margin-top:3px;height:255px;overflow-y:auto;overflow-x:visible;">
+                    <div class="niceLabel-default col-sm-4">
+                        <div>
+                          
+                                <!----Start table html--->
+                                <div class="row">
+                                    <label for="inpGroupType" class="col-xs-4">Group Type:</label>
+                                    <span id="txtGroupType" class="col-xs-8"></span>
+                                </div>
+                                <div class="row">
+                                    <label for="inpEmail" class="col-xs-4">Email:</label>
+                                    <span id="txtEmail" class="col-xs-8"></span>
+                                </div>
+                                <div class="row">
+                                    <label for="inpLyrisSend" class="col-xs-4">Lyris Send:</label>
+                                    <span id="txtLyrisSend" class="col-xs-8 "></span>
+                                </div>
+                                <div class="row">
+                                    <label for="inpRoll" class="col-xs-4">Roll-up to:</label>
+                                    <span id="txtRoll" class="col-xs-8"></span>
+                                </div>
+                                <div class="row">
+                                    <label for="inpDivision" class="col-xs-4">Division:</label>
+                                    <span id="txtDivision" class="col-xs-8"></span>
+                                </div>
+                                <div class="row">
+                                    <label for="inpDept" class="col-xs-4">Department:</label>
+                                    <span id="txtDept" class="col-xs-8 "></span>
+                                </div>
+                                <div class="row">
+                                    <label for="inpLastMod" class="col-xs-4">Last Modified:</label>
+                                    <span id="txtLastMod" class="col-xs-8"></span>
+                                </div>
+                                <div class="row">
+                                    <label for="inpGAB" class="col-xs-4">Global Address Book:</label>
+                                    <span id="txtGAB" class="col-xs-8"></span>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="col-padding">
+                            @*<div class="row">
+                                <span class="niceLabel-italic-blue info  col-xs-12">A4A Subscribers</span>
+                            </div>*@ 
+                            <div id="a4a-sub">
+                                <table id="tblA4ASub" class="niceLabel-default">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Role</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="col-padding">
+                            @*<div class="row">
+                                <span class="niceLabel-italic-blue   col-xs-12">History</span>
+                            </div>*@  
+                            <div id="">
+                                <table id="tblGrpTransactions" class="niceLabel-default">
+                                    <thead>
+                                        <tr>
+                                            <th>Action</th>
+                                            <th>Details</th>
+                                            <th>Modified By</th>
+                                            <th>Modified Date</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <br/>
+        <div class="sub-container col-padding">
+            <div class="row  " style="border-bottom:1px solid black;"></div>
+            <div class="row grid-divider info" style="line-height: 1.2;">
+                <span class="niceLabel-italic-blue">Subscribers</span> <br /><br />
+            </div>
+                <table id="tblSubscribers" class="niceLabel-default  display" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>LastName</th>
+                            <th>FirstName</th>
+                            <th>E-Mail</th>
+                            <th>Office #</th>
+                            <th>Mobile #</th>
+                            <th>Last Modified</th>
+                            <th>Roles</th>
+                            <th class="hidden-print">View User</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            </div>
+            @section scripts {
+                <script type="text/javascript">
+                    var getUrlParameter = function getUrlParameter(sParam) {
+                         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                               sURLVariables = sPageURL.split('&'), sParameterName, i;
+                          for (i = 0; i < sURLVariables.length; i++) {
+                                sParameterName = sURLVariables[i].split('=');
+                                if (sParameterName[0] === sParam) {
+                                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                                }
+                            }
+                        };
+                        var gid = parseInt(getUrlParameter('gid'));
+                        var tab = parseInt(getUrlParameter('tab'));
+                        if (gid > 0) {
+                            //Update properties
+                            var group = $.getJSON('/api/getgrouplist/?type=0&groupid=' + gid, function (data) {
+                                $("#breadcrumb").hide();
+                                if (data.length > 2) {
+                                    var dat = JSON.parse(data);
+                                    gname = dat[0]["GroupName"];
+                                    gtype = dat[0]["GroupType"];
+                                    gemail = dat[0]["GroupEmail"];
+                                    LyrSend = dat[0]["LyrSend"];
+                                    Liaison = dat[0]["Liaison"];
+                                    MemberCount = dat[0]["MemberCount"];
+                                    ParentGroup = dat[0]["ParentGroup"];
+                                    Mission = dat[0]["Mission"];
+                                    GAB = dat[0]["GAB"];
+                                    BounceReports = dat[0]["BounceReports"];
+                                    LastMod = dat[0]["LastModified"];
+                                    Div = dat[0]["DivisionName"];
+                                    Dept = dat[0]["DepartmentName"];
+
+                                    $("#txtGroupType").text(gtype);
+                                    $("#txtGroupName").html(gname);
+                                    $("#txtEmail").text(gemail);
+                                    $("#txtLyrisSend").html(LyrSend);
+                                    $("#txtLiaison").text(Liaison);
+                                    $("#txtTotSub").html(MemberCount);
+                                    $("#txtRoll").text(ParentGroup);
+                                    $("#txtDivision").html(Div);
+                                    $("#txtDept").text(Dept);
+                                    $("#txtMission").html(Mission);
+                                    $("#txtGAB").text(GAB);
+                                    $("#txtLastMod").text(LastMod);
+                                }
+                                else
+                                {
+                                    $("#errorMessage").html("No GroupId found for the Group Id provided!");
+                                }
+                            }); 
+                            //Check if you can Show the Edit icon
+                            var str1 = '<a href="/group/index#1"  target="_blank"><img src="/images/add-25.png" alt="Add Group" title="Add Group"/></a> ';
+                            var str2 = '';
+                            var str3 = '<a href="#" onclick="window.print();return false;"><img src="/images/PrintFriendly.png" alt="Print Group" title="Print Group" /></a> ';
+                            var url = "/api/GetIsCurrentUserAdmin"; 
+                            $.ajax({
+                                url: url,   
+                                contentType: 'application/json',
+                                success: function (data) {
+                               
+                                if (data) {
+                                    str2 = '<a href="/group/index/?gid=' + gid + '" target="_blank"><img src="/images/edit-25.png" alt="Edit Group" title="Edit Group"/></a> ';
+                                } 
+                                $("#divLinks").html(str1 + '&nbsp;&nbsp;' + str3 + '&nbsp;&nbsp;' + str2);
+                                },
+                                error: function (xhr, status, error) { 
+                                    $("#divLinks").html(str1 + '&nbsp;&nbsp;' + str3 + '&nbsp;&nbsp;' + str2);
+                                    return false;
+                                }
+                            });
+                            
+                            //Update Group Transactions
+                            var query = "/api/getTransactions/?groupId=" + gid;
+                            $.ajax({
+                                url: query,
+                                type: "GET",
+                                datatype: "json",
+                                processData: false,
+                                contentType: "application/json; charset=utf-8",
+                                success: function (result) {
+                                    var table = $("#tblGrpTransactions").DataTable({
+                                        "aaData": JSON.parse(result),
+                                        retrieve: true,
+                                        "deferRender": true,
+                                        bProcessing: true,
+                                        bAutoWidth: false,
+                                        aoColumns: [
+                                          { mData: "Action" },
+                                          { mData: "Details" },
+                                          { mData: "modifiedby" },
+                                          { mData: "TransactionDate" },
+                                        ],
+                                        "bInfo": false,
+                                        "bLengthChange": false,
+                                        bPaginate: false, 
+                                        "oLanguage": {
+                                            "sEmptyTable": "No Transactions found for the group."
+                                        }
+                                    });
+                                },
+                                error: function (exception) { self.InfoMessage('Exception in getting Transactions' + exception.responseText); }
+                            });
+
+                            //Update A4A Subscribers
+                            var query = "/api/getgroupuserlist/?GroupId=" + gid + "&type=1";
+                            $.ajax({
+                                url: query,
+                                type: "GET",
+                                datatype: "json",
+                                processData: false,
+                                contentType: "application/json; charset=utf-8",
+                                success: function (result) { 
+                                    var table = $("#tblA4ASub").DataTable({
+                                        "aaData": JSON.parse(result),
+                                        retrieve: true,
+                                        "deferRender": true,
+                                        bProcessing: true,
+                                        bAutoWidth: false,
+                                        aoColumns: [
+                                          { mData: "Name", "sClass": "nowrap" },
+                                          { mData: "Roles" },
+                                        ],
+                                        "bInfo": false,
+                                        "bFilter": false,
+                                        bPaginate: false,
+                                        "oLanguage": {
+                                            "sEmptyTable": "No A4A admins found for the group."
+                                        }
+                                    });
+                                },
+                                error: function (exception) { self.InfoMessage('Exception in getting A4A Subscribers:' + exception.responseText); }
+                            });
+
+                            //Update Member/nonmember Subscribers
+                            var query = "/api/getgroupuserlist/?GroupId=" + gid + "&type=2";
+                            $.ajax({
+                                url: query,
+                                type: "GET",
+                                datatype: "json",
+                                processData: false,
+                                contentType: "application/json; charset=utf-8",
+                                success: function (result) {
+                                    var table = $("#tblSubscribers").DataTable({
+                                        "aaData": JSON.parse(result),
+                                        retrieve: true,
+                                        "deferRender": true,
+                                        bAutoWidth: false,
+                                        dom: 'Bfrtip',
+                                        buttons: [
+                                            {
+                                                extend: 'copyHtml5',
+                                                exportOptions: {
+                                                    columns: ':contains("Office")'
+                                                }
+                                            },
+                                            'excelHtml5',
+                                            'csvHtml5',
+                                            'pdfHtml5'
+                                        ],
+                                        aoColumns: [
+                                          { mData: "CompanyName", "sClass": "nowrap" },
+                                          { mData: "LastName" },
+                                          { mData: "FirstName" },
+                                          { mData: "Email" },
+                                          { mData: "OfficePhone" },
+                                          { mData: "MobilePhone" },
+                                          { mData: "LastModified" },
+                                          { mData: "Roles"},
+                                          { mData: "View", sWidth: "30px" ,sClass:"hidden-print" },
+                                        ] , "aoColumnDefs": [
+                                         {
+                                             "aTargets": [-1],
+                                             "mRender": function (data, type, full) {
+                                                 return '<a  href="/user/index/?uid='+ full.UserId + '"  title="View"><img alt="View"  src="/images/view_20.png" border="0" /></a>';
+                                             }
+                                         },
+                                        ],
+                                        "bInfo": false,
+                                        bPaginate: false,
+                                        "oLanguage": {
+                                            "sEmptyTable": "No Subscribers found for the group."
+                                        }
+                                    });
+                                },
+                                error: function (exception) { self.InfoMessage('Exception in getting A4A Subscribers:' + exception.responseText); }
+                            }).done(function () {
+                                $(".preloader").hide();
+                            }); 
+                        }
+                        else {
+                            $("#errorMessage").html("No GroupId found! Please provide GroupId!");
+                            $(".preloader").hide();
+                        }
+                    $(function () {
+                        $(function () {
+                            $("#dlgMission").dialog({
+                                autoOpen: false,
+                                modal: true,
+                                show: {
+                                    effect: "blind",
+                                    duration: 1000
+                                },
+                                hide: {
+                                    effect: "explode",
+                                    duration: 1000
+                                },
+                                buttons: {
+                                    Ok: function () {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                            $("#opener").on("click", function () {
+                                $("#dlgMission").dialog("open");
+                            });
+                        });
+                    });
+                </script>
+            }
+

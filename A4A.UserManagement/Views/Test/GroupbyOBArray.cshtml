@@ -1,0 +1,279 @@
+﻿@{
+    Layout = null;
+}
+ 
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="googlebot" content="noindex, nofollow">
+
+
+
+
+
+
+
+
+
+
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.7.1.js"></script>
+
+
+
+
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+
+
+
+
+
+    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+
+
+    <script type="text/javascript" src="http://knockoutjs.com/downloads/knockout-2.0.0.debug.js"></script>
+
+
+
+    <style type="text/css">
+        h2 {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+
+    <title>KnockoutJS ObservableArray data grouping by rniemeyer</title>
+
+
+</head>
+
+<body>
+    <h2 class="text-danger"  data-bind="text:$root.errorMessage"></h2>
+    <p>
+        <input type="text" class="chosen form-control" style="width:300px;" id="name-search"
+               data-bind="ko_autocomplete: { source: GetAllUsers, select: selectPrimAltUser4Company ,minLength: 3 }" />
+
+        <select id="inpCompanies" class="form-control"
+                data-bind="options: Companies, optionsText: 'name', optionsValue: 'id', value:company"></select>
+        <select id="inpGroupRole" class="form-control"
+                data-bind="options: Roles, optionsText: 'name', optionsValue: 'id', value:role"></select>
+    </p>
+    <button data-bind="click: addCommitteePrimAlt">Add CommitteePrimAlt</button>
+
+    <hr />
+
+    <ul data-bind="foreach:  Companies">
+        <li>
+            <h2 data-bind="text:name"></h2>
+            <ul data-bind="foreach: $root.people.index.CompanyName()[$data.name]">
+                <li><span data-bind="text: Name"></span> - <span class="niceLabel-default" data-bind="text: Type"></span>  <a href="#" class="text-danger" data-bind="click: $root.removeCommitteePrimAlt"> x </a></li> 
+            </ul>
+            <hr />
+        </li>
+    </ul> 
+<br/> 
+<script type='text/javascript'>
+//<![CDATA[
+    /////////////////////////////////////////////////////////////////////
+    /*******TAB 5&6 and Part of Council Committee - A
+    Complete Subscribe/Informational tab KO binding Object********/
+    /////////////////////////////////////////////////////////////////////  
+ko.bindingHandlers.ko_autocomplete = {
+        init: function (element, params) {
+            $(element).autocomplete(params());
+        },
+        update: function (element, params) {
+            $(element).autocomplete("option", "source", params().source);
+        }
+};
+ko.observableArray.fn.distinct = function(prop) {
+    var target = this;
+    target.index = {};
+    target.index[prop] = ko.observable({});
+
+    ko.computed(function() {
+        //rebuild index
+        var propIndex = {};
+
+        ko.utils.arrayForEach(target(), function(item) {
+            var key = ko.utils.unwrapObservable(item[prop]);
+            if (key) {
+                propIndex[key] = propIndex[key] || [];
+                propIndex[key].push(item);
+            }
+        }); 
+        target.index[prop](propIndex);
+    }); 
+    return target;
+};
+
+var CommitteePrimAlt = function (Name, UserId, Type, CompanyName, Alternate,Primary) {
+   this.Name = ko.observable(Name);
+   this.UserId = ko.observable(UserId);
+   this.CompanyName = ko.observable(CompanyName);
+   this.Type = ko.observable(Type);
+   this.Alternate = ko.observable(Alternate);
+   this.Primary = ko.observable(Primary);
+}
+
+var councilCommitteeGGAViewModel = function () {
+    var self = this;
+    self.gId = ko.observable();
+    self.errorMessage = ko.observable();
+    self.Companies = ["x A4A Test Company", "Alaska Airlines", "American Airlines", "Atlas Air", "FedEx", "Hawaiian Airlines", "JetBlue Airways", "Southwest Airlines", "UPS", "US Airways", "United Airlines"];
+    self.people = ko.observableArray([]).distinct('CompanyName');
+        self.Roles = ko.observableArray([
+            { id: "1", name: "Primary" },
+            { id: "2", name: "Alternate" }]);
+        self.role = ko.observable();
+        self.Companies = ko.observableArray();
+        self.company = ko.observable(); 
+        self.GetCompanies = $.getJSON('/api/GetCompanies/?isMember=' + true, function (data) {
+            $.each(data, function (key, value) {
+                self.Companies.push({ id: value, name: key });
+            });
+    }); 
+    this.addCommitteePrimAlt = function() {
+        self.people.push(new CommitteePrimAlt("Jimmy Fallon", 1293, "Alternate", "American Airlines", true, false));
+    };
+    this.selectPrimAltUser4Company = function (event, ui) {
+        var gId = 0;
+        var gId = $('#hdnGroupId').val();
+        self.errorMessage = ko.observable();
+        if (!(gId > 0) && !(self.gId() > 0)) {
+            self.errorMessage("Invalid GroupID. Your changes will not be saved! Contact the IT Administrator!");
+        }
+        else {
+            if (self.gId() < 1)
+                self.gId(gId);
+            self.errorMessage("");
+        }
+
+        var role = self.role();
+        var roleName = $("#inpGroupRole option[value='" + role + "']").text();//self.Roles()[role].name;
+
+        var comp = self.company();
+        var CompanyName = $("#inpCompanies option[value='" + comp + "']").text();
+         if (typeof role === 'undefined' || isNaN(self.gId())) {
+            self.errorMessage("Role or GroupId Missing. The user cannot be added to the group.");
+        }
+        else {
+            //Set the item to push to DB & knockout array
+            var temp = {};
+            temp['Name'] = ui.item.label;
+            temp['UserId'] = ui.item.text;
+            temp['role'] = roleName;
+            temp[roleName.replace(/\s/g, '')] = true;
+            temp['GroupId'] = self.gId();
+            temp['CompanyName'] = CompanyName;
+            //First check if the user already exists in the array
+            var match = ko.utils.arrayFirst(self.people(),
+                function (item) { 
+                    return ui.item.text == item.UserId();
+                });   
+            if (!match) {
+                //Now check if its a Primary and some primary already exists for the company
+                var matchPrim = ko.utils.arrayFirst(self.people(),
+                function (item) {
+                    return (CompanyName === item.CompanyName() && roleName === "Primary");
+                });
+                if (matchPrim)
+                {
+                    self.removeCommitteePrimAlt(matchPrim);
+                }
+
+
+                var dataObject = ko.utils.stringifyJson(temp); 
+                $.ajax({
+                    url: '/api/UserGroupGGA',
+                    type: 'post',
+                    data: dataObject,
+                    contentType: 'application/json',
+                    success: function (data) {
+                        alert("Successfully added!"+data );
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error!");
+                    }
+                });
+                if (roleName == "Primary") {
+                    self.people.push(new CommitteePrimAlt(ui.item.label, ui.item.text, roleName, CompanyName, true, false));
+                } else
+                    self.people.push(new CommitteePrimAlt(ui.item.label, ui.item.text, roleName, CompanyName, false, true));
+            }
+            else {
+                self.errorMessage("The user " + match.Name() + " already exists under " + match.CompanyName() + " ");
+            } 
+        }
+    }
+    self.removeCommitteePrimAlt = function (CommitteePrimAlt) { 
+      var role = 1; 
+      if (CommitteePrimAlt.Type === "Alternate")
+           role = 2; 
+      var URL = "/api/RemoveGrpUsrbyComp/?CompanyName=" + CommitteePrimAlt.CompanyName + "&GroupId=" + gId + "&RoleId=" + role;
+    //Delete the user from database and clear the field
+      RemoveGroupUser(URL);
+      alert(CommitteePrimAlt.Name);
+      self.people.remove(CommitteePrimAlt);
+}
+function RemoveGroupUser(URL) {
+    $.ajax({
+        url: URL,
+        type: 'post',
+        contentType: 'application/json',
+        success: function (data) {
+        },
+        error: function (xhr, status, error) {
+            var err = eval("(" + xhr.responseText + ")");
+            alert(err.Message);
+            $(event.target).parent().append("<span id='" + compPrimError + "' class='error'><br/><i class='fa fa-times-circle'>&nbsp;</i>" + err.Message + "</span>");
+            return false;
+        }
+    })
+    } 
+   this.GetAllUsers = function (request, response) { 
+        var text = request.term; 
+        var comp = self.company();
+        var CompanyName = $("#inpCompanies option[value='" + comp + "']").text();
+        $.ajax({
+            url: '/api/GetComapnyUsers/?CompanyName=' + CompanyName,
+            type: 'GET',
+            cache: false,
+            data: request,
+            dataType: 'json',
+            success: function (json) {
+                response($.map(json, function (key, value) {
+                    return {
+                        label: value,
+                        text: key,
+                        value: ""
+                    }
+                }));
+            }
+        });
+    }; 
+};
+
+
+ko.applyBindings(new councilCommitteeGGAViewModel());
+//]]>
+
+    </script>
+
+    <script>
+  // tell the embed parent frame the height of the content
+  if (window.parent && window.parent.parent){
+    window.parent.parent.postMessage(["resultsFrame", {
+      height: document.body.getBoundingClientRect().height,
+      slug: "mXVtN"
+    }], "*")
+  }
+    </script>
+
+</body>
+
+</html>

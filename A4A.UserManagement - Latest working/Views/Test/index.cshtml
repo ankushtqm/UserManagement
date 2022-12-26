@@ -1,0 +1,114 @@
+﻿@*@model A4A.UM.EntityDataModel.Group*@
+
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+} 
+
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> 
+<script type="text/javascript" src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script> 
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/ui-lightness/jquery-ui.css"> 
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/knockout/knockout-2.2.1.js"></script>
+
+<h2>View</h2>
+<label for="name-search">Search language: </label>
+<input type="text" id="name-search" data-bind="ko_autocomplete: { source: getLanguages, select: selectLanguage ,minLength: 3 }" />
+<table>
+    <thead>
+        <tr><th>Name</th><th>Key</th></tr>
+    </thead>
+    <tbody data-bind="foreach: $data.selectedValues">
+        <tr>
+            <td data-bind="text: Name"></td>
+            <td data-bind="text: UserId"></td> 
+            <td><a href='#' data-bind='click: $root.removeUMContacts'>Delete</a></td>
+        </tr>
+    </tbody>
+</table>
+<input type="button" id="btnAddGroup" class="btn btn-primary" value="Save" data-bind="click: addGroup" /> 
+
+<script type='text/javascript'>
+//<![CDATA[
+$(window).load(function(){
+ko.bindingHandlers.ko_autocomplete = {
+    init: function(element, params) {
+        $(element).autocomplete(params());
+    },
+    update: function(element, params) {
+        $(element).autocomplete("option", "source", params().source);
+    }
+};
+
+var AutoCompleteExample;
+(function(AutoCompleteExample) {
+
+    var ViewModel = (function() { 
+        function ViewModel() {
+            this.selectedValue = ko.observable();
+            this.selectedValuesNW = ko.observableArray(); 
+        } 
+       
+        ViewModel.prototype.removeUMContacts = function (contact) {
+            ViewModel.prototype.selectedValues.remove(contact);
+        };
+
+        ViewModel.prototype.getLanguages = function(request, response) {
+            var text = request.term;
+            $.ajax({
+                url: '/api/GetAllContacts',
+                type: 'GET',
+                cache: false,
+                data: request,
+                dataType: 'json',
+                success: function (json) { 
+                    response($.map(json, function (key, value) {
+                        return {
+                            label: key,
+                            value: value
+                        }
+                    }));
+                } 
+            });
+        };
+
+        ViewModel.prototype.selectedValues = ko.observableArray();
+        ViewModel.prototype.selectLanguage = function (event, ui)
+        {
+            alert(ui.item.value + "  " + ui.item.label) 
+            ViewModel.prototype.selectedValues.push({
+                Name: ui.item.label,
+                UserId: ui.item.value,
+                Subscribe: true,
+                GroupId: 264
+            });  
+        };
+
+        ViewModel.prototype.addGroup = function ()
+        {
+            alert("in addgroup")
+            var dataObject = ko.utils.stringifyJson(ViewModel.prototype.selectedValues);
+
+                $.ajax({
+                    url: '/api/UserGroup',
+                    type: 'post',
+                    data: dataObject,
+                    contentType: 'application/json',
+                    success: function (data) {                
+                    },
+                    error: function (exception) { alert('Exception:' + exception); }
+                }).done(function (data) {  
+                    alert("done!");
+                }); 
+          };
+        return ViewModel;
+    })();
+    AutoCompleteExample.ViewModel = ViewModel;
+
+})(AutoCompleteExample || (AutoCompleteExample = {}));
+
+ko.applyBindings(new AutoCompleteExample.ViewModel());
+
+});//]]>
+
+</script>
+

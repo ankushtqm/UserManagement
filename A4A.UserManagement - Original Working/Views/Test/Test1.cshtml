@@ -1,0 +1,164 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <title>simple-popup.js - A jQuery(optional) plugin to show a centered popup</title>
+    @*<style>
+        .hide {
+            display: none;
+        }
+
+        .popup-wrapper {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px #aaa;
+            overflow: hidden;
+        }
+
+        .popup-title {
+            padding: 10px 15px;
+            background-color: #f4f4f4;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+            .popup-title h3 {
+                margin: 0;
+                line-height: 1.5em;
+                color: #333;
+            }
+
+        .popup-body {
+            padding: 10px 15px;
+            color: #555;
+        }
+
+        .popup-close {
+            float: right;
+            margin-top: 2px;
+            padding: 0;
+            font-size: 24px;
+            line-height: 1;
+            border: 0;
+            background: transparent;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        button, submit {
+            border: none;
+            background-color: #fff;
+        }
+
+        .popup-button {
+            border: none;
+            background-color: #fff;
+        }
+    </style>*@
+</head>
+<body>
+    @*<div class="btn-group">
+        <button type="button" id="open" class="btn btn-mid"><img src="Help-icon.png" /></button>
+        <button type="button" id="close" class="btn btn-mid">Close</button>
+    </div>
+    <div id="popup" class="popup-wrapper hide">
+        <div class="popup-content">
+            <div class="popup-title">
+                <button type="button" class="popup-close">&times;</button>
+                <h3>Popup Title</h3>
+            </div>
+            <div class="popup-body">
+                <p>simple-popup.js - A jQuery(optional) plugin to show a centered popup</p>
+            </div>
+        </div>
+    </div>*@
+    <div id="dialog-message" title="Download complete">
+        <p>
+            <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+            Your files have downloaded successfully into the My Downloads folder.
+        </p>
+        <p>
+            Currently using <b>36% of your storage space</b>.
+        </p>
+    </div>
+    <div id="dialog" title="Basic dialog">
+        <p>This is an animated dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+    </div>
+
+    <button id="opener">Open Dialog</button>
+     <script>
+         $(function () {
+             $(function () {
+                 //$("#dialog").dialog({
+                 //    autoOpen: false,
+                 //    show: {
+                 //        effect: "blind",
+                 //        duration: 1000
+                 //    },
+                 //    hide: {
+                 //        effect: "explode",
+                 //        duration: 1000
+                 //    }
+                 //});
+
+                 $("#dialog-message").dialog({
+                     autoOpen: false,
+                     modal: true,
+                     show: {
+                                 effect: "blind",
+                                 duration: 1000
+                             },
+                             hide: {
+                                 effect: "explode",
+                                 duration: 1000
+                             },
+                     buttons: {
+                         Ok: function () {
+                             $(this).dialog("close");
+                         }
+                     }
+                 });
+
+                 $("#opener").on("click", function () {
+                     $("#dialog-message").dialog("open");
+                 });
+             });
+
+       
+      } );
+    </script>
+    @*<script src="~/Scripts/simple-popup.js"></script>*@
+    @*<script>
+        var popupEl = document.getElementById('popup');
+
+        // As a native plugin
+        var popup = new Popup(popupEl, {
+            width: 400,
+            height: 300
+        });
+
+        // As a jQuery plugin
+        // var popup = $('#popup').popup({
+        //     width: 400,
+        //     height: 300
+        // });
+
+        var open = document.getElementById('open');
+        var close = document.getElementById('close');
+
+        open.onclick = function() {
+            popup.open();
+        };
+
+        close.onclick = function() {
+            popup.close();
+        };
+    </script>*@
+</body>
+</html>

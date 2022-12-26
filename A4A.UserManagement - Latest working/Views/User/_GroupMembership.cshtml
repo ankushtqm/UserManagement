@@ -1,0 +1,35 @@
+﻿<div class="GroupMembership" id="UserGroupMembership">
+    <fieldset>
+        <Legend class="niceLabel-bold"></Legend>
+        <div class="text-danger niceLabel  bold " data-bind="html: ErrorMessageGM"></div><br />
+        <div class="text-success niceLabel bold" data-bind="html: InfoMessageGM"></div>
+        <br />
+        <span class="niceLabel text-warning">Groups: </span>
+        <p>
+            <input type="text" class="chosen form-control" style="width:300px;" placeholder="Search Groups" id="usersGrps" data-bind="ko_autocomplete: { source: GetAllGroups, select: SelectGroupforUser ,minLength: 3 }" />
+            <a href='#' class='text-danger deleteX' data-bind="click: clearUserGroups">X</a>
+            <select id="inpGroupRole" class="form-control"  data-bind="options: Roles, optionsText: 'name', optionsValue: 'value', value:role ,optionsCaption: 'Choose Role'">
+            </select>
+            <button class="z-btn  btn btn-primary" data-bind='click: AddGroup, enable: Roles().length > 0' type='submit'>Add</button> 
+        </p>
+        <table class="table" data-bind='visible: $data.UserGroups().length > 0'>
+            <thead>
+                <tr>
+                    <th class="control-label">Name</th>
+                    <th class="control-label">GroupType</th>
+                    <th class="control-label">Role</th>
+                    <th class="control-label">Delete</th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: $data.UserGroups()">
+                <tr>
+                    <td><span data-bind='text: GroupName'></span></td>
+                    <td><span data-bind='text: GroupType'></span></td>
+                    <td><span data-bind='text: Role'></span></td>
+                    <td><a href='#' data-bind='click: $parent.removeUserGroup,visible:IsCurrentUserAdmin '>Delete</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </fieldset>
+</div>
+ 

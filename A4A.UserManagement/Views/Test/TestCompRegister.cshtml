@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "TestCompRegister";
+    Layout = null;/*"~/Views/Shared/_Layout.cshtml";*/
+}
+
+<h2>TestCompRegister</h2>
+<script type="text/javascript" src="//code.jquery.com/jquery-2.1.3.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script>
+<title>Knockout Component example</title>
+
+<table>
+    <tr>
+        <td>Company</td>
+        <td>Primary</td>
+        <td>Alternate</td>
+    </tr>
+    <tr>
+        <primalt params="Company: 'American Airlines'">
+        </primalt>
+    </tr>
+    <tr>
+        <primalt params="Company: 'Alaskan Airlines'">
+        </primalt>
+    </tr>
+</table>
+<script type='text/javascript'>
+//<![CDATA[
+
+    var councilCommitteeViewModel = function (params) {
+        self = this;
+        self.Company = ko.observable(params && params.Company || '1');
+
+        self.Primary = ko.observable("");
+        self.Alernate = ko.observable("");
+        self.show = function ()
+        {
+            alert("self: " + self.Company() + " params.Company: " + params.Company);
+        }
+        };
+
+$(document).ready(function () {
+    // Register knockout UI components
+    ko.components.register('primalt', {
+        template: "<td><span data-bind='text: Company'></span></td>"+
+        "<td><input class='chosen form-control' style='width:300px;'  data-bind='value: Primary' />"+
+        "<span data-bind='text: Primary'></span> </td>" +
+        "<td><a href='#' data-bind='click: $data.show'>show</a></td>" +
+        "<td><input class='chosen form-control' style='width:300px;'  data-bind='value: Alernate' /><span data-bind='text: Alernate'></span> </td>",
+        viewModel: councilCommitteeViewModel
+    });
+
+    ko.applyBindings();
+
+});
+
+
+//]]>
+
+</script>

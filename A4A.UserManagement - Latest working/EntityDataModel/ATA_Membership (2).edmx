@@ -1,0 +1,2944 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ATA_MembershipModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'ATA_Membership.dbo.__TempNischala' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="__TempNischala">
+          <Property Name="FirstName" Type="nvarchar(max)" />
+          <Property Name="LastName" Type="nvarchar(max)" />
+        </EntityType>-->
+        <EntityType Name="Activity">
+          <Key>
+            <PropertyRef Name="ActivityId" />
+          </Key>
+          <Property Name="ActivityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ActivityDate" Type="datetime" />
+          <Property Name="ActivitySubject" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="ActivityUserId" Type="int" Nullable="false" />
+          <Property Name="OnBehalfofUserId" Type="int" />
+          <Property Name="ActivityMediaContactId" Type="int" Nullable="false" />
+          <Property Name="ObjectiveId" Type="int" />
+          <Property Name="InitiativeId" Type="int" />
+          <Property Name="Attachment1" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Attachment2" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Attachment3" Type="nvarchar" MaxLength="1000" />
+          <Property Name="ActivityNotes" Type="nvarchar(max)" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="ModifiedUserId" Type="int" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Activity_ActivityTopic">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ActivityId" Type="int" Nullable="false" />
+          <Property Name="ActivityTopicId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Activity_ActivityType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ActivityId" Type="int" Nullable="false" />
+          <Property Name="ActivityTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ActivityTopic">
+          <Key>
+            <PropertyRef Name="ActivityTopicId" />
+          </Key>
+          <Property Name="ActivityTopicId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ActivityTopicDescription" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="CreateUserId" Type="int" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="ModifiedUserId" Type="int" />
+          <Property Name="ModifiedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="ActivityType">
+          <Key>
+            <PropertyRef Name="ActivityTypeId" />
+          </Key>
+          <Property Name="ActivityTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ActivityTypeDescription" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="CreateUserId" Type="int" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="ModifiedUserId" Type="int" />
+          <Property Name="ModifiedDate" Type="datetime" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Address">
+          <Key>
+            <PropertyRef Name="AddressId" />
+          </Key>
+          <Property Name="AddressId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Address1" Type="nvarchar" MaxLength="125" Nullable="false" />
+          <Property Name="Address2" Type="nvarchar" MaxLength="125" Nullable="false" />
+          <Property Name="City" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="State" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ZipCode" Type="nvarchar" MaxLength="12" Nullable="false" />
+          <Property Name="Province" Type="nvarchar" MaxLength="75" Nullable="false" />
+          <Property Name="Country" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AddressType">
+          <Key>
+            <PropertyRef Name="AddressTypeId" />
+          </Key>
+          <Property Name="AddressTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AddressTypeDescription" Type="nvarchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Airport">
+          <Key>
+            <PropertyRef Name="AirportId" />
+          </Key>
+          <Property Name="AirportId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AirportCode" Type="nvarchar" MaxLength="4" Nullable="false" />
+          <Property Name="SPListItemUniqueId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="AppliesToSite">
+          <Key>
+            <PropertyRef Name="AppliesToSiteId" />
+          </Key>
+          <Property Name="AppliesToSiteId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AppliesToSite" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ATA_Membership.dbo.CommitteeRole' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="CommitteeRole">
+          <Key>
+            <PropertyRef Name="CommitteeRoleId" />
+            <PropertyRef Name="CommitteeRoleName" />
+          </Key>
+          <Property Name="CommitteeRoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CommitteeRoleName" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Sequence" Type="int" />
+        </EntityType>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="CompanyId" />
+          </Key>
+          <Property Name="CompanyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CompanyName" Type="nvarchar" MaxLength="75" Nullable="false" />
+          <Property Name="IsAirline" Type="bit" Nullable="false" />
+          <Property Name="SPListItemUniqueId" Type="uniqueidentifier" />
+          <Property Name="CompanyTypeId" Type="int" />
+          <Property Name="FuelsCompanyTypeId" Type="int" />
+          <Property Name="CompanyCategoryId" Type="int" />
+        </EntityType>
+        <EntityType Name="CompanyCategory">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CompanyType">
+          <Key>
+            <PropertyRef Name="CompanyTypeId" />
+          </Key>
+          <Property Name="CompanyTypeId" Type="int" Nullable="false" />
+          <Property Name="Relationship" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsA4aMember" Type="bit" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="CountryId" />
+          </Key>
+          <Property Name="CountryId" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="CountryName" Type="varchar" MaxLength="80" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmailsOnlyManagedInLyris">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Facility">
+          <Key>
+            <PropertyRef Name="FacilityId" />
+          </Key>
+          <Property Name="FacilityId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AirportId" Type="int" />
+          <Property Name="FacilityName" Type="nvarchar" MaxLength="75" Nullable="false" />
+          <Property Name="SPListItemUniqueId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="FuelsCompanyType">
+          <Key>
+            <PropertyRef Name="FuelsCompanyTypeId" />
+          </Key>
+          <Property Name="FuelsCompanyTypeId" Type="int" Nullable="false" />
+          <Property Name="FuelsCompanyTypeName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="GroupId" />
+          </Key>
+          <Property Name="GroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsOpenEnrollment" Type="bit" Nullable="false" />
+          <Property Name="AppliesToSiteId" Type="int" Nullable="false" />
+          <Property Name="LyrisListName" Type="nvarchar" MaxLength="60" Nullable="false" />
+          <Property Name="LyrisShortDescription" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="LyrisListType" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="GroupSiteUrl" Type="nvarchar" MaxLength="512" Nullable="false" />
+          <Property Name="IsCommittee" Type="bit" Nullable="false" />
+          <Property Name="IsChildGroup" Type="bit" Nullable="false" />
+          <Property Name="ParentGroupId" Type="int" Nullable="false" />
+          <Property Name="CouncilParentId" Type="int" />
+          <Property Name="IsSecurityGroup" Type="bit" Nullable="false" />
+          <Property Name="GroupTypeId" Type="int" />
+        </EntityType>
+        <EntityType Name="GroupAdmin">
+          <Key>
+            <PropertyRef Name="GroupId" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="GroupId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="IsBounceAdmin" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ATA_Membership.dbo.GroupAdmin2' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="GroupAdmin2">
+          <Key>
+            <PropertyRef Name="GroupId" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="IsBounceAdmin" />
+          </Key>
+          <Property Name="GroupId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="IsBounceAdmin" Type="bit" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ATA_Membership.dbo.GroupAdmin3' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="GroupAdmin3">
+          <Key>
+            <PropertyRef Name="GroupId" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="IsBounceAdmin" />
+          </Key>
+          <Property Name="GroupId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="IsBounceAdmin" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GroupToGroupSubscriptions">
+          <Key>
+            <PropertyRef Name="SubscribingGroupId" />
+            <PropertyRef Name="GroupId" />
+          </Key>
+          <Property Name="SubscribingGroupId" Type="int" Nullable="false" />
+          <Property Name="GroupId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GroupType">
+          <Key>
+            <PropertyRef Name="GroupTypeId" />
+          </Key>
+          <Property Name="GroupTypeId" Type="int" Nullable="false" />
+          <Property Name="GroupTypeName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="IsCommitteeCategory" Type="bit" />
+          <Property Name="IsSecurityCategory" Type="bit" />
+          <Property Name="IsDistributionCategory" Type="bit" />
+        </EntityType>
+        <EntityType Name="Issue">
+          <Key>
+            <PropertyRef Name="IssueId" />
+          </Key>
+          <Property Name="IssueId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="SPListItemUniqueId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="JobTitle">
+          <Key>
+            <PropertyRef Name="JobTitleId" />
+          </Key>
+          <Property Name="JobTitleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="JobTitleName" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MeetingGroup">
+          <Key>
+            <PropertyRef Name="MeetingGroupId" />
+          </Key>
+          <Property Name="MeetingGroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MeetingGroupName" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="MeetingList">
+          <Key>
+            <PropertyRef Name="MeetingListId" />
+          </Key>
+          <Property Name="MeetingListId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupId" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" Nullable="false" />
+          <Property Name="MeetingName" Type="nvarchar" MaxLength="400" Nullable="false" />
+          <Property Name="MeetingTypeId" Type="int" Nullable="false" />
+          <Property Name="MeetingLocation" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="MeetingPurpose" Type="nvarchar(max)" />
+          <Property Name="MeetingGroupId" Type="int" />
+          <Property Name="Createdby" Type="int" />
+          <Property Name="Created" Type="datetime" />
+          <Property Name="Modifiedby" Type="int" />
+          <Property Name="Modified" Type="datetime" />
+        </EntityType>
+        <EntityType Name="MeetingListSourceUser">
+          <Key>
+            <PropertyRef Name="MeetingListSourceUserId" />
+          </Key>
+          <Property Name="MeetingListSourceUserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="MeetingListId" Type="int" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="400" Nullable="false" />
+          <Property Name="CompanyId" Type="int" Nullable="false" />
+          <Property Name="CommitteeRoleId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MeetingListUser">
+          <Key>
+            <PropertyRef Name="MeetingListUserId" />
+          </Key>
+          <Property Name="MeetingListUserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="400" Nullable="false" />
+          <Property Name="CompanyId" Type="int" />
+          <Property Name="IsMainGroupUser" Type="bit" Nullable="false" />
+          <Property Name="MeetingListId" Type="int" Nullable="false" />
+          <Property Name="IsA4AUser" Type="bit" />
+          <Property Name="Email" Type="nvarchar" MaxLength="400" />
+        </EntityType>
+        <EntityType Name="MeetingType">
+          <Key>
+            <PropertyRef Name="MeetingTypeId" />
+          </Key>
+          <Property Name="MeetingTypeId" Type="int" Nullable="false" />
+          <Property Name="DisplayOrder" Type="int" Nullable="false" />
+          <Property Name="MeetingTypeName" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MemberType">
+          <Key>
+            <PropertyRef Name="MemberTypeId" />
+          </Key>
+          <Property Name="MemberTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MemberTypeName" Type="nvarchar" MaxLength="75" Nullable="false" />
+          <Property Name="AppliesToSiteId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SponsorGroup">
+          <Key>
+            <PropertyRef Name="SponsorGroupId" />
+          </Key>
+          <Property Name="SponsorGroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SponsorGroupUser">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="SponsorGroupId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="SponsorGroupId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="ReportsToId" Type="int" />
+          <Property Name="Prefix" Type="nvarchar" MaxLength="5" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="75" />
+          <Property Name="MiddleName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="100" />
+          <Property Name="Suffix" Type="nvarchar" MaxLength="7" />
+          <Property Name="PreferredName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="Email2" Type="nvarchar" MaxLength="256" />
+          <Property Name="HomePhone" Type="nvarchar" MaxLength="15" />
+          <Property Name="OfficePhone" Type="nvarchar" MaxLength="15" />
+          <Property Name="OfficePhoneExtension" Type="nvarchar" MaxLength="10" />
+          <Property Name="MobilePhone" Type="nvarchar" MaxLength="15" />
+          <Property Name="PrimaryFax" Type="nvarchar" MaxLength="15" />
+          <Property Name="TopicsOfInterest" Type="nvarchar(max)" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="CreateUserId" Type="int" />
+          <Property Name="ExpirationDate" Type="datetime" />
+          <Property Name="LastUpdatedDate" Type="datetime" Nullable="false" />
+          <Property Name="LastUpdatedUserId" Type="int" />
+          <Property Name="IsActiveMB" Type="bit" Nullable="false" />
+          <Property Name="IsActiveFF" Type="bit" Nullable="false" />
+          <Property Name="IsATAStaff" Type="bit" Nullable="false" />
+          <Property Name="IsAcceptedLicense" Type="bit" Nullable="false" />
+          <Property Name="IsPrivate" Type="bit" Nullable="false" />
+          <Property Name="RequiresPasswordChange" Type="bit" Nullable="false" />
+          <Property Name="LastLoginDate" Type="datetime" Nullable="false" />
+          <Property Name="LastMyProfileUpdate" Type="datetime" />
+          <Property Name="JobTitle" Type="nvarchar" MaxLength="100" />
+          <Property Name="WebPage" Type="nvarchar" MaxLength="500" />
+          <Property Name="IsActiveContact" Type="bit" />
+          <Property Name="Twitter" Type="nvarchar" MaxLength="500" />
+          <Property Name="Facebook" Type="nvarchar" MaxLength="500" />
+          <Property Name="LinkedIn" Type="nvarchar" MaxLength="500" />
+          <Property Name="GooglePlus" Type="nvarchar" MaxLength="500" />
+          <Property Name="Pinterest" Type="nvarchar" MaxLength="500" />
+          <Property Name="IsActiveSAS" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserAddress">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="AddressId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="AddressId" Type="int" Nullable="false" />
+          <Property Name="AddressTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserCompany">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="CompanyId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="CompanyId" Type="int" Nullable="false" />
+          <Property Name="JobTitleId" Type="int" />
+          <Property Name="Responsibilities" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserGroup">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="GroupId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="GroupId" Type="int" Nullable="false" />
+          <Property Name="JobTitleId" Type="int" />
+          <Property Name="PreferredEmailUserId" Type="int" />
+          <Property Name="IsPreferredEmailPrimary" Type="bit" Nullable="false" />
+          <Property Name="CommitteeRoleId" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ATA_Membership.dbo.UserGroup2' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="UserGroup2">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="GroupId" />
+            <PropertyRef Name="IsPreferredEmailPrimary" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="GroupId" Type="int" Nullable="false" />
+          <Property Name="JobTitleId" Type="int" />
+          <Property Name="PreferredEmailUserId" Type="int" />
+          <Property Name="IsPreferredEmailPrimary" Type="bit" Nullable="false" />
+          <Property Name="CommitteeRoleId" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ATA_Membership.dbo.UserIssue' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="UserIssue">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="IssueId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="IssueId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserMemberType">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="MemberTypeId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="MemberTypeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserSponsor">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="SponsorId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="SponsorId" Type="int" Nullable="false" />
+          <Property Name="IsPrimary" Type="bit" Nullable="false" />
+          <Property Name="IsAddedAsSuperAdmin" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserToSponsorGroup">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="SponsorGroupId" />
+          </Key>
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="SponsorGroupId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="X_CompanyFacility">
+          <Key>
+            <PropertyRef Name="CompanyId" />
+            <PropertyRef Name="FacilityId" />
+          </Key>
+          <Property Name="CompanyId" Type="int" Nullable="false" />
+          <Property Name="FacilityId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="X_Report_Council_Taxonomy">
+          <Key>
+            <PropertyRef Name="CommitteeID" />
+          </Key>
+          <Property Name="CommitteeID" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Council" Type="nvarchar" MaxLength="50" />
+          <Property Name="LyrisShortDescription" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Rank" Type="numeric" Precision="18" Scale="0" />
+        </EntityType>
+        <EntityType Name="X_Report_Council_Taxonomy_with_Roles">
+          <Key>
+            <PropertyRef Name="Committee_ID" />
+          </Key>
+          <Property Name="Committee_ID" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Council" Type="nvarchar" MaxLength="50" />
+          <Property Name="LyrisShortDescription" Type="nvarchar" MaxLength="50" />
+          <Property Name="Rank" Type="numeric" Precision="18" Scale="0" />
+          <Property Name="RoleID" Type="numeric" Precision="18" Scale="0" />
+        </EntityType>
+        <EntityType Name="X_Report_Role_Mapping">
+          <Key>
+            <PropertyRef Name="CommitteeRoleID" />
+          </Key>
+          <Property Name="CommitteeRoleID" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="50" />
+          <Property Name="RoleID" Type="numeric" Precision="18" Scale="0" />
+        </EntityType>
+        <Association Name="FK_Activity_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Activity" Type="Self.Activity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Activity">
+              <PropertyRef Name="ActivityUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Activity_User1">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Activity" Type="Self.Activity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Activity">
+              <PropertyRef Name="ActivityMediaContactId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Activity_User2">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Activity" Type="Self.Activity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Activity">
+              <PropertyRef Name="OnBehalfofUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Activity_User3">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Activity" Type="Self.Activity" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Activity">
+              <PropertyRef Name="ModifiedUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ActivityTopic_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ActivityTopic" Type="Self.ActivityTopic" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ActivityTopic">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ActivityTopic_User1">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ActivityTopic" Type="Self.ActivityTopic" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ActivityTopic">
+              <PropertyRef Name="ModifiedUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ActivityType_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ActivityType" Type="Self.ActivityType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ActivityType">
+              <PropertyRef Name="CreateUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ActivityType_User1">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ActivityType" Type="Self.ActivityType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="ActivityType">
+              <PropertyRef Name="ModifiedUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Company_CompanyCategory">
+          <End Role="CompanyCategory" Type="Self.CompanyCategory" Multiplicity="0..1" />
+          <End Role="Company" Type="Self.Company" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompanyCategory">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Company">
+              <PropertyRef Name="CompanyCategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Company_FuelsCompanyTypeId">
+          <End Role="FuelsCompanyType" Type="Self.FuelsCompanyType" Multiplicity="0..1" />
+          <End Role="Company" Type="Self.Company" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="FuelsCompanyType">
+              <PropertyRef Name="FuelsCompanyTypeId" />
+            </Principal>
+            <Dependent Role="Company">
+              <PropertyRef Name="FuelsCompanyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompanyToCompanyType">
+          <End Role="CompanyType" Type="Self.CompanyType" Multiplicity="0..1" />
+          <End Role="Company" Type="Self.Company" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CompanyType">
+              <PropertyRef Name="CompanyTypeId" />
+            </Principal>
+            <Dependent Role="Company">
+              <PropertyRef Name="CompanyTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Facility_Airport">
+          <End Role="Airport" Type="Self.Airport" Multiplicity="0..1" />
+          <End Role="Facility" Type="Self.Facility" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Airport">
+              <PropertyRef Name="AirportId" />
+            </Principal>
+            <Dependent Role="Facility">
+              <PropertyRef Name="AirportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Group_GroupType">
+          <End Role="GroupType" Type="Self.GroupType" Multiplicity="0..1" />
+          <End Role="Group" Type="Self.Group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GroupType">
+              <PropertyRef Name="GroupTypeId" />
+            </Principal>
+            <Dependent Role="Group">
+              <PropertyRef Name="GroupTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GroupAdmin_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="GroupAdmin" Type="Self.GroupAdmin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="GroupAdmin">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GroupAdmin_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="GroupAdmin" Type="Self.GroupAdmin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="GroupAdmin">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GroupToGroupSubscriptions_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="GroupToGroupSubscriptions" Type="Self.GroupToGroupSubscriptions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="GroupToGroupSubscriptions">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GroupToGroupSubscriptions_Group1">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="GroupToGroupSubscriptions" Type="Self.GroupToGroupSubscriptions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="GroupToGroupSubscriptions">
+              <PropertyRef Name="SubscribingGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MeetingList_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="MeetingList" Type="Self.MeetingList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="MeetingList">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MeetingList_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="MeetingList" Type="Self.MeetingList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="MeetingList">
+              <PropertyRef Name="Modifiedby" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MeetingList_User_CreatedBy">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="MeetingList" Type="Self.MeetingList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="MeetingList">
+              <PropertyRef Name="Createdby" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_MeetingListMeetingTypeId">
+          <End Role="MeetingType" Type="Self.MeetingType" Multiplicity="1" />
+          <End Role="MeetingList" Type="Self.MeetingList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MeetingType">
+              <PropertyRef Name="MeetingTypeId" />
+            </Principal>
+            <Dependent Role="MeetingList">
+              <PropertyRef Name="MeetingTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_MeetingListSourceUserCompanyId">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="MeetingListSourceUser" Type="Self.MeetingListSourceUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="MeetingListSourceUser">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_MeetingListSourceUserMeetingListIdId">
+          <End Role="MeetingList" Type="Self.MeetingList" Multiplicity="1" />
+          <End Role="MeetingListSourceUser" Type="Self.MeetingListSourceUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MeetingList">
+              <PropertyRef Name="MeetingListId" />
+            </Principal>
+            <Dependent Role="MeetingListSourceUser">
+              <PropertyRef Name="MeetingListId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_MeetingListUserCompanyId">
+          <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+          <End Role="MeetingListUser" Type="Self.MeetingListUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="MeetingListUser">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_MeetingListUserMeetingListId">
+          <End Role="MeetingList" Type="Self.MeetingList" Multiplicity="1" />
+          <End Role="MeetingListUser" Type="Self.MeetingListUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MeetingList">
+              <PropertyRef Name="MeetingListId" />
+            </Principal>
+            <Dependent Role="MeetingListUser">
+              <PropertyRef Name="MeetingListId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SponsorGroupUser_SponsorGroup">
+          <End Role="SponsorGroup" Type="Self.SponsorGroup" Multiplicity="1" />
+          <End Role="SponsorGroupUser" Type="Self.SponsorGroupUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SponsorGroup">
+              <PropertyRef Name="SponsorGroupId" />
+            </Principal>
+            <Dependent Role="SponsorGroupUser">
+              <PropertyRef Name="SponsorGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SponsorGroupUser_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="SponsorGroupUser" Type="Self.SponsorGroupUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="SponsorGroupUser">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserAddress_Address">
+          <End Role="Address" Type="Self.Address" Multiplicity="1" />
+          <End Role="UserAddress" Type="Self.UserAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="AddressId" />
+            </Principal>
+            <Dependent Role="UserAddress">
+              <PropertyRef Name="AddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserAddress_AddressType">
+          <End Role="AddressType" Type="Self.AddressType" Multiplicity="1" />
+          <End Role="UserAddress" Type="Self.UserAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AddressType">
+              <PropertyRef Name="AddressTypeId" />
+            </Principal>
+            <Dependent Role="UserAddress">
+              <PropertyRef Name="AddressTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserAddress_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserAddress" Type="Self.UserAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserAddress">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCompany_Company">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="UserCompany" Type="Self.UserCompany" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="UserCompany">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCompany_JobTitle">
+          <End Role="JobTitle" Type="Self.JobTitle" Multiplicity="0..1" />
+          <End Role="UserCompany" Type="Self.UserCompany" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="JobTitle">
+              <PropertyRef Name="JobTitleId" />
+            </Principal>
+            <Dependent Role="UserCompany">
+              <PropertyRef Name="JobTitleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCompany_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserCompany" Type="Self.UserCompany" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserCompany">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserGroup_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="UserGroup" Type="Self.UserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="UserGroup">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserGroup_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserGroup" Type="Self.UserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserGroup">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserIssue_Issue">
+          <End Role="Issue" Type="Self.Issue" Multiplicity="1" />
+          <End Role="UserIssue" Type="Self.UserIssue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Issue">
+              <PropertyRef Name="IssueId" />
+            </Principal>
+            <Dependent Role="UserIssue">
+              <PropertyRef Name="IssueId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserIssue_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserIssue" Type="Self.UserIssue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserIssue">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMemberType_MemberType">
+          <End Role="MemberType" Type="Self.MemberType" Multiplicity="1" />
+          <End Role="UserMemberType" Type="Self.UserMemberType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MemberType">
+              <PropertyRef Name="MemberTypeId" />
+            </Principal>
+            <Dependent Role="UserMemberType">
+              <PropertyRef Name="MemberTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserMemberType_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserMemberType" Type="Self.UserMemberType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserMemberType">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserSponsor_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserSponsor" Type="Self.UserSponsor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserSponsor">
+              <PropertyRef Name="SponsorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserToSponsorGroup_SponsorGroup">
+          <End Role="SponsorGroup" Type="Self.SponsorGroup" Multiplicity="1" />
+          <End Role="UserToSponsorGroup" Type="Self.UserToSponsorGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SponsorGroup">
+              <PropertyRef Name="SponsorGroupId" />
+            </Principal>
+            <Dependent Role="UserToSponsorGroup">
+              <PropertyRef Name="SponsorGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserToSponsorGroup_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserToSponsorGroup" Type="Self.UserToSponsorGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserToSponsorGroup">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_X_CompanyFacility_Company">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="X_CompanyFacility" Type="Self.X_CompanyFacility" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="X_CompanyFacility">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_X_CompanyFacility_Facility">
+          <End Role="Facility" Type="Self.Facility" Multiplicity="1" />
+          <End Role="X_CompanyFacility" Type="Self.X_CompanyFacility" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Facility">
+              <PropertyRef Name="FacilityId" />
+            </Principal>
+            <Dependent Role="X_CompanyFacility">
+              <PropertyRef Name="FacilityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ATA_MembershipModelStoreContainer">
+          <EntitySet Name="Activity" EntityType="Self.Activity" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Activity_ActivityTopic" EntityType="Self.Activity_ActivityTopic" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Activity_ActivityType" EntityType="Self.Activity_ActivityType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ActivityTopic" EntityType="Self.ActivityTopic" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ActivityType" EntityType="Self.ActivityType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Address" EntityType="Self.Address" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AddressType" EntityType="Self.AddressType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Airport" EntityType="Self.Airport" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AppliesToSite" EntityType="Self.AppliesToSite" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CompanyCategory" EntityType="Self.CompanyCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CompanyType" EntityType="Self.CompanyType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmailsOnlyManagedInLyris" EntityType="Self.EmailsOnlyManagedInLyris" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Facility" EntityType="Self.Facility" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="FuelsCompanyType" EntityType="Self.FuelsCompanyType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Group" EntityType="Self.Group" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GroupAdmin" EntityType="Self.GroupAdmin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GroupToGroupSubscriptions" EntityType="Self.GroupToGroupSubscriptions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GroupType" EntityType="Self.GroupType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Issue" EntityType="Self.Issue" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="JobTitle" EntityType="Self.JobTitle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MeetingGroup" EntityType="Self.MeetingGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MeetingList" EntityType="Self.MeetingList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MeetingListSourceUser" EntityType="Self.MeetingListSourceUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MeetingListUser" EntityType="Self.MeetingListUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MeetingType" EntityType="Self.MeetingType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MemberType" EntityType="Self.MemberType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SponsorGroup" EntityType="Self.SponsorGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SponsorGroupUser" EntityType="Self.SponsorGroupUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserAddress" EntityType="Self.UserAddress" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserCompany" EntityType="Self.UserCompany" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserGroup" EntityType="Self.UserGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserMemberType" EntityType="Self.UserMemberType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserSponsor" EntityType="Self.UserSponsor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserToSponsorGroup" EntityType="Self.UserToSponsorGroup" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="X_CompanyFacility" EntityType="Self.X_CompanyFacility" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="X_Report_Council_Taxonomy" EntityType="Self.X_Report_Council_Taxonomy" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="X_Report_Council_Taxonomy_with_Roles" EntityType="Self.X_Report_Council_Taxonomy_with_Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="X_Report_Role_Mapping" EntityType="Self.X_Report_Role_Mapping" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CommitteeRole" EntityType="Self.CommitteeRole" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [CommitteeRole].[CommitteeRoleId] AS [CommitteeRoleId], 
+    [CommitteeRole].[CommitteeRoleName] AS [CommitteeRoleName], 
+    [CommitteeRole].[Sequence] AS [Sequence]
+    FROM [dbo].[CommitteeRole] AS [CommitteeRole]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="GroupAdmin2" EntityType="Self.GroupAdmin2" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [GroupAdmin2].[GroupId] AS [GroupId], 
+    [GroupAdmin2].[UserId] AS [UserId], 
+    [GroupAdmin2].[IsBounceAdmin] AS [IsBounceAdmin]
+    FROM [dbo].[GroupAdmin2] AS [GroupAdmin2]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="GroupAdmin3" EntityType="Self.GroupAdmin3" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [GroupAdmin3].[GroupId] AS [GroupId], 
+    [GroupAdmin3].[UserId] AS [UserId], 
+    [GroupAdmin3].[IsBounceAdmin] AS [IsBounceAdmin]
+    FROM [dbo].[GroupAdmin3] AS [GroupAdmin3]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="UserGroup2" EntityType="Self.UserGroup2" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [UserGroup2].[UserId] AS [UserId], 
+    [UserGroup2].[GroupId] AS [GroupId], 
+    [UserGroup2].[JobTitleId] AS [JobTitleId], 
+    [UserGroup2].[PreferredEmailUserId] AS [PreferredEmailUserId], 
+    [UserGroup2].[IsPreferredEmailPrimary] AS [IsPreferredEmailPrimary], 
+    [UserGroup2].[CommitteeRoleId] AS [CommitteeRoleId]
+    FROM [dbo].[UserGroup2] AS [UserGroup2]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="UserIssue" EntityType="Self.UserIssue" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [UserIssue].[UserId] AS [UserId], 
+    [UserIssue].[IssueId] AS [IssueId]
+    FROM [dbo].[UserIssue] AS [UserIssue]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Activity_User" Association="Self.FK_Activity_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Activity" EntitySet="Activity" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Activity_User1" Association="Self.FK_Activity_User1">
+            <End Role="User" EntitySet="User" />
+            <End Role="Activity" EntitySet="Activity" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Activity_User2" Association="Self.FK_Activity_User2">
+            <End Role="User" EntitySet="User" />
+            <End Role="Activity" EntitySet="Activity" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Activity_User3" Association="Self.FK_Activity_User3">
+            <End Role="User" EntitySet="User" />
+            <End Role="Activity" EntitySet="Activity" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActivityTopic_User" Association="Self.FK_ActivityTopic_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ActivityTopic" EntitySet="ActivityTopic" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActivityTopic_User1" Association="Self.FK_ActivityTopic_User1">
+            <End Role="User" EntitySet="User" />
+            <End Role="ActivityTopic" EntitySet="ActivityTopic" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActivityType_User" Association="Self.FK_ActivityType_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ActivityType" EntitySet="ActivityType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActivityType_User1" Association="Self.FK_ActivityType_User1">
+            <End Role="User" EntitySet="User" />
+            <End Role="ActivityType" EntitySet="ActivityType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Company_CompanyCategory" Association="Self.FK_Company_CompanyCategory">
+            <End Role="CompanyCategory" EntitySet="CompanyCategory" />
+            <End Role="Company" EntitySet="Company" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Company_FuelsCompanyTypeId" Association="Self.FK_Company_FuelsCompanyTypeId">
+            <End Role="FuelsCompanyType" EntitySet="FuelsCompanyType" />
+            <End Role="Company" EntitySet="Company" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompanyToCompanyType" Association="Self.FK_CompanyToCompanyType">
+            <End Role="CompanyType" EntitySet="CompanyType" />
+            <End Role="Company" EntitySet="Company" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Facility_Airport" Association="Self.FK_Facility_Airport">
+            <End Role="Airport" EntitySet="Airport" />
+            <End Role="Facility" EntitySet="Facility" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Group_GroupType" Association="Self.FK_Group_GroupType">
+            <End Role="GroupType" EntitySet="GroupType" />
+            <End Role="Group" EntitySet="Group" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupAdmin_Group" Association="Self.FK_GroupAdmin_Group">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="GroupAdmin" EntitySet="GroupAdmin" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupAdmin_User" Association="Self.FK_GroupAdmin_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="GroupAdmin" EntitySet="GroupAdmin" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupToGroupSubscriptions_Group" Association="Self.FK_GroupToGroupSubscriptions_Group">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="GroupToGroupSubscriptions" EntitySet="GroupToGroupSubscriptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupToGroupSubscriptions_Group1" Association="Self.FK_GroupToGroupSubscriptions_Group1">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="GroupToGroupSubscriptions" EntitySet="GroupToGroupSubscriptions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MeetingList_Group" Association="Self.FK_MeetingList_Group">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="MeetingList" EntitySet="MeetingList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MeetingList_User" Association="Self.FK_MeetingList_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="MeetingList" EntitySet="MeetingList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MeetingList_User_CreatedBy" Association="Self.FK_MeetingList_User_CreatedBy">
+            <End Role="User" EntitySet="User" />
+            <End Role="MeetingList" EntitySet="MeetingList" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingListMeetingTypeId" Association="Self.fk_MeetingListMeetingTypeId">
+            <End Role="MeetingType" EntitySet="MeetingType" />
+            <End Role="MeetingList" EntitySet="MeetingList" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingListSourceUserCompanyId" Association="Self.fk_MeetingListSourceUserCompanyId">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="MeetingListSourceUser" EntitySet="MeetingListSourceUser" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingListSourceUserMeetingListIdId" Association="Self.fk_MeetingListSourceUserMeetingListIdId">
+            <End Role="MeetingList" EntitySet="MeetingList" />
+            <End Role="MeetingListSourceUser" EntitySet="MeetingListSourceUser" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingListUserCompanyId" Association="Self.fk_MeetingListUserCompanyId">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="MeetingListUser" EntitySet="MeetingListUser" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingListUserMeetingListId" Association="Self.fk_MeetingListUserMeetingListId">
+            <End Role="MeetingList" EntitySet="MeetingList" />
+            <End Role="MeetingListUser" EntitySet="MeetingListUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SponsorGroupUser_SponsorGroup" Association="Self.FK_SponsorGroupUser_SponsorGroup">
+            <End Role="SponsorGroup" EntitySet="SponsorGroup" />
+            <End Role="SponsorGroupUser" EntitySet="SponsorGroupUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SponsorGroupUser_User" Association="Self.FK_SponsorGroupUser_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="SponsorGroupUser" EntitySet="SponsorGroupUser" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAddress_Address" Association="Self.FK_UserAddress_Address">
+            <End Role="Address" EntitySet="Address" />
+            <End Role="UserAddress" EntitySet="UserAddress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAddress_AddressType" Association="Self.FK_UserAddress_AddressType">
+            <End Role="AddressType" EntitySet="AddressType" />
+            <End Role="UserAddress" EntitySet="UserAddress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAddress_User" Association="Self.FK_UserAddress_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserAddress" EntitySet="UserAddress" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCompany_Company" Association="Self.FK_UserCompany_Company">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="UserCompany" EntitySet="UserCompany" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCompany_JobTitle" Association="Self.FK_UserCompany_JobTitle">
+            <End Role="JobTitle" EntitySet="JobTitle" />
+            <End Role="UserCompany" EntitySet="UserCompany" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCompany_User" Association="Self.FK_UserCompany_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserCompany" EntitySet="UserCompany" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserGroup_Group" Association="Self.FK_UserGroup_Group">
+            <End Role="Group" EntitySet="Group" />
+            <End Role="UserGroup" EntitySet="UserGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserGroup_User" Association="Self.FK_UserGroup_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserGroup" EntitySet="UserGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserIssue_Issue" Association="Self.FK_UserIssue_Issue">
+            <End Role="Issue" EntitySet="Issue" />
+            <End Role="UserIssue" EntitySet="UserIssue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserIssue_User" Association="Self.FK_UserIssue_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserIssue" EntitySet="UserIssue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMemberType_MemberType" Association="Self.FK_UserMemberType_MemberType">
+            <End Role="MemberType" EntitySet="MemberType" />
+            <End Role="UserMemberType" EntitySet="UserMemberType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserMemberType_User" Association="Self.FK_UserMemberType_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserMemberType" EntitySet="UserMemberType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserSponsor_User" Association="Self.FK_UserSponsor_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserSponsor" EntitySet="UserSponsor" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserToSponsorGroup_SponsorGroup" Association="Self.FK_UserToSponsorGroup_SponsorGroup">
+            <End Role="SponsorGroup" EntitySet="SponsorGroup" />
+            <End Role="UserToSponsorGroup" EntitySet="UserToSponsorGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserToSponsorGroup_User" Association="Self.FK_UserToSponsorGroup_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserToSponsorGroup" EntitySet="UserToSponsorGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_X_CompanyFacility_Company" Association="Self.FK_X_CompanyFacility_Company">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="X_CompanyFacility" EntitySet="X_CompanyFacility" />
+          </AssociationSet>
+          <AssociationSet Name="FK_X_CompanyFacility_Facility" Association="Self.FK_X_CompanyFacility_Facility">
+            <End Role="Facility" EntitySet="Facility" />
+            <End Role="X_CompanyFacility" EntitySet="X_CompanyFacility" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ATA_MembershipModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Activity">
+          <Key>
+            <PropertyRef Name="ActivityId" />
+          </Key>
+          <Property Name="ActivityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ActivityDate" Type="DateTime" Precision="3" />
+          <Property Name="ActivitySubject" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ObjectiveId" Type="Int32" />
+          <Property Name="InitiativeId" Type="Int32" />
+          <Property Name="Attachment1" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Attachment2" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Attachment3" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="ActivityNotes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Activity_User" FromRole="Activity" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="Self.FK_Activity_User1" FromRole="Activity" ToRole="User" />
+          <NavigationProperty Name="User2" Relationship="Self.FK_Activity_User2" FromRole="Activity" ToRole="User" />
+          <NavigationProperty Name="User3" Relationship="Self.FK_Activity_User3" FromRole="Activity" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Activity_ActivityTopic">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ActivityId" Type="Int32" Nullable="false" />
+          <Property Name="ActivityTopicId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Activity_ActivityType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ActivityId" Type="Int32" Nullable="false" />
+          <Property Name="ActivityTypeId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ActivityTopic">
+          <Key>
+            <PropertyRef Name="ActivityTopicId" />
+          </Key>
+          <Property Name="ActivityTopicId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ActivityTopicDescription" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="User" Relationship="Self.FK_ActivityTopic_User" FromRole="ActivityTopic" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="Self.FK_ActivityTopic_User1" FromRole="ActivityTopic" ToRole="User" />
+        </EntityType>
+        <EntityType Name="ActivityType">
+          <Key>
+            <PropertyRef Name="ActivityTypeId" />
+          </Key>
+          <Property Name="ActivityTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ActivityTypeDescription" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_ActivityType_User" FromRole="ActivityType" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="Self.FK_ActivityType_User1" FromRole="ActivityType" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Address">
+          <Key>
+            <PropertyRef Name="AddressId" />
+          </Key>
+          <Property Name="AddressId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Address1" Type="String" MaxLength="125" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address2" Type="String" MaxLength="125" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ZipCode" Type="String" MaxLength="12" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Province" Type="String" MaxLength="75" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="UserAddresses" Relationship="Self.FK_UserAddress_Address" FromRole="Address" ToRole="UserAddress" />
+        </EntityType>
+        <EntityType Name="AddressType">
+          <Key>
+            <PropertyRef Name="AddressTypeId" />
+          </Key>
+          <Property Name="AddressTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AddressTypeDescription" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="UserAddresses" Relationship="Self.FK_UserAddress_AddressType" FromRole="AddressType" ToRole="UserAddress" />
+        </EntityType>
+        <EntityType Name="Airport">
+          <Key>
+            <PropertyRef Name="AirportId" />
+          </Key>
+          <Property Name="AirportId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AirportCode" Type="String" MaxLength="4" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SPListItemUniqueId" Type="Guid" />
+          <NavigationProperty Name="Facilities" Relationship="Self.FK_Facility_Airport" FromRole="Airport" ToRole="Facility" />
+        </EntityType>
+        <EntityType Name="AppliesToSite">
+          <Key>
+            <PropertyRef Name="AppliesToSiteId" />
+          </Key>
+          <Property Name="AppliesToSiteId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AppliesToSite1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="CompanyId" />
+          </Key>
+          <Property Name="CompanyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompanyName" Type="String" MaxLength="75" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsAirline" Type="Boolean" Nullable="false" />
+          <Property Name="SPListItemUniqueId" Type="Guid" />
+          <NavigationProperty Name="CompanyCategory" Relationship="Self.FK_Company_CompanyCategory" FromRole="Company" ToRole="CompanyCategory" />
+          <NavigationProperty Name="FuelsCompanyType" Relationship="Self.FK_Company_FuelsCompanyTypeId" FromRole="Company" ToRole="FuelsCompanyType" />
+          <NavigationProperty Name="CompanyType" Relationship="Self.FK_CompanyToCompanyType" FromRole="Company" ToRole="CompanyType" />
+          <NavigationProperty Name="MeetingListSourceUsers" Relationship="Self.fk_MeetingListSourceUserCompanyId" FromRole="Company" ToRole="MeetingListSourceUser" />
+          <NavigationProperty Name="MeetingListUsers" Relationship="Self.fk_MeetingListUserCompanyId" FromRole="Company" ToRole="MeetingListUser" />
+          <NavigationProperty Name="UserCompanies" Relationship="Self.FK_UserCompany_Company" FromRole="Company" ToRole="UserCompany" />
+          <NavigationProperty Name="Facilities" Relationship="Self.X_CompanyFacility" FromRole="Company" ToRole="Facility" />
+        </EntityType>
+        <EntityType Name="CompanyCategory">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Companies" Relationship="Self.FK_Company_CompanyCategory" FromRole="CompanyCategory" ToRole="Company" />
+        </EntityType>
+        <EntityType Name="CompanyType">
+          <Key>
+            <PropertyRef Name="CompanyTypeId" />
+          </Key>
+          <Property Name="CompanyTypeId" Type="Int32" Nullable="false" />
+          <Property Name="Relationship" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsA4aMember" Type="Boolean" />
+          <NavigationProperty Name="Companies" Relationship="Self.FK_CompanyToCompanyType" FromRole="CompanyType" ToRole="Company" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="CountryId" />
+          </Key>
+          <Property Name="CountryId" Type="String" MaxLength="2" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="CountryName" Type="String" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmailsOnlyManagedInLyri">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Facility">
+          <Key>
+            <PropertyRef Name="FacilityId" />
+          </Key>
+          <Property Name="FacilityId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FacilityName" Type="String" MaxLength="75" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SPListItemUniqueId" Type="Guid" />
+          <NavigationProperty Name="Airport" Relationship="Self.FK_Facility_Airport" FromRole="Facility" ToRole="Airport" />
+          <NavigationProperty Name="Companies" Relationship="Self.X_CompanyFacility" FromRole="Facility" ToRole="Company" />
+        </EntityType>
+        <EntityType Name="FuelsCompanyType">
+          <Key>
+            <PropertyRef Name="FuelsCompanyTypeId" />
+          </Key>
+          <Property Name="FuelsCompanyTypeId" Type="Int32" Nullable="false" />
+          <Property Name="FuelsCompanyTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Companies" Relationship="Self.FK_Company_FuelsCompanyTypeId" FromRole="FuelsCompanyType" ToRole="Company" />
+        </EntityType>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="GroupId" />
+          </Key>
+          <Property Name="GroupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsOpenEnrollment" Type="Boolean" Nullable="false" />
+          <Property Name="AppliesToSiteId" Type="Int32" Nullable="false" />
+          <Property Name="LyrisListName" Type="String" MaxLength="60" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LyrisShortDescription" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LyrisListType" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="GroupSiteUrl" Type="String" MaxLength="512" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsCommittee" Type="Boolean" Nullable="false" />
+          <Property Name="IsChildGroup" Type="Boolean" Nullable="false" />
+          <Property Name="ParentGroupId" Type="Int32" Nullable="false" />
+          <Property Name="CouncilParentId" Type="Int32" />
+          <Property Name="IsSecurityGroup" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="GroupType" Relationship="Self.FK_Group_GroupType" FromRole="Group" ToRole="GroupType" />
+          <NavigationProperty Name="GroupAdmins" Relationship="Self.FK_GroupAdmin_Group" FromRole="Group" ToRole="GroupAdmin" />
+          <NavigationProperty Name="MeetingLists" Relationship="Self.FK_MeetingList_Group" FromRole="Group" ToRole="MeetingList" />
+          <NavigationProperty Name="UserGroups" Relationship="Self.FK_UserGroup_Group" FromRole="Group" ToRole="UserGroup" />
+          <NavigationProperty Name="Group1" Relationship="Self.GroupToGroupSubscriptions" FromRole="Group" ToRole="Group1" />
+          <NavigationProperty Name="Groups" Relationship="Self.GroupToGroupSubscriptions" FromRole="Group1" ToRole="Group" />
+        </EntityType>
+        <EntityType Name="GroupAdmin">
+          <Key>
+            <PropertyRef Name="GroupId" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="IsBounceAdmin" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Group" Relationship="Self.FK_GroupAdmin_Group" FromRole="GroupAdmin" ToRole="Group" />
+          <NavigationProperty Name="User" Relationship="Self.FK_GroupAdmin_User" FromRole="GroupAdmin" ToRole="User" />
+        </EntityType>
+        <EntityType Name="GroupType">
+          <Key>
+            <PropertyRef Name="GroupTypeId" />
+          </Key>
+          <Property Name="GroupTypeId" Type="Int32" Nullable="false" />
+          <Property Name="GroupTypeName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsCommitteeCategory" Type="Boolean" />
+          <Property Name="IsSecurityCategory" Type="Boolean" />
+          <Property Name="IsDistributionCategory" Type="Boolean" />
+          <NavigationProperty Name="Groups" Relationship="Self.FK_Group_GroupType" FromRole="GroupType" ToRole="Group" />
+        </EntityType>
+        <EntityType Name="Issue">
+          <Key>
+            <PropertyRef Name="IssueId" />
+          </Key>
+          <Property Name="IssueId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SPListItemUniqueId" Type="Guid" />
+          <NavigationProperty Name="Users" Relationship="Self.UserIssue" FromRole="Issue" ToRole="User" />
+        </EntityType>
+        <EntityType Name="JobTitle">
+          <Key>
+            <PropertyRef Name="JobTitleId" />
+          </Key>
+          <Property Name="JobTitleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="JobTitleName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="UserCompanies" Relationship="Self.FK_UserCompany_JobTitle" FromRole="JobTitle" ToRole="UserCompany" />
+        </EntityType>
+        <EntityType Name="MeetingGroup">
+          <Key>
+            <PropertyRef Name="MeetingGroupId" />
+          </Key>
+          <Property Name="MeetingGroupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MeetingGroupName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="MeetingList">
+          <Key>
+            <PropertyRef Name="MeetingListId" />
+          </Key>
+          <Property Name="MeetingListId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="MeetingName" Type="String" MaxLength="400" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MeetingLocation" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MeetingPurpose" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="MeetingGroupId" Type="Int32" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="Modified" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Group" Relationship="Self.FK_MeetingList_Group" FromRole="MeetingList" ToRole="Group" />
+          <NavigationProperty Name="User" Relationship="Self.FK_MeetingList_User" FromRole="MeetingList" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="Self.FK_MeetingList_User_CreatedBy" FromRole="MeetingList" ToRole="User" />
+          <NavigationProperty Name="MeetingType" Relationship="Self.fk_MeetingListMeetingTypeId" FromRole="MeetingList" ToRole="MeetingType" />
+          <NavigationProperty Name="MeetingListSourceUsers" Relationship="Self.fk_MeetingListSourceUserMeetingListIdId" FromRole="MeetingList" ToRole="MeetingListSourceUser" />
+          <NavigationProperty Name="MeetingListUsers" Relationship="Self.fk_MeetingListUserMeetingListId" FromRole="MeetingList" ToRole="MeetingListUser" />
+        </EntityType>
+        <EntityType Name="MeetingListSourceUser">
+          <Key>
+            <PropertyRef Name="MeetingListSourceUserId" />
+          </Key>
+          <Property Name="MeetingListSourceUserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="DisplayName" Type="String" MaxLength="400" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CommitteeRoleId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Company" Relationship="Self.fk_MeetingListSourceUserCompanyId" FromRole="MeetingListSourceUser" ToRole="Company" />
+          <NavigationProperty Name="MeetingList" Relationship="Self.fk_MeetingListSourceUserMeetingListIdId" FromRole="MeetingListSourceUser" ToRole="MeetingList" />
+        </EntityType>
+        <EntityType Name="MeetingListUser">
+          <Key>
+            <PropertyRef Name="MeetingListUserId" />
+          </Key>
+          <Property Name="MeetingListUserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="DisplayName" Type="String" MaxLength="400" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsMainGroupUser" Type="Boolean" Nullable="false" />
+          <Property Name="IsA4AUser" Type="Boolean" />
+          <Property Name="Email" Type="String" MaxLength="400" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Company" Relationship="Self.fk_MeetingListUserCompanyId" FromRole="MeetingListUser" ToRole="Company" />
+          <NavigationProperty Name="MeetingList" Relationship="Self.fk_MeetingListUserMeetingListId" FromRole="MeetingListUser" ToRole="MeetingList" />
+        </EntityType>
+        <EntityType Name="MeetingType">
+          <Key>
+            <PropertyRef Name="MeetingTypeId" />
+          </Key>
+          <Property Name="MeetingTypeId" Type="Int32" Nullable="false" />
+          <Property Name="DisplayOrder" Type="Int32" Nullable="false" />
+          <Property Name="MeetingTypeName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="MeetingLists" Relationship="Self.fk_MeetingListMeetingTypeId" FromRole="MeetingType" ToRole="MeetingList" />
+        </EntityType>
+        <EntityType Name="MemberType">
+          <Key>
+            <PropertyRef Name="MemberTypeId" />
+          </Key>
+          <Property Name="MemberTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MemberTypeName" Type="String" MaxLength="75" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AppliesToSiteId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Self.UserMemberType" FromRole="MemberType" ToRole="User" />
+        </EntityType>
+        <EntityType Name="SponsorGroup">
+          <Key>
+            <PropertyRef Name="SponsorGroupId" />
+          </Key>
+          <Property Name="SponsorGroupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Users" Relationship="Self.SponsorGroupUser" FromRole="SponsorGroup" ToRole="User" />
+          <NavigationProperty Name="Users1" Relationship="Self.UserToSponsorGroup" FromRole="SponsorGroup" ToRole="User" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ReportsToId" Type="Int32" />
+          <Property Name="Prefix" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" MaxLength="75" FixedLength="false" Unicode="true" />
+          <Property Name="MiddleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Suffix" Type="String" MaxLength="7" FixedLength="false" Unicode="true" />
+          <Property Name="PreferredName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Email2" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="HomePhone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="OfficePhone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="OfficePhoneExtension" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="MobilePhone" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="PrimaryFax" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="TopicsOfInterest" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreateUserId" Type="Int32" />
+          <Property Name="ExpirationDate" Type="DateTime" Precision="3" />
+          <Property Name="LastUpdatedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastUpdatedUserId" Type="Int32" />
+          <Property Name="IsActiveMB" Type="Boolean" Nullable="false" />
+          <Property Name="IsActiveFF" Type="Boolean" Nullable="false" />
+          <Property Name="IsATAStaff" Type="Boolean" Nullable="false" />
+          <Property Name="IsAcceptedLicense" Type="Boolean" Nullable="false" />
+          <Property Name="IsPrivate" Type="Boolean" Nullable="false" />
+          <Property Name="RequiresPasswordChange" Type="Boolean" Nullable="false" />
+          <Property Name="LastLoginDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastMyProfileUpdate" Type="DateTime" Precision="3" />
+          <Property Name="JobTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="WebPage" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IsActiveContact" Type="Boolean" />
+          <Property Name="Twitter" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Facebook" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="LinkedIn" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="GooglePlus" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Pinterest" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="IsActiveSAS" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Activities" Relationship="Self.FK_Activity_User" FromRole="User" ToRole="Activity" />
+          <NavigationProperty Name="Activities1" Relationship="Self.FK_Activity_User1" FromRole="User" ToRole="Activity" />
+          <NavigationProperty Name="Activities2" Relationship="Self.FK_Activity_User2" FromRole="User" ToRole="Activity" />
+          <NavigationProperty Name="Activities3" Relationship="Self.FK_Activity_User3" FromRole="User" ToRole="Activity" />
+          <NavigationProperty Name="ActivityTopics" Relationship="Self.FK_ActivityTopic_User" FromRole="User" ToRole="ActivityTopic" />
+          <NavigationProperty Name="ActivityTopics1" Relationship="Self.FK_ActivityTopic_User1" FromRole="User" ToRole="ActivityTopic" />
+          <NavigationProperty Name="ActivityTypes" Relationship="Self.FK_ActivityType_User" FromRole="User" ToRole="ActivityType" />
+          <NavigationProperty Name="ActivityTypes1" Relationship="Self.FK_ActivityType_User1" FromRole="User" ToRole="ActivityType" />
+          <NavigationProperty Name="GroupAdmins" Relationship="Self.FK_GroupAdmin_User" FromRole="User" ToRole="GroupAdmin" />
+          <NavigationProperty Name="MeetingLists" Relationship="Self.FK_MeetingList_User" FromRole="User" ToRole="MeetingList" />
+          <NavigationProperty Name="MeetingLists1" Relationship="Self.FK_MeetingList_User_CreatedBy" FromRole="User" ToRole="MeetingList" />
+          <NavigationProperty Name="UserAddresses" Relationship="Self.FK_UserAddress_User" FromRole="User" ToRole="UserAddress" />
+          <NavigationProperty Name="UserCompanies" Relationship="Self.FK_UserCompany_User" FromRole="User" ToRole="UserCompany" />
+          <NavigationProperty Name="UserGroups" Relationship="Self.FK_UserGroup_User" FromRole="User" ToRole="UserGroup" />
+          <NavigationProperty Name="UserSponsors" Relationship="Self.FK_UserSponsor_User" FromRole="User" ToRole="UserSponsor" />
+          <NavigationProperty Name="SponsorGroups" Relationship="Self.SponsorGroupUser" FromRole="User" ToRole="SponsorGroup" />
+          <NavigationProperty Name="MemberTypes" Relationship="Self.UserMemberType" FromRole="User" ToRole="MemberType" />
+          <NavigationProperty Name="SponsorGroups1" Relationship="Self.UserToSponsorGroup" FromRole="User" ToRole="SponsorGroup" />
+          <NavigationProperty Name="Issues" Relationship="Self.UserIssue" FromRole="User" ToRole="Issue" />
+        </EntityType>
+        <EntityType Name="UserAddress">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="AddressId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="AddressId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Address" Relationship="Self.FK_UserAddress_Address" FromRole="UserAddress" ToRole="Address" />
+          <NavigationProperty Name="AddressType" Relationship="Self.FK_UserAddress_AddressType" FromRole="UserAddress" ToRole="AddressType" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserAddress_User" FromRole="UserAddress" ToRole="User" />
+        </EntityType>
+        <EntityType Name="UserCompany">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="CompanyId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="CompanyId" Type="Int32" Nullable="false" />
+          <Property Name="Responsibilities" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_UserCompany_Company" FromRole="UserCompany" ToRole="Company" />
+          <NavigationProperty Name="JobTitle" Relationship="Self.FK_UserCompany_JobTitle" FromRole="UserCompany" ToRole="JobTitle" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserCompany_User" FromRole="UserCompany" ToRole="User" />
+        </EntityType>
+        <EntityType Name="UserGroup">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="GroupId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <Property Name="JobTitleId" Type="Int32" />
+          <Property Name="PreferredEmailUserId" Type="Int32" />
+          <Property Name="IsPreferredEmailPrimary" Type="Boolean" Nullable="false" />
+          <Property Name="CommitteeRoleId" Type="Int32" />
+          <NavigationProperty Name="Group" Relationship="Self.FK_UserGroup_Group" FromRole="UserGroup" ToRole="Group" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserGroup_User" FromRole="UserGroup" ToRole="User" />
+        </EntityType>
+        <EntityType Name="UserSponsor">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="SponsorId" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="SponsorId" Type="Int32" Nullable="false" />
+          <Property Name="IsPrimary" Type="Boolean" Nullable="false" />
+          <Property Name="IsAddedAsSuperAdmin" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserSponsor_User" FromRole="UserSponsor" ToRole="User" />
+        </EntityType>
+        <EntityType Name="X_Report_Council_Taxonomy">
+          <Key>
+            <PropertyRef Name="CommitteeID" />
+          </Key>
+          <Property Name="CommitteeID" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Council" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LyrisShortDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Rank" Type="Decimal" Precision="18" Scale="0" />
+        </EntityType>
+        <EntityType Name="X_Report_Council_Taxonomy_with_Roles">
+          <Key>
+            <PropertyRef Name="Committee_ID" />
+          </Key>
+          <Property Name="Committee_ID" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Council" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LyrisShortDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Rank" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="RoleID" Type="Decimal" Precision="18" Scale="0" />
+        </EntityType>
+        <EntityType Name="X_Report_Role_Mapping">
+          <Key>
+            <PropertyRef Name="CommitteeRoleID" />
+          </Key>
+          <Property Name="CommitteeRoleID" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RoleID" Type="Decimal" Precision="18" Scale="0" />
+        </EntityType>
+        <EntityType Name="CommitteeRole">
+          <Key>
+            <PropertyRef Name="CommitteeRoleId" />
+            <PropertyRef Name="CommitteeRoleName" />
+          </Key>
+          <Property Name="CommitteeRoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CommitteeRoleName" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Sequence" Type="Int32" />
+        </EntityType>
+        <EntityType Name="GroupAdmin2">
+          <Key>
+            <PropertyRef Name="GroupId" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="IsBounceAdmin" />
+          </Key>
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="IsBounceAdmin" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GroupAdmin3">
+          <Key>
+            <PropertyRef Name="GroupId" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="IsBounceAdmin" />
+          </Key>
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="IsBounceAdmin" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserGroup2">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="GroupId" />
+            <PropertyRef Name="IsPreferredEmailPrimary" />
+          </Key>
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <Property Name="JobTitleId" Type="Int32" />
+          <Property Name="PreferredEmailUserId" Type="Int32" />
+          <Property Name="IsPreferredEmailPrimary" Type="Boolean" Nullable="false" />
+          <Property Name="CommitteeRoleId" Type="Int32" />
+        </EntityType>
+        <Association Name="FK_Activity_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Activity" Type="Self.Activity" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_Activity_User1">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Activity" Type="Self.Activity" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_Activity_User2">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Activity" Type="Self.Activity" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_Activity_User3">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Activity" Type="Self.Activity" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_ActivityTopic_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ActivityTopic" Type="Self.ActivityTopic" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_ActivityTopic_User1">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ActivityTopic" Type="Self.ActivityTopic" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_ActivityType_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ActivityType" Type="Self.ActivityType" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_ActivityType_User1">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ActivityType" Type="Self.ActivityType" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_UserAddress_Address">
+          <End Role="Address" Type="Self.Address" Multiplicity="1" />
+          <End Role="UserAddress" Type="Self.UserAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Address">
+              <PropertyRef Name="AddressId" />
+            </Principal>
+            <Dependent Role="UserAddress">
+              <PropertyRef Name="AddressId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserAddress_AddressType">
+          <End Role="AddressType" Type="Self.AddressType" Multiplicity="1" />
+          <End Role="UserAddress" Type="Self.UserAddress" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_Facility_Airport">
+          <End Role="Airport" Type="Self.Airport" Multiplicity="0..1" />
+          <End Role="Facility" Type="Self.Facility" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_Company_CompanyCategory">
+          <End Role="CompanyCategory" Type="Self.CompanyCategory" Multiplicity="0..1" />
+          <End Role="Company" Type="Self.Company" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_Company_FuelsCompanyTypeId">
+          <End Role="FuelsCompanyType" Type="Self.FuelsCompanyType" Multiplicity="0..1" />
+          <End Role="Company" Type="Self.Company" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_CompanyToCompanyType">
+          <End Role="CompanyType" Type="Self.CompanyType" Multiplicity="0..1" />
+          <End Role="Company" Type="Self.Company" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_MeetingListSourceUserCompanyId">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="MeetingListSourceUser" Type="Self.MeetingListSourceUser" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_MeetingListUserCompanyId">
+          <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+          <End Role="MeetingListUser" Type="Self.MeetingListUser" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_UserCompany_Company">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="UserCompany" Type="Self.UserCompany" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="UserCompany">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Group_GroupType">
+          <End Role="GroupType" Type="Self.GroupType" Multiplicity="0..1" />
+          <End Role="Group" Type="Self.Group" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_GroupAdmin_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="GroupAdmin" Type="Self.GroupAdmin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="GroupAdmin">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MeetingList_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="MeetingList" Type="Self.MeetingList" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_UserGroup_Group">
+          <End Role="Group" Type="Self.Group" Multiplicity="1" />
+          <End Role="UserGroup" Type="Self.UserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="UserGroup">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GroupAdmin_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="GroupAdmin" Type="Self.GroupAdmin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="GroupAdmin">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCompany_JobTitle">
+          <End Role="JobTitle" Type="Self.JobTitle" Multiplicity="0..1" />
+          <End Role="UserCompany" Type="Self.UserCompany" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_MeetingList_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="MeetingList" Type="Self.MeetingList" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_MeetingList_User_CreatedBy">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="MeetingList" Type="Self.MeetingList" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_MeetingListMeetingTypeId">
+          <End Role="MeetingType" Type="Self.MeetingType" Multiplicity="1" />
+          <End Role="MeetingList" Type="Self.MeetingList" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_MeetingListSourceUserMeetingListIdId">
+          <End Role="MeetingList" Type="Self.MeetingList" Multiplicity="1" />
+          <End Role="MeetingListSourceUser" Type="Self.MeetingListSourceUser" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_MeetingListUserMeetingListId">
+          <End Role="MeetingList" Type="Self.MeetingList" Multiplicity="1" />
+          <End Role="MeetingListUser" Type="Self.MeetingListUser" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_UserAddress_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserAddress" Type="Self.UserAddress" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserAddress">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCompany_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserCompany" Type="Self.UserCompany" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserCompany">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserGroup_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserGroup" Type="Self.UserGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserGroup">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserSponsor_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserSponsor" Type="Self.UserSponsor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="UserSponsor">
+              <PropertyRef Name="SponsorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GroupToGroupSubscriptions">
+          <End Role="Group" Type="Self.Group" Multiplicity="*" />
+          <End Role="Group1" Type="Self.Group" Multiplicity="*" />
+        </Association>
+        <Association Name="SponsorGroupUser">
+          <End Role="SponsorGroup" Type="Self.SponsorGroup" Multiplicity="*" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+        </Association>
+        <Association Name="UserMemberType">
+          <End Role="MemberType" Type="Self.MemberType" Multiplicity="*" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+        </Association>
+        <Association Name="UserToSponsorGroup">
+          <End Role="SponsorGroup" Type="Self.SponsorGroup" Multiplicity="*" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+        </Association>
+        <Association Name="X_CompanyFacility">
+          <End Role="Company" Type="Self.Company" Multiplicity="*" />
+          <End Role="Facility" Type="Self.Facility" Multiplicity="*" />
+        </Association>
+        <Association Name="UserIssue">
+          <End Role="Issue" Type="Self.Issue" Multiplicity="*" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="ATA_MembershipEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Activities" EntityType="Self.Activity" />
+          <EntitySet Name="Activity_ActivityTopic" EntityType="Self.Activity_ActivityTopic" />
+          <EntitySet Name="Activity_ActivityType" EntityType="Self.Activity_ActivityType" />
+          <EntitySet Name="ActivityTopics" EntityType="Self.ActivityTopic" />
+          <EntitySet Name="ActivityTypes" EntityType="Self.ActivityType" />
+          <EntitySet Name="Addresses" EntityType="Self.Address" />
+          <EntitySet Name="AddressTypes" EntityType="Self.AddressType" />
+          <EntitySet Name="Airports" EntityType="Self.Airport" />
+          <EntitySet Name="AppliesToSites" EntityType="Self.AppliesToSite" />
+          <EntitySet Name="Companies" EntityType="Self.Company" />
+          <EntitySet Name="CompanyCategories" EntityType="Self.CompanyCategory" />
+          <EntitySet Name="CompanyTypes" EntityType="Self.CompanyType" />
+          <EntitySet Name="Countries" EntityType="Self.Country" />
+          <EntitySet Name="EmailsOnlyManagedInLyris" EntityType="Self.EmailsOnlyManagedInLyri" />
+          <EntitySet Name="Facilities" EntityType="Self.Facility" />
+          <EntitySet Name="FuelsCompanyTypes" EntityType="Self.FuelsCompanyType" />
+          <EntitySet Name="Groups" EntityType="Self.Group" />
+          <EntitySet Name="GroupAdmins" EntityType="Self.GroupAdmin" />
+          <EntitySet Name="GroupTypes" EntityType="Self.GroupType" />
+          <EntitySet Name="Issues" EntityType="Self.Issue" />
+          <EntitySet Name="JobTitles" EntityType="Self.JobTitle" />
+          <EntitySet Name="MeetingGroups" EntityType="Self.MeetingGroup" />
+          <EntitySet Name="MeetingLists" EntityType="Self.MeetingList" />
+          <EntitySet Name="MeetingListSourceUsers" EntityType="Self.MeetingListSourceUser" />
+          <EntitySet Name="MeetingListUsers" EntityType="Self.MeetingListUser" />
+          <EntitySet Name="MeetingTypes" EntityType="Self.MeetingType" />
+          <EntitySet Name="MemberTypes" EntityType="Self.MemberType" />
+          <EntitySet Name="SponsorGroups" EntityType="Self.SponsorGroup" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="UserAddresses" EntityType="Self.UserAddress" />
+          <EntitySet Name="UserCompanies" EntityType="Self.UserCompany" />
+          <EntitySet Name="UserGroups" EntityType="Self.UserGroup" />
+          <EntitySet Name="UserSponsors" EntityType="Self.UserSponsor" />
+          <EntitySet Name="X_Report_Council_Taxonomy" EntityType="Self.X_Report_Council_Taxonomy" />
+          <EntitySet Name="X_Report_Council_Taxonomy_with_Roles" EntityType="Self.X_Report_Council_Taxonomy_with_Roles" />
+          <EntitySet Name="X_Report_Role_Mapping" EntityType="Self.X_Report_Role_Mapping" />
+          <EntitySet Name="CommitteeRoles" EntityType="Self.CommitteeRole" />
+          <EntitySet Name="GroupAdmin2" EntityType="Self.GroupAdmin2" />
+          <EntitySet Name="GroupAdmin3" EntityType="Self.GroupAdmin3" />
+          <EntitySet Name="UserGroup2" EntityType="Self.UserGroup2" />
+          <AssociationSet Name="FK_Activity_User" Association="Self.FK_Activity_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Activity" EntitySet="Activities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Activity_User1" Association="Self.FK_Activity_User1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Activity" EntitySet="Activities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Activity_User2" Association="Self.FK_Activity_User2">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Activity" EntitySet="Activities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Activity_User3" Association="Self.FK_Activity_User3">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Activity" EntitySet="Activities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActivityTopic_User" Association="Self.FK_ActivityTopic_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ActivityTopic" EntitySet="ActivityTopics" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActivityTopic_User1" Association="Self.FK_ActivityTopic_User1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ActivityTopic" EntitySet="ActivityTopics" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActivityType_User" Association="Self.FK_ActivityType_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ActivityType" EntitySet="ActivityTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ActivityType_User1" Association="Self.FK_ActivityType_User1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="ActivityType" EntitySet="ActivityTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAddress_Address" Association="Self.FK_UserAddress_Address">
+            <End Role="Address" EntitySet="Addresses" />
+            <End Role="UserAddress" EntitySet="UserAddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAddress_AddressType" Association="Self.FK_UserAddress_AddressType">
+            <End Role="AddressType" EntitySet="AddressTypes" />
+            <End Role="UserAddress" EntitySet="UserAddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Facility_Airport" Association="Self.FK_Facility_Airport">
+            <End Role="Airport" EntitySet="Airports" />
+            <End Role="Facility" EntitySet="Facilities" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Company_CompanyCategory" Association="Self.FK_Company_CompanyCategory">
+            <End Role="CompanyCategory" EntitySet="CompanyCategories" />
+            <End Role="Company" EntitySet="Companies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Company_FuelsCompanyTypeId" Association="Self.FK_Company_FuelsCompanyTypeId">
+            <End Role="FuelsCompanyType" EntitySet="FuelsCompanyTypes" />
+            <End Role="Company" EntitySet="Companies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompanyToCompanyType" Association="Self.FK_CompanyToCompanyType">
+            <End Role="CompanyType" EntitySet="CompanyTypes" />
+            <End Role="Company" EntitySet="Companies" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingListSourceUserCompanyId" Association="Self.fk_MeetingListSourceUserCompanyId">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="MeetingListSourceUser" EntitySet="MeetingListSourceUsers" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingListUserCompanyId" Association="Self.fk_MeetingListUserCompanyId">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="MeetingListUser" EntitySet="MeetingListUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCompany_Company" Association="Self.FK_UserCompany_Company">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="UserCompany" EntitySet="UserCompanies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Group_GroupType" Association="Self.FK_Group_GroupType">
+            <End Role="GroupType" EntitySet="GroupTypes" />
+            <End Role="Group" EntitySet="Groups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupAdmin_Group" Association="Self.FK_GroupAdmin_Group">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="GroupAdmin" EntitySet="GroupAdmins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MeetingList_Group" Association="Self.FK_MeetingList_Group">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="MeetingList" EntitySet="MeetingLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserGroup_Group" Association="Self.FK_UserGroup_Group">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="UserGroup" EntitySet="UserGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GroupAdmin_User" Association="Self.FK_GroupAdmin_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="GroupAdmin" EntitySet="GroupAdmins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCompany_JobTitle" Association="Self.FK_UserCompany_JobTitle">
+            <End Role="JobTitle" EntitySet="JobTitles" />
+            <End Role="UserCompany" EntitySet="UserCompanies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MeetingList_User" Association="Self.FK_MeetingList_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="MeetingList" EntitySet="MeetingLists" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MeetingList_User_CreatedBy" Association="Self.FK_MeetingList_User_CreatedBy">
+            <End Role="User" EntitySet="Users" />
+            <End Role="MeetingList" EntitySet="MeetingLists" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingListMeetingTypeId" Association="Self.fk_MeetingListMeetingTypeId">
+            <End Role="MeetingType" EntitySet="MeetingTypes" />
+            <End Role="MeetingList" EntitySet="MeetingLists" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingListSourceUserMeetingListIdId" Association="Self.fk_MeetingListSourceUserMeetingListIdId">
+            <End Role="MeetingList" EntitySet="MeetingLists" />
+            <End Role="MeetingListSourceUser" EntitySet="MeetingListSourceUsers" />
+          </AssociationSet>
+          <AssociationSet Name="fk_MeetingListUserMeetingListId" Association="Self.fk_MeetingListUserMeetingListId">
+            <End Role="MeetingList" EntitySet="MeetingLists" />
+            <End Role="MeetingListUser" EntitySet="MeetingListUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserAddress_User" Association="Self.FK_UserAddress_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserAddress" EntitySet="UserAddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCompany_User" Association="Self.FK_UserCompany_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserCompany" EntitySet="UserCompanies" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserGroup_User" Association="Self.FK_UserGroup_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserGroup" EntitySet="UserGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserSponsor_User" Association="Self.FK_UserSponsor_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="UserSponsor" EntitySet="UserSponsors" />
+          </AssociationSet>
+          <AssociationSet Name="GroupToGroupSubscriptions" Association="Self.GroupToGroupSubscriptions">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="Group1" EntitySet="Groups" />
+          </AssociationSet>
+          <AssociationSet Name="SponsorGroupUser" Association="Self.SponsorGroupUser">
+            <End Role="SponsorGroup" EntitySet="SponsorGroups" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="UserMemberType" Association="Self.UserMemberType">
+            <End Role="MemberType" EntitySet="MemberTypes" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="UserToSponsorGroup" Association="Self.UserToSponsorGroup">
+            <End Role="SponsorGroup" EntitySet="SponsorGroups" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="X_CompanyFacility" Association="Self.X_CompanyFacility">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="Facility" EntitySet="Facilities" />
+          </AssociationSet>
+          <AssociationSet Name="UserIssue" Association="Self.UserIssue">
+            <End Role="Issue" EntitySet="Issues" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ATA_MembershipModelStoreContainer" CdmEntityContainer="ATA_MembershipEntities">
+          <EntitySetMapping Name="Activities">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.Activity">
+              <MappingFragment StoreEntitySet="Activity">
+                <ScalarProperty Name="ActivityId" ColumnName="ActivityId" />
+                <ScalarProperty Name="ActivityDate" ColumnName="ActivityDate" />
+                <ScalarProperty Name="ActivitySubject" ColumnName="ActivitySubject" />
+                <ScalarProperty Name="ObjectiveId" ColumnName="ObjectiveId" />
+                <ScalarProperty Name="InitiativeId" ColumnName="InitiativeId" />
+                <ScalarProperty Name="Attachment1" ColumnName="Attachment1" />
+                <ScalarProperty Name="Attachment2" ColumnName="Attachment2" />
+                <ScalarProperty Name="Attachment3" ColumnName="Attachment3" />
+                <ScalarProperty Name="ActivityNotes" ColumnName="ActivityNotes" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Activity_ActivityTopic">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.Activity_ActivityTopic">
+              <MappingFragment StoreEntitySet="Activity_ActivityTopic">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ActivityId" ColumnName="ActivityId" />
+                <ScalarProperty Name="ActivityTopicId" ColumnName="ActivityTopicId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Activity_ActivityType">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.Activity_ActivityType">
+              <MappingFragment StoreEntitySet="Activity_ActivityType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ActivityId" ColumnName="ActivityId" />
+                <ScalarProperty Name="ActivityTypeId" ColumnName="ActivityTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ActivityTopics">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.ActivityTopic">
+              <MappingFragment StoreEntitySet="ActivityTopic">
+                <ScalarProperty Name="ActivityTopicId" ColumnName="ActivityTopicId" />
+                <ScalarProperty Name="ActivityTopicDescription" ColumnName="ActivityTopicDescription" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ActivityTypes">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.ActivityType">
+              <MappingFragment StoreEntitySet="ActivityType">
+                <ScalarProperty Name="ActivityTypeId" ColumnName="ActivityTypeId" />
+                <ScalarProperty Name="ActivityTypeDescription" ColumnName="ActivityTypeDescription" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Addresses">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.Address">
+              <MappingFragment StoreEntitySet="Address">
+                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+                <ScalarProperty Name="Address1" ColumnName="Address1" />
+                <ScalarProperty Name="Address2" ColumnName="Address2" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="Province" ColumnName="Province" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AddressTypes">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.AddressType">
+              <MappingFragment StoreEntitySet="AddressType">
+                <ScalarProperty Name="AddressTypeId" ColumnName="AddressTypeId" />
+                <ScalarProperty Name="AddressTypeDescription" ColumnName="AddressTypeDescription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Airports">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.Airport">
+              <MappingFragment StoreEntitySet="Airport">
+                <ScalarProperty Name="AirportId" ColumnName="AirportId" />
+                <ScalarProperty Name="AirportCode" ColumnName="AirportCode" />
+                <ScalarProperty Name="SPListItemUniqueId" ColumnName="SPListItemUniqueId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AppliesToSites">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.AppliesToSite">
+              <MappingFragment StoreEntitySet="AppliesToSite">
+                <ScalarProperty Name="AppliesToSiteId" ColumnName="AppliesToSiteId" />
+                <ScalarProperty Name="AppliesToSite1" ColumnName="AppliesToSite" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Companies">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.Company">
+              <MappingFragment StoreEntitySet="Company">
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+                <ScalarProperty Name="IsAirline" ColumnName="IsAirline" />
+                <ScalarProperty Name="SPListItemUniqueId" ColumnName="SPListItemUniqueId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CompanyCategories">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.CompanyCategory">
+              <MappingFragment StoreEntitySet="CompanyCategory">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CompanyTypes">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.CompanyType">
+              <MappingFragment StoreEntitySet="CompanyType">
+                <ScalarProperty Name="CompanyTypeId" ColumnName="CompanyTypeId" />
+                <ScalarProperty Name="Relationship" ColumnName="Relationship" />
+                <ScalarProperty Name="IsA4aMember" ColumnName="IsA4aMember" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Countries">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.Country">
+              <MappingFragment StoreEntitySet="Country">
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmailsOnlyManagedInLyris">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.EmailsOnlyManagedInLyri">
+              <MappingFragment StoreEntitySet="EmailsOnlyManagedInLyris">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Facilities">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.Facility">
+              <MappingFragment StoreEntitySet="Facility">
+                <ScalarProperty Name="FacilityId" ColumnName="FacilityId" />
+                <ScalarProperty Name="FacilityName" ColumnName="FacilityName" />
+                <ScalarProperty Name="SPListItemUniqueId" ColumnName="SPListItemUniqueId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FuelsCompanyTypes">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.FuelsCompanyType">
+              <MappingFragment StoreEntitySet="FuelsCompanyType">
+                <ScalarProperty Name="FuelsCompanyTypeId" ColumnName="FuelsCompanyTypeId" />
+                <ScalarProperty Name="FuelsCompanyTypeName" ColumnName="FuelsCompanyTypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Groups">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.Group">
+              <MappingFragment StoreEntitySet="Group">
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+                <ScalarProperty Name="IsOpenEnrollment" ColumnName="IsOpenEnrollment" />
+                <ScalarProperty Name="AppliesToSiteId" ColumnName="AppliesToSiteId" />
+                <ScalarProperty Name="LyrisListName" ColumnName="LyrisListName" />
+                <ScalarProperty Name="LyrisShortDescription" ColumnName="LyrisShortDescription" />
+                <ScalarProperty Name="LyrisListType" ColumnName="LyrisListType" />
+                <ScalarProperty Name="GroupSiteUrl" ColumnName="GroupSiteUrl" />
+                <ScalarProperty Name="IsCommittee" ColumnName="IsCommittee" />
+                <ScalarProperty Name="IsChildGroup" ColumnName="IsChildGroup" />
+                <ScalarProperty Name="ParentGroupId" ColumnName="ParentGroupId" />
+                <ScalarProperty Name="CouncilParentId" ColumnName="CouncilParentId" />
+                <ScalarProperty Name="IsSecurityGroup" ColumnName="IsSecurityGroup" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GroupAdmins">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.GroupAdmin">
+              <MappingFragment StoreEntitySet="GroupAdmin">
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="IsBounceAdmin" ColumnName="IsBounceAdmin" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GroupTypes">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.GroupType">
+              <MappingFragment StoreEntitySet="GroupType">
+                <ScalarProperty Name="GroupTypeId" ColumnName="GroupTypeId" />
+                <ScalarProperty Name="GroupTypeName" ColumnName="GroupTypeName" />
+                <ScalarProperty Name="IsCommitteeCategory" ColumnName="IsCommitteeCategory" />
+                <ScalarProperty Name="IsSecurityCategory" ColumnName="IsSecurityCategory" />
+                <ScalarProperty Name="IsDistributionCategory" ColumnName="IsDistributionCategory" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Issues">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.Issue">
+              <MappingFragment StoreEntitySet="Issue">
+                <ScalarProperty Name="IssueId" ColumnName="IssueId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="SPListItemUniqueId" ColumnName="SPListItemUniqueId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="JobTitles">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.JobTitle">
+              <MappingFragment StoreEntitySet="JobTitle">
+                <ScalarProperty Name="JobTitleId" ColumnName="JobTitleId" />
+                <ScalarProperty Name="JobTitleName" ColumnName="JobTitleName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MeetingGroups">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.MeetingGroup">
+              <MappingFragment StoreEntitySet="MeetingGroup">
+                <ScalarProperty Name="MeetingGroupId" ColumnName="MeetingGroupId" />
+                <ScalarProperty Name="MeetingGroupName" ColumnName="MeetingGroupName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MeetingLists">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.MeetingList">
+              <MappingFragment StoreEntitySet="MeetingList">
+                <ScalarProperty Name="MeetingListId" ColumnName="MeetingListId" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="MeetingName" ColumnName="MeetingName" />
+                <ScalarProperty Name="MeetingLocation" ColumnName="MeetingLocation" />
+                <ScalarProperty Name="MeetingPurpose" ColumnName="MeetingPurpose" />
+                <ScalarProperty Name="MeetingGroupId" ColumnName="MeetingGroupId" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="Modified" ColumnName="Modified" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MeetingListSourceUsers">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.MeetingListSourceUser">
+              <MappingFragment StoreEntitySet="MeetingListSourceUser">
+                <ScalarProperty Name="MeetingListSourceUserId" ColumnName="MeetingListSourceUserId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="CommitteeRoleId" ColumnName="CommitteeRoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MeetingListUsers">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.MeetingListUser">
+              <MappingFragment StoreEntitySet="MeetingListUser">
+                <ScalarProperty Name="MeetingListUserId" ColumnName="MeetingListUserId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="IsMainGroupUser" ColumnName="IsMainGroupUser" />
+                <ScalarProperty Name="IsA4AUser" ColumnName="IsA4AUser" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MeetingTypes">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.MeetingType">
+              <MappingFragment StoreEntitySet="MeetingType">
+                <ScalarProperty Name="MeetingTypeId" ColumnName="MeetingTypeId" />
+                <ScalarProperty Name="DisplayOrder" ColumnName="DisplayOrder" />
+                <ScalarProperty Name="MeetingTypeName" ColumnName="MeetingTypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MemberTypes">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.MemberType">
+              <MappingFragment StoreEntitySet="MemberType">
+                <ScalarProperty Name="MemberTypeId" ColumnName="MemberTypeId" />
+                <ScalarProperty Name="MemberTypeName" ColumnName="MemberTypeName" />
+                <ScalarProperty Name="AppliesToSiteId" ColumnName="AppliesToSiteId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SponsorGroups">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.SponsorGroup">
+              <MappingFragment StoreEntitySet="SponsorGroup">
+                <ScalarProperty Name="SponsorGroupId" ColumnName="SponsorGroupId" />
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="ReportsToId" ColumnName="ReportsToId" />
+                <ScalarProperty Name="Prefix" ColumnName="Prefix" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Suffix" ColumnName="Suffix" />
+                <ScalarProperty Name="PreferredName" ColumnName="PreferredName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Email2" ColumnName="Email2" />
+                <ScalarProperty Name="HomePhone" ColumnName="HomePhone" />
+                <ScalarProperty Name="OfficePhone" ColumnName="OfficePhone" />
+                <ScalarProperty Name="OfficePhoneExtension" ColumnName="OfficePhoneExtension" />
+                <ScalarProperty Name="MobilePhone" ColumnName="MobilePhone" />
+                <ScalarProperty Name="PrimaryFax" ColumnName="PrimaryFax" />
+                <ScalarProperty Name="TopicsOfInterest" ColumnName="TopicsOfInterest" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="CreateUserId" ColumnName="CreateUserId" />
+                <ScalarProperty Name="ExpirationDate" ColumnName="ExpirationDate" />
+                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+                <ScalarProperty Name="LastUpdatedUserId" ColumnName="LastUpdatedUserId" />
+                <ScalarProperty Name="IsActiveMB" ColumnName="IsActiveMB" />
+                <ScalarProperty Name="IsActiveFF" ColumnName="IsActiveFF" />
+                <ScalarProperty Name="IsATAStaff" ColumnName="IsATAStaff" />
+                <ScalarProperty Name="IsAcceptedLicense" ColumnName="IsAcceptedLicense" />
+                <ScalarProperty Name="IsPrivate" ColumnName="IsPrivate" />
+                <ScalarProperty Name="RequiresPasswordChange" ColumnName="RequiresPasswordChange" />
+                <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+                <ScalarProperty Name="LastMyProfileUpdate" ColumnName="LastMyProfileUpdate" />
+                <ScalarProperty Name="JobTitle" ColumnName="JobTitle" />
+                <ScalarProperty Name="WebPage" ColumnName="WebPage" />
+                <ScalarProperty Name="IsActiveContact" ColumnName="IsActiveContact" />
+                <ScalarProperty Name="Twitter" ColumnName="Twitter" />
+                <ScalarProperty Name="Facebook" ColumnName="Facebook" />
+                <ScalarProperty Name="LinkedIn" ColumnName="LinkedIn" />
+                <ScalarProperty Name="GooglePlus" ColumnName="GooglePlus" />
+                <ScalarProperty Name="Pinterest" ColumnName="Pinterest" />
+                <ScalarProperty Name="IsActiveSAS" ColumnName="IsActiveSAS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserAddresses">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.UserAddress">
+              <MappingFragment StoreEntitySet="UserAddress">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserCompanies">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.UserCompany">
+              <MappingFragment StoreEntitySet="UserCompany">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="Responsibilities" ColumnName="Responsibilities" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserGroups">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.UserGroup">
+              <MappingFragment StoreEntitySet="UserGroup">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="JobTitleId" ColumnName="JobTitleId" />
+                <ScalarProperty Name="PreferredEmailUserId" ColumnName="PreferredEmailUserId" />
+                <ScalarProperty Name="IsPreferredEmailPrimary" ColumnName="IsPreferredEmailPrimary" />
+                <ScalarProperty Name="CommitteeRoleId" ColumnName="CommitteeRoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserSponsors">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.UserSponsor">
+              <MappingFragment StoreEntitySet="UserSponsor">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="SponsorId" ColumnName="SponsorId" />
+                <ScalarProperty Name="IsPrimary" ColumnName="IsPrimary" />
+                <ScalarProperty Name="IsAddedAsSuperAdmin" ColumnName="IsAddedAsSuperAdmin" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="X_Report_Council_Taxonomy">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.X_Report_Council_Taxonomy">
+              <MappingFragment StoreEntitySet="X_Report_Council_Taxonomy">
+                <ScalarProperty Name="CommitteeID" ColumnName="CommitteeID" />
+                <ScalarProperty Name="Council" ColumnName="Council" />
+                <ScalarProperty Name="LyrisShortDescription" ColumnName="LyrisShortDescription" />
+                <ScalarProperty Name="Rank" ColumnName="Rank" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="X_Report_Council_Taxonomy_with_Roles">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.X_Report_Council_Taxonomy_with_Roles">
+              <MappingFragment StoreEntitySet="X_Report_Council_Taxonomy_with_Roles">
+                <ScalarProperty Name="Committee_ID" ColumnName="Committee_ID" />
+                <ScalarProperty Name="Council" ColumnName="Council" />
+                <ScalarProperty Name="LyrisShortDescription" ColumnName="LyrisShortDescription" />
+                <ScalarProperty Name="Rank" ColumnName="Rank" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="X_Report_Role_Mapping">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.X_Report_Role_Mapping">
+              <MappingFragment StoreEntitySet="X_Report_Role_Mapping">
+                <ScalarProperty Name="CommitteeRoleID" ColumnName="CommitteeRoleID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CommitteeRoles">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.CommitteeRole">
+              <MappingFragment StoreEntitySet="CommitteeRole">
+                <ScalarProperty Name="CommitteeRoleId" ColumnName="CommitteeRoleId" />
+                <ScalarProperty Name="CommitteeRoleName" ColumnName="CommitteeRoleName" />
+                <ScalarProperty Name="Sequence" ColumnName="Sequence" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GroupAdmin2">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.GroupAdmin2">
+              <MappingFragment StoreEntitySet="GroupAdmin2">
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="IsBounceAdmin" ColumnName="IsBounceAdmin" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GroupAdmin3">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.GroupAdmin3">
+              <MappingFragment StoreEntitySet="GroupAdmin3">
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="IsBounceAdmin" ColumnName="IsBounceAdmin" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserGroup2">
+            <EntityTypeMapping TypeName="ATA_MembershipModel.UserGroup2">
+              <MappingFragment StoreEntitySet="UserGroup2">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="JobTitleId" ColumnName="JobTitleId" />
+                <ScalarProperty Name="PreferredEmailUserId" ColumnName="PreferredEmailUserId" />
+                <ScalarProperty Name="IsPreferredEmailPrimary" ColumnName="IsPreferredEmailPrimary" />
+                <ScalarProperty Name="CommitteeRoleId" ColumnName="CommitteeRoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="FK_Activity_User" TypeName="ATA_MembershipModel.FK_Activity_User" StoreEntitySet="Activity">
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserId" ColumnName="ActivityUserId" />
+            </EndProperty>
+            <EndProperty Name="Activity">
+              <ScalarProperty Name="ActivityId" ColumnName="ActivityId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_Activity_User1" TypeName="ATA_MembershipModel.FK_Activity_User1" StoreEntitySet="Activity">
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserId" ColumnName="ActivityMediaContactId" />
+            </EndProperty>
+            <EndProperty Name="Activity">
+              <ScalarProperty Name="ActivityId" ColumnName="ActivityId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_Activity_User2" TypeName="ATA_MembershipModel.FK_Activity_User2" StoreEntitySet="Activity">
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserId" ColumnName="OnBehalfofUserId" />
+            </EndProperty>
+            <EndProperty Name="Activity">
+              <ScalarProperty Name="ActivityId" ColumnName="ActivityId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="OnBehalfofUserId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_Activity_User3" TypeName="ATA_MembershipModel.FK_Activity_User3" StoreEntitySet="Activity">
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserId" ColumnName="ModifiedUserId" />
+            </EndProperty>
+            <EndProperty Name="Activity">
+              <ScalarProperty Name="ActivityId" ColumnName="ActivityId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="ModifiedUserId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_ActivityTopic_User" TypeName="ATA_MembershipModel.FK_ActivityTopic_User" StoreEntitySet="ActivityTopic">
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserId" ColumnName="CreateUserId" />
+            </EndProperty>
+            <EndProperty Name="ActivityTopic">
+              <ScalarProperty Name="ActivityTopicId" ColumnName="ActivityTopicId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="CreateUserId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_ActivityTopic_User1" TypeName="ATA_MembershipModel.FK_ActivityTopic_User1" StoreEntitySet="ActivityTopic">
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserId" ColumnName="ModifiedUserId" />
+            </EndProperty>
+            <EndProperty Name="ActivityTopic">
+              <ScalarProperty Name="ActivityTopicId" ColumnName="ActivityTopicId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="ModifiedUserId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_ActivityType_User" TypeName="ATA_MembershipModel.FK_ActivityType_User" StoreEntitySet="ActivityType">
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserId" ColumnName="CreateUserId" />
+            </EndProperty>
+            <EndProperty Name="ActivityType">
+              <ScalarProperty Name="ActivityTypeId" ColumnName="ActivityTypeId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="CreateUserId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_ActivityType_User1" TypeName="ATA_MembershipModel.FK_ActivityType_User1" StoreEntitySet="ActivityType">
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserId" ColumnName="ModifiedUserId" />
+            </EndProperty>
+            <EndProperty Name="ActivityType">
+              <ScalarProperty Name="ActivityTypeId" ColumnName="ActivityTypeId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="ModifiedUserId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_UserAddress_AddressType" TypeName="ATA_MembershipModel.FK_UserAddress_AddressType" StoreEntitySet="UserAddress">
+            <EndProperty Name="AddressType">
+              <ScalarProperty Name="AddressTypeId" ColumnName="AddressTypeId" />
+            </EndProperty>
+            <EndProperty Name="UserAddress">
+              <ScalarProperty Name="UserId" ColumnName="UserId" />
+              <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_Facility_Airport" TypeName="ATA_MembershipModel.FK_Facility_Airport" StoreEntitySet="Facility">
+            <EndProperty Name="Airport">
+              <ScalarProperty Name="AirportId" ColumnName="AirportId" />
+            </EndProperty>
+            <EndProperty Name="Facility">
+              <ScalarProperty Name="FacilityId" ColumnName="FacilityId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="AirportId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_Company_CompanyCategory" TypeName="ATA_MembershipModel.FK_Company_CompanyCategory" StoreEntitySet="Company">
+            <EndProperty Name="CompanyCategory">
+              <ScalarProperty Name="ID" ColumnName="CompanyCategoryId" />
+            </EndProperty>
+            <EndProperty Name="Company">
+              <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="CompanyCategoryId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_Company_FuelsCompanyTypeId" TypeName="ATA_MembershipModel.FK_Company_FuelsCompanyTypeId" StoreEntitySet="Company">
+            <EndProperty Name="FuelsCompanyType">
+              <ScalarProperty Name="FuelsCompanyTypeId" ColumnName="FuelsCompanyTypeId" />
+            </EndProperty>
+            <EndProperty Name="Company">
+              <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="FuelsCompanyTypeId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_CompanyToCompanyType" TypeName="ATA_MembershipModel.FK_CompanyToCompanyType" StoreEntitySet="Company">
+            <EndProperty Name="CompanyType">
+              <ScalarProperty Name="CompanyTypeId" ColumnName="CompanyTypeId" />
+            </EndProperty>
+            <EndProperty Name="Company">
+              <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="CompanyTypeId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_MeetingListSourceUserCompanyId" TypeName="ATA_MembershipModel.fk_MeetingListSourceUserCompanyId" StoreEntitySet="MeetingListSourceUser">
+            <EndProperty Name="Company">
+              <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+            </EndProperty>
+            <EndProperty Name="MeetingListSourceUser">
+              <ScalarProperty Name="MeetingListSourceUserId" ColumnName="MeetingListSourceUserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_MeetingListUserCompanyId" TypeName="ATA_MembershipModel.fk_MeetingListUserCompanyId" StoreEntitySet="MeetingListUser">
+            <EndProperty Name="Company">
+              <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+            </EndProperty>
+            <EndProperty Name="MeetingListUser">
+              <ScalarProperty Name="MeetingListUserId" ColumnName="MeetingListUserId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="CompanyId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_Group_GroupType" TypeName="ATA_MembershipModel.FK_Group_GroupType" StoreEntitySet="Group">
+            <EndProperty Name="GroupType">
+              <ScalarProperty Name="GroupTypeId" ColumnName="GroupTypeId" />
+            </EndProperty>
+            <EndProperty Name="Group">
+              <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="GroupTypeId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_MeetingList_Group" TypeName="ATA_MembershipModel.FK_MeetingList_Group" StoreEntitySet="MeetingList">
+            <EndProperty Name="Group">
+              <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+            </EndProperty>
+            <EndProperty Name="MeetingList">
+              <ScalarProperty Name="MeetingListId" ColumnName="MeetingListId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_UserCompany_JobTitle" TypeName="ATA_MembershipModel.FK_UserCompany_JobTitle" StoreEntitySet="UserCompany">
+            <EndProperty Name="JobTitle">
+              <ScalarProperty Name="JobTitleId" ColumnName="JobTitleId" />
+            </EndProperty>
+            <EndProperty Name="UserCompany">
+              <ScalarProperty Name="UserId" ColumnName="UserId" />
+              <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="JobTitleId" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_MeetingList_User" TypeName="ATA_MembershipModel.FK_MeetingList_User" StoreEntitySet="MeetingList">
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserId" ColumnName="Modifiedby" />
+            </EndProperty>
+            <EndProperty Name="MeetingList">
+              <ScalarProperty Name="MeetingListId" ColumnName="MeetingListId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="Modifiedby" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="FK_MeetingList_User_CreatedBy" TypeName="ATA_MembershipModel.FK_MeetingList_User_CreatedBy" StoreEntitySet="MeetingList">
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserId" ColumnName="Createdby" />
+            </EndProperty>
+            <EndProperty Name="MeetingList">
+              <ScalarProperty Name="MeetingListId" ColumnName="MeetingListId" />
+            </EndProperty>
+            <Condition IsNull="false" ColumnName="Createdby" />
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_MeetingListMeetingTypeId" TypeName="ATA_MembershipModel.fk_MeetingListMeetingTypeId" StoreEntitySet="MeetingList">
+            <EndProperty Name="MeetingType">
+              <ScalarProperty Name="MeetingTypeId" ColumnName="MeetingTypeId" />
+            </EndProperty>
+            <EndProperty Name="MeetingList">
+              <ScalarProperty Name="MeetingListId" ColumnName="MeetingListId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_MeetingListSourceUserMeetingListIdId" TypeName="ATA_MembershipModel.fk_MeetingListSourceUserMeetingListIdId" StoreEntitySet="MeetingListSourceUser">
+            <EndProperty Name="MeetingList">
+              <ScalarProperty Name="MeetingListId" ColumnName="MeetingListId" />
+            </EndProperty>
+            <EndProperty Name="MeetingListSourceUser">
+              <ScalarProperty Name="MeetingListSourceUserId" ColumnName="MeetingListSourceUserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="fk_MeetingListUserMeetingListId" TypeName="ATA_MembershipModel.fk_MeetingListUserMeetingListId" StoreEntitySet="MeetingListUser">
+            <EndProperty Name="MeetingList">
+              <ScalarProperty Name="MeetingListId" ColumnName="MeetingListId" />
+            </EndProperty>
+            <EndProperty Name="MeetingListUser">
+              <ScalarProperty Name="MeetingListUserId" ColumnName="MeetingListUserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="GroupToGroupSubscriptions" TypeName="ATA_MembershipModel.GroupToGroupSubscriptions" StoreEntitySet="GroupToGroupSubscriptions">
+            <EndProperty Name="Group">
+              <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+            </EndProperty>
+            <EndProperty Name="Group1">
+              <ScalarProperty Name="GroupId" ColumnName="SubscribingGroupId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="SponsorGroupUser" TypeName="ATA_MembershipModel.SponsorGroupUser" StoreEntitySet="SponsorGroupUser">
+            <EndProperty Name="SponsorGroup">
+              <ScalarProperty Name="SponsorGroupId" ColumnName="SponsorGroupId" />
+            </EndProperty>
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserId" ColumnName="UserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserMemberType" TypeName="ATA_MembershipModel.UserMemberType" StoreEntitySet="UserMemberType">
+            <EndProperty Name="MemberType">
+              <ScalarProperty Name="MemberTypeId" ColumnName="MemberTypeId" />
+            </EndProperty>
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserId" ColumnName="UserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserToSponsorGroup" TypeName="ATA_MembershipModel.UserToSponsorGroup" StoreEntitySet="UserToSponsorGroup">
+            <EndProperty Name="SponsorGroup">
+              <ScalarProperty Name="SponsorGroupId" ColumnName="SponsorGroupId" />
+            </EndProperty>
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserId" ColumnName="UserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="X_CompanyFacility" TypeName="ATA_MembershipModel.X_CompanyFacility" StoreEntitySet="X_CompanyFacility">
+            <EndProperty Name="Company">
+              <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+            </EndProperty>
+            <EndProperty Name="Facility">
+              <ScalarProperty Name="FacilityId" ColumnName="FacilityId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="UserIssue" TypeName="ATA_MembershipModel.UserIssue" StoreEntitySet="UserIssue">
+            <EndProperty Name="Issue">
+              <ScalarProperty Name="IssueId" ColumnName="IssueId" />
+            </EndProperty>
+            <EndProperty Name="User">
+              <ScalarProperty Name="UserId" ColumnName="UserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="false" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

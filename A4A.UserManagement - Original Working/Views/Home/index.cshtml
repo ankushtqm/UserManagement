@@ -1,0 +1,215 @@
+﻿
+@{
+    ViewBag.Title = "index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+ <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-debug.js"></script>
+<script src="~/Scripts/knockout.validation.min.js"></script>
+<script src="~/KnockoutModels/UserRegisterViewModel.js"></script>
+@*<script src="https://use.fontawesome.com/d27d5a71df.js"></script>*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+@section heading{<h4 class="niceLabel-bold" id="Headtitle">A4A User Management Home</h4>}
+<style>
+    .preloader {
+        background: rgba(255,255,255,0.9);
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9998;
+        opacity: 1;
+        transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        -webkit-transition: all 0.5s ease-in-out;
+    }0
+
+        .preloader img {
+            position: fixed;
+            z-index: 9999;
+            top: 40%;
+            left: 45%;
+        }
+
+    .error {
+        color: #D8000C;
+        font-weight: bold;
+        border-color: red;
+    }
+
+    div.editable {
+        width: 100em;
+        height: 40em;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+    input 
+   {
+    max-width: 550px !important;
+}
+    .CommentBox {
+    width:400px;
+    height:50px;
+    //background-color: #A12A1E;
+    color:White;
+    margin:0 auto;
+}
+
+
+input[type="text"] {
+    margin:1em auto;
+    width:100%;
+} 
+table.dataTable thead th, table.dataTable thead td
+{
+    border:none;
+}
+table.no-footer.dataTable
+{
+    border:none;
+}
+</style>
+<div class="overlay">
+    <div id="loading-img"></div>
+</div> 
+<div id ="useroverlay" class="overlay">
+    <div id="loading-img"></div>
+</div> 
+<div id="groupoverlay" class="overlay">
+    <div id="loading-img"></div>
+</div> 
+<div class="row">
+<div class="col-lg-3">  </div>
+ <div class="col-lg-4">
+    <input type="text" id="search" class="form-control" onfocus="if (this.value == 'Type first or last name…') this.value = ''" value="Type first or last name…"  />    
+ </div>
+<div class="col-lg-5">  </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-sm-1">
+        <div id="divResults">
+            <span class="niceLabel-bold text-info"> Search Results for Users...</span>
+            <table id="tblUsers"  style="width: 80%;margin-left: 10px;">
+                <thead>
+                    <tr>
+                       <th> </th> 
+                    </tr>
+                </thead>               
+            </table>
+        </div>
+        </div> 
+</div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#search").keypress(function (e) {
+                var key = e.which;
+                if(key == 13)  // the enter key code
+                { 
+                    showUserResults($(this).val()); 
+                }
+            });
+
+            var showUserResults = function (str) { 
+                 $("#useroverlay").show();
+                 $.ajax({
+                     url: '/api/GetIsUserExisting/?term='+str,
+                     type: 'get',
+                     contentType: 'application/json',
+                     success: function (data) {
+                     var tablepre = $('#tblUsers').DataTable();
+                        tablepre.destroy();
+                        var table = $("#tblUsers").DataTable({
+                            "aaData": JSON.parse(data),
+                            "bDestroy": true,
+                            retrieve: true,
+                            "deferRender": true,
+                            bProcessing: true,
+                            "bInfo": false,
+                            "bLengthChange": false,
+                            bAutoWidth: false,
+                            "oLanguage": {
+                                "sEmptyTable": "No Users found!",
+                                "sSearch": "Narrow Search Results:"
+                            },
+                            aoColumns: [
+                              { mData: "Username" } 
+                            ]
+                            ,
+                            "aoColumnDefs": [
+                                {
+                                    "aTargets": [-1],
+                                    "mRender": function (data, type, full) {
+                                        if (full.IsActiveContact)
+                                            return '<a  class="text-success niceLabel bold active"  href="/user/show/?uid=' + full.userid + '" title="View User"> ' + full.FirstName + ',' + full.LastName + ' - ' + full.CompanyName + '</a>';
+                                            // +'<br/> Company: <span class="niceLabel">' + full.CompanyName + '</span><br/> Is Active: ' + (full.IsActiveContact ? "Yes" : "No") + ",      Created:" + (new Date(parseInt(full.CreateDate.substr(6)))).toDateString();
+                                        else
+                                            return '<a  class="text-danger niceLabel bold"  href="/user/show/?uid=' + full.userid + '" title="View User"> ' + full.FirstName + ',' + full.LastName + ' - ' + full.CompanyName + '</a>';
+                                            //  +'<br/> Company: <span class="niceLabel">' + full.CompanyName + '</span><br/> Is Active: ' + (full.IsActiveContact ? "Yes" : "No") + ",      Created:" + (new Date(parseInt(full.CreateDate.substr(6)))).toDateString();
+                                    }
+                                } 
+                            ], 
+                            "displayLength": 10 
+                        });
+                       // $('#tblUsers').DataTable().ajax.reload();
+                    },
+                    error: function (exception) {
+                        alert('Exception in get My Groups:' + exception.responseText);
+                    }
+
+
+                }).done(function (data) {
+                    setTimeout(function () { $("#useroverlay").fadeOut("slow"); }, 30);
+                });
+            }; 
+            var showGroupResults = function (str) {
+                $("#groupoverlay").show();
+                $.ajax({
+                    url: '/api/getgrouplist/?term=' + str,
+                    type: 'get',
+                    contentType: 'application/json',
+                    success: function (data) { 
+                        var tablepre = $('#tblGroups').DataTable();
+                        tablepre.destroy();
+                        var table = $("#tblGroups").DataTable({
+                            "aaData": JSON.parse(data),
+                            "bDestroy": true,
+                            retrieve: true,
+                            "deferRender": true,
+                            bProcessing: true,
+                            "bInfo": false,
+                            "bLengthChange": false,
+                            bAutoWidth: false,
+                            "oLanguage": {
+                                "sEmptyTable": "No Match found"
+                            },
+                            aoColumns: [
+                              { mData: "Username" }
+                            ]
+                            ,
+                            "aoColumnDefs": [
+                                {
+                                    "aTargets": [-1],
+                                    "mRender": function (data, type, full) {
+                                        return '<a  class="text-info niceLabel-bold"  href="/group/show/?gid=' + full.GroupId + '" title="View Group"> ' + full.GroupName + ' (' + full.GroupEmail + ')' + '</a>' +
+                                             '<br/> Liasion: <span class="niceLabel">' + full.Liaison + '</span><br/> Group Type: ' + full.GroupType + ",      Division: " + full.DivisionName + ", Department : " + full.DepartmentName;
+                                    }
+                                }
+                            ],
+                            "displayLength": 10
+                        }); 
+                    },
+                    error: function (exception) {
+                        alert('Exception in retreiving group results:' + exception.responseText);
+                    } 
+                }).done(function (data) {
+
+                    setTimeout(function () { $("#groupoverlay").fadeOut("slow"); }, 30);
+                });
+            };
+            
+           
+            $(".overlay").hide();
+        });
+    </script>

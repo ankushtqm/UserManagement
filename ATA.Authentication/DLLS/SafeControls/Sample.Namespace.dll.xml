@@ -1,0 +1,3 @@
+﻿<SafeControls>
+	<SafeControl Assembly="Sample.Namespace.dll" Namespace="Sample.Namespace.Controls" Safe="True" TypeName="*"/>
+</SafeControls>

@@ -1,0 +1,36 @@
+﻿<div class="TaskForceSubscriber" id="TaskForceSubscriber">
+    @*<div class="overlay">
+        <div id="loading-img"></div>
+    </div>*@
+    <p>You have selected <span data-bind='text: $data.selectedTskForUser().length'>&nbsp;</span> Subscribers</p> 
+    <span id="tskErrorMsg"  class="margin-topbot10 niceLabel bold" data-bind='text:errorMessage'></span><br/>
+    <span class="text-success niceLabel margin-topbot10 bold" data-bind="text: InfoMessage"></span>
+
+    <label for="tskGrpUser">Contact: </label>
+    <p>
+        <select id="inpGroupRole" class="form-control"
+                data-bind="options: Roles, optionsText: 'name', optionsValue: 'id', value:role,optionsCaption: 'Choose Role'"></select> 
+        <input type="text" class="chosen form-control" style="width:300px;" placeholder="Search Contacts"  id="tskGrpUser" data-bind="ko_autocomplete: { source: GetAllUsers, select: selectTskFrGroupUser ,minLength: 3 }" />
+        <a href='#' class='text-danger' data-bind="click: clearTaskGroupUser">Delete</a>
+    </p> 
+    <table class="table" data-bind='visible: $data.selectedTskForUser().length > 0'>
+        <thead>
+            <tr>
+                <th class="control-label">Name</th>
+                <th class="control-label">Company </th>
+                <th class="control-label">Role</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: $data.selectedTskForUser().sort(function(l,r) { return l.Name == r.Name ? 0 : (l.Name < r.Name ? -1 : 1)}) ">
+           <tr>
+                <td><span data-bind='text: Name'></span> </td>
+                <td><span data-bind='text: CompanyName'></span></td>
+                <td><span data-bind='text: role'></span></td>
+                <td><a href='#' data-bind='click: $parent.removeUMContacts'>Delete</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+ 

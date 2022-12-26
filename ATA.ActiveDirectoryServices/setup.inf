@@ -1,0 +1,20 @@
+;*** BEGIN **********************************************************
+;**                                                                **
+;** Automatically generated on: Wed Jul 08 08:39:37 2015           **
+;**                                                                **
+;** MakeCAB Version: 5.2.3790.0                     **
+;**                                                                **
+;*** BEGIN **********************************************************
+[disk list]
+1,Disk 1
+[cabinet list]
+1,1,ATA.ActiveDirectoryServices.wsp
+[file list]
+1,1,GAC\ATA.ActiveDirectoryServices.dll,34816
+1,1,SafeControls\Sample.Namespace.dll.xml,146
+1,1,manifest.xml,288
+;*** END ************************************************************
+;**                                                                **
+;** Automatically generated on: Wed Jul 08 08:39:37 2015           **
+;**                                                                **
+;*** END ************************************************************

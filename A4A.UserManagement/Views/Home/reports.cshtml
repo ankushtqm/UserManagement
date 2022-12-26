@@ -1,0 +1,118 @@
+﻿
+@{
+    ViewBag.Title = "index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+ <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-debug.js"></script>
+<script src="~/Scripts/knockout.validation.min.js"></script>
+<script src="~/KnockoutModels/UserRegisterViewModel.js"></script>
+@*<script src="https://use.fontawesome.com/d27d5a71df.js"></script>*@
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+@section heading{<h4 class="niceLabel-bold" id="Headtitle">Reports</h4>}
+<style>
+
+a { 
+  text-decoration:initial; /* no underline */
+  font-family: Helvetica, sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #0000EE;  
+}
+
+#divResults
+{
+    margin-left: 5em;
+}
+</style>
+<div class="overlay">
+    <div id="loading-img"></div>
+</div> 
+ 
+<div class="row ">
+    <div>
+        <div id="divResults"  > 
+            <h3 class="niceLabel-bold margin-bot20"> Council and Committee</h3>
+            <div class="col-lg-12 col-sm-12">
+                <a href="/Structure.pdf" class="" target="_blank">Structure</a>|
+                <a href="http://sql02/ReportServer/Pages/ReportViewer.aspx?%2fUser+Management%2fGroup%20Liaisons&rs:Command=Render&rs:Format=pdf" target="_blank">Liaisons </a>|
+                <a href="http://sql02/ReportServer/Pages/ReportViewer.aspx?%2fUser+Management%2fChair+Counts&rs:Command=Render&rs:Format=PDF" target="_blank">Chairs</a>
+            </div>    
+            <div class="col-lg-12 col-sm-12">
+                   <br/>
+                    <a href="http://sql02/ReportServer/Pages/ReportViewer.aspx?%2fUser+Management%2fParticipation&rs:Command=Render&rs:Format=pdf&Member=Air%20Canada" target="_blank">Air Canada</a> |
+                    <a href="http://sql02/ReportServer/Pages/ReportViewer.aspx?%2fUser+Management%2fParticipation&rs:Command=Render&rs:Format=pdf&Member=Alaska%20Airlines" target="_blank">Alaska</a> |
+                    <a href="http://sql02/ReportServer/Pages/ReportViewer.aspx?%2fUser+Management%2fParticipation&rs:Command=Render&rs:Format=pdf&Member=American%20Airlines" target="_blank">American </a>|
+                    <a href="http://sql02/ReportServer/Pages/ReportViewer.aspx?%2fUser+Management%2fParticipation&rs:Command=Render&rs:Format=pdf&Member=Atlas%20Air" target="_blank">Atlas</a> |
+                    <a href="http://sql02/ReportServer/Pages/ReportViewer.aspx?%2fUser+Management%2fParticipation&rs:Command=Render&rs:Format=pdf&Member=Delta%20Air%20Lines" target="_blank">Delta </a>|
+                    <a href="http://sql02/ReportServer/Pages/ReportViewer.aspx?%2fUser+Management%2fParticipation&rs:Command=Render&rs:Format=pdf&Member=FedEx" target="_blank">FedEx </a>| 
+                    <a href="http://sql02/ReportServer/Pages/ReportViewer.aspx?%2fUser+Management%2fParticipation&rs:Command=Render&rs:Format=pdf&Member=Hawaiian%20Airlines" target="_blank"> Hawaiian </a>|
+                    <a href="http://sql02/ReportServer/Pages/ReportViewer.aspx?%2fUser+Management%2fParticipation&rs:Command=Render&rs:Format=pdf&Member=JetBlue%20Airways" target="_blank">JetBlue </a>|
+                    <a href="http://sql02/ReportServer/Pages/ReportViewer.aspx?%2fUser+Management%2fParticipation&rs:Command=Render&rs:Format=pdf&Member=Southwest%20Airlines" target="_blank">Southwest</a> |
+                    <a href="http://sql02/ReportServer/Pages/ReportViewer.aspx?%2fUser+Management%2fParticipation&rs:Command=Render&rs:Format=pdf&Member=United%20Airlines" target="_blank">United</a> |
+                    <a href="http://sql02/ReportServer/Pages/ReportViewer.aspx?%2fUser+Management%2fParticipation&rs:Command=Render&rs:Format=pdf&Member=UPS" target="_blank">UPS </a>|
+                    <a href="http://sql02/ReportServer/Pages/ReportViewer.aspx?%2fUser+Management%2fParticipation&rs:Command=Render&rs:Format=pdf&Member=%25" target="_blank">All Members </a>|
+                    <a href="http://sql02/ReportServer/Pages/ReportViewer.aspx?%2fUser+Management%2fParticipation&rs:Command=Render&rs:Format=excel&Member=%25" target="_blank">All Excel</a>
+                    <br /><br />
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=347&GroupTypeid=1" target="_blank">Air Traffic Management Council</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=276&GroupTypeid=1" target="_blank">Airport Affairs Council</a><br />
+                    
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=542&GroupTypeid=1" target="_blank">Cargo Council</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=1082&GroupTypeid=1" target="_blank">Chief Legal Officer Council</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=735&GroupTypeid=1" target="_blank">Communications Council</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=264&GroupTypeid=1" target="_blank">Energy Council</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=488&GroupTypeid=1" target="_blank">Engineering, Maintenance & Materiel Council</a><br />
+
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=644&GroupTypeid=1" target="_blank">Environment Council</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=1120&GroupTypeid=7" target="_blank"> Government Affairs Council</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=766&GroupTypeid=1" target="_blank">Labor and Employment Council</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=378&GroupTypeid=1" target="_blank"> Operations Council</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=616&GroupTypeid=1" target="_blank"> Passenger Council</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=581&GroupTypeid=1" target="_blank"> Passenger Facilitation Council</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=323&GroupTypeid=1" target="_blank"> Safety Council</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=388&GroupTypeid=1" target="_blank">Security Council</a><br />
+
+                    <br /><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=0&GroupTypeid=1&GroupTypeid=2&GroupTypeid=7&GroupTypeid=8" target="_blank"> All Councils &amp; Committees</a><br />
+                </div>
+                <div class="col-lg-6 col-sm-6">
+
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=268&GroupTypeid=2" target="_blank">Airworthiness Committee</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=339&GroupTypeid=2" target="_blank">Cabin Ops Committee</a><br />
+
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=809&GroupTypeid=2" target="_blank">Corporate Compliance & Ethics Committee</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=585&GroupTypeid=2" target="_blank">Credit Committee</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=997&GroupTypeid=2" target="_blank">Electronic Flight Bag Committee</a><br />
+
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=360&GroupTypeid=2" target="_blank">Flight Safety Committee</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=655&GroupTypeid=2" target="_blank">Fuel Technical Committee</a><br />
+
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=310&GroupTypeid=2" target="_blank">Ground Safety Committee</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=335&GroupTypeid=2" target="_blank">Insurance Committee</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=302&GroupTypeid=2" target="_blank">International Affairs Committee</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=331&GroupTypeid=2" target="_blank">International Noise and Emissions Committee</a><br />
+
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=298&GroupTypeid=2" target="_blank">Litigation Committee</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=822&GroupTypeid=2" target="_blank">Maintenance Safety Committee</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=1013&GroupTypeid=2" target="_blank">Meteorology Committee</a><br />
+
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=1122&GroupTypeid=8" target="_blank"> State/Local Affairs Committee</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=369&GroupTypeid=2" target="_blank"> Tax Committee</a><br />
+                    <a href="http://sql02/ReportServer?%2fUser+Management%2fGroup+Report&rs:Command=Render&rs:Format=PDF&Division=0&Department=0&Liaison=0&Group=373&GroupTypeid=2" target="_blank"> Training Committee</a><br />
+                </div>
+                <table id="tblUsers" style="width: 80%;margin-left: 10px;">
+                    <thead>
+                        <tr>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+    </div> 
+</div>
+    <script type="text/javascript">
+        $(document).ready(function () { 
+        });
+    </script>

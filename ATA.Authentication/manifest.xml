@@ -1,0 +1,9 @@
+<Solution xmlns='http://schemas.microsoft.com/sharepoint/' SolutionId='8FFFCA74-C53F-490b-BEBE-735510B7097E'>
+    <Assemblies>
+        <Assembly DeploymentTarget='GlobalAssemblyCache' Location='GAC\ATA.Authentication.dll'>
+        </Assembly>
+    </Assemblies>
+    <FeatureManifests>
+        <FeatureManifest Location='ATA_Authentication\Feature.xml' />
+    </FeatureManifests>
+</Solution>

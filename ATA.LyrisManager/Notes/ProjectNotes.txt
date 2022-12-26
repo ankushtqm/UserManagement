@@ -1,0 +1,50 @@
+﻿select EmailAddr_,   List_, FullName_, IsListAdm_, RcvAdmMail_, NotifySubm_ from members_
+where List_ = 'aaa_deletme1'
+
+select top 100 List_,  EMailaddr_, NotifySubm_, RcvAdmMail_, NotifyErr_ from Members_
+ where IsListADm_ = 'T'  
+order by List_, EMailaddr_
+
+-- Currently for admins NotifyErr_ is always false
+--  NotifySubm_ is always true in testing but could be true or false in Production
+--  RcvAdmMail_ (Bounce Admin) could be true or false in Production
+
+http://www.lyris.com/help/lm_help/10.0/
+How many users are on list xxx  
+To determine how many users are subscribed to a particular list, simply query the members_table:   
+select count(*) from members_ where list_ = 'jazztalk' and MemberType_ = 'normal'  
+
+If you want to know the breakdown of members by type, on a list:  
+select MemberType_, count(*) from members_ where list_ = 'jazztalk' group by MemberType_
+
+Adding a member 
+
+The members_table stores a row for each list that the member has joined, so the same email address will appear multiple times in this table. 
+Most columns have defaults, so the minimum number of columns can be provided for an insert. 
+You must split the user name and domain portion of the email address prior to inserting a row into this table. 
+The UserNameLC_ field stores the user name in lower case, and the domain should always be in lower case. 
+The EmailAddr_ field stores the email address in mixed cases, and mustbe the same as the UserNameLC_ + @ + Domain_, ignoring case, or ListManager will not work properly. 
+Records can be inserted into the members_ table with a 'needs-' status, such as needs-confirm. 
+ListManager regularly polls new records into the members_ table to see if any of the new members need a hello, confirm, or goodbye document sent to them. 
+The check is only done regularly for new members, so updating an existing member to 'needs-hello', for example, will not cause an immediate document send. 
+Instead, during a nightly check this status change will be noticed and the document sent. 
+Members can be added or marked unsubscribed at any time in ListManager. 
+Postings which have been processed to the point that sending has started will not reflect changes made in subscriptions after that point. 
+So if a posting is created to ten people and it is processed to become an outmail record, when user number eleven is added to the list he/she is not automatically sent the posting, even if the job has not yet completed sending to all recipients.
+ 
+The MemberID_ field is an auto-numbering field, so should never be provided for insert statements.  
+insert into members_ ( EmailAddr_, UserNameLC_, Domain_, List_, MemberType_ ) 
+values ( 'GeorgeBush@example.com', 'georgebush', 'example.com', 'terrorist-watch-news', 'needs-confirm' )
+
+
+Direct Database File Access and ListManager 
+It is possible to directly manipulate the ListManager database...
+Programmers should feel free to work with the members_table. 
+Many companies want to be able to add or change the membership information in the members_ table dynamically, 
+and doing so generally should not cause problems. 
+Programmers are encouraged to import their membership data directly into the database server using the native tools provided by the database. 
+Using these tools results in import speeds of millions of records per hour, which is faster than any other method available through ListManager.  
+While ListManager is expecting users to add columns to the members_ table, it will very likely cause errors if existing columns/indexes are changed, or the schema is modified in other tables. 
+Developers interested in making demographic data available for mail merging or for the purpose of determining whom to send mail are encouraged to add columns to the members_ table or to a new table. ListManager has the easy ability to pull data from user-provided tables during the mail merge process.
+ 
+All tables are designed by Lyris for the purpose of making ListManager as fast and powerful as it is today. As the technology demands changes, any of the tables used by ListManager today may be changed in subsequent versions of ListManager, so application programmers need to keep this in mind. Lyris offers no guarantees that the schema used for one version of ListManager will be the same for another version.

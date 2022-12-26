@@ -1,0 +1,34 @@
+﻿<span class="text-left text-danger niceLabel italic margin-topbot10  bold"    data-bind="text:errorMessage()"></span>
+<br/>
+<p> 
+    <span class="bold" style="vertical-align:middle;">Company:</span>
+    <select id="inpGGACompanies" class="form-control"
+                data-bind="options: Companies, optionsText: 'name', optionsValue: 'id', value:company"></select>
+    <span class="bold " style="vertical-align:middle;">Role:</span>
+    <select id="inpGGAGroupRole" class="form-control"
+            data-bind="options: Roles, optionsText: 'name', optionsValue: 'id', value:role"></select>
+    <span class="bold " style="vertical-align:middle;">Choose User:</span>
+    <input type="text" class="chosen form-control" style="width:300px;" id="name-search"
+               data-bind="ko_autocomplete: { source: GetAllUsers, select: selectPrimAltUser4Company ,minLength: 3 }" /> 
+</p>
+<ul data-bind="foreach:  Companies">
+    <li>                      
+        <h2  class="text-justify text-info bold niceLabel"  data-bind="text:name"></h2>
+        <ul data-bind="foreach: $parent.people.index.CompanyName()[$data.name]">
+            <li><div class="row padding-10">
+                    <div class="col-lg-5">
+                         <span data-bind="text: Name"></span>
+                    </div>
+                    <div class="col-lg-2">
+                         <span class="niceLabel-default italic text-info" data-bind="text: Type"></span> 
+                    </div>
+                    <div class="col-lg-2"> 
+                         <a href="#" class="text-danger" data-bind="click:$parent.test">Delete</a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <hr />
+    </li>
+</ul>
+<br />

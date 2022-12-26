@@ -1,0 +1,46 @@
+﻿<style>
+    #grouptbody > tr > td:hover {
+        background-color: #eaeaea;
+    }
+</style>
+<div class="GroupMembership row" id="UserGroupMembership">
+    <fieldset id="grp-fieldset">
+        <Legend class="niceLabel-bold" style="color: #666;"><span class="niceLabel-bold">Group Membership</span></Legend>
+        <span class="col-sm-9 font-small  text-muted" style="padding-left:0px;">
+            <i>Member companies have access to all groups. Non-member companies have access to all groups except for council and committees</i>
+        </span>
+        <br />
+        <div id="divGMMEssage"></div>
+        <div class="text-danger niceLabel  bold " data-bind="html: ErrorMessageGM"></div><br />
+        <div class="text-success niceLabel bold" data-bind="html: InfoMessageGM"></div>
+        <p>
+            <input type="text" class="chosen form-control" style="width:300px;" id="usersGrps" data-bind="ko_autocomplete: { source: GetAllGroups, select: SelectGroupforUser ,minLength: 3 }" />
+            <button id="grpClearbtn" class="z-btn  btn btn-primary" data-bind='click: clearUserGroups'>Clear</button>
+            <select id="inpGroupRole" class="form-control" data-bind="options: Roles, optionsText: 'name', optionsValue: 'value', value:role ,optionsCaption: 'Choose Role'" style="margin-left:1rem;">
+            </select>
+            <button id="grpAddbtn" class="z-btn  btn btn-primary" data-bind='click: AddGroup, enable: Roles().length > 0' type='submit'>Add</button>
+        </p>
+        <table class="table" data-bind='visible: $data.UserGroups().length > 0'>
+            <thead>
+                <tr>
+                    <th class="control-label">Name</th>
+                    <th class="control-label">Liaison</th>
+                    <th class="control-label">GroupType</th>
+                    <th class="control-label">Role</th>
+                    <th class="control-label">Joined</th>
+                    <th class="control-label">Delete</th>
+                </tr>
+            </thead>
+            <tbody id="grouptbody" data-bind="foreach: $data.UserGroups()">
+                <tr>
+                    <td style="width:100px"><a data-bind="attr: { href:'/group/index/?gid='+ GroupId,target:'_blank' }"><span data-bind='text: GroupName'></span></a></td>
+                    <td style="width:100px"><span data-bind='text: Liaison'></span></td>
+                    <td style="width:100px"><span data-bind='text: GroupType'></span></td>
+                    <td style="width:100px"><span data-bind='text: Role'></span></td>
+                    <td style="width:100px"><span data-bind='text: TransactionDate'></span></td>
+                    <td style="width:100px"><a href='#' data-bind='click: $parent.removeUserGroup,visible:IsCurrentUserAdmin '>Delete</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </fieldset>
+</div>

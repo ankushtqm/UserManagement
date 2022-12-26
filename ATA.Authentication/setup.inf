@@ -1,0 +1,21 @@
+;*** BEGIN **********************************************************
+;**                                                                **
+;** Automatically generated on: Wed Jul 08 08:39:39 2015           **
+;**                                                                **
+;** MakeCAB Version: 5.2.3790.0                     **
+;**                                                                **
+;*** BEGIN **********************************************************
+[disk list]
+1,Disk 1
+[cabinet list]
+1,1,ATA.Authentication.wsp
+[file list]
+1,1,ATA_Authentication\Feature.xml,702
+1,1,GAC\ATA.Authentication.dll,59904
+1,1,SafeControls\Sample.Namespace.dll.xml,146
+1,1,manifest.xml,399
+;*** END ************************************************************
+;**                                                                **
+;** Automatically generated on: Wed Jul 08 08:39:39 2015           **
+;**                                                                **
+;*** END ************************************************************

@@ -1,0 +1,95 @@
+﻿@model IEnumerable<ATA.ObjectModel.ATAGroup>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.GroupName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsOpenEnrollment)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AppliesToSiteId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LyrisListName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LyrisShortDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LyrisListType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GroupSiteUrl)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsCommittee)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsChildGroup)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ParentGroupId)
+        </th> 
+        <th>
+            @Html.DisplayNameFor(model => model.IsSecurityGroup)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.GroupName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsOpenEnrollment)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AppliesToSiteId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LyrisListName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LyrisShortDescription)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LyrisListType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GroupSiteUrl)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsCommittee)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsChildGroup)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ParentGroupId)
+        </td>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.IsSecurityGroup)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.GroupId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.GroupId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.GroupId })
+        </td>
+    </tr>
+}
+
+</table>

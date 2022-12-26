@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<webParts>
+  <webPart xmlns="http://schemas.microsoft.com/WebPart/v3">
+    <metaData>
+      <type name="A4A.SharePoint16.Webparts.A4AGroupMission.A4AGroupMission, $SharePoint.Project.AssemblyFullName$" />
+      <importErrorMessage>$Resources:core,ImportErrorMessage;</importErrorMessage>
+    </metaData>
+    <data>
+      <properties>
+        <property name="Title" type="string">A4A Group Mission</property>
+        <property name="Description" type="string">Lists A4A group mission</property>
+        <property name="ChromeType" type="chrometype">TitleOnly</property>
+      </properties>
+    </data>
+  </webPart>
+</webParts>

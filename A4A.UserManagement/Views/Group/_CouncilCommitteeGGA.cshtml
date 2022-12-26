@@ -1,0 +1,32 @@
+﻿<span class="text-left text-danger niceLabel italic margin-topbot10  bold" data-bind="text:errorMessage()"></span>
+<span class="text-left text-success niceLabel italic margin-topbot10 bold" data-bind="text:infoMessage()"></span>
+<br />
+<p>
+    <span class="bold " style="vertical-align:middle;">Contact:</span>
+    <input type="text" class="chosen form-control" style="width:200px;" id="ggaUser" placeholder="Enter Username.." data-bind="ko_autocomplete: { source: GetAllUserWithCompany,select: selectPrimAltUser,minLength: 3 }" />
+    <a href='#' class='text-danger' data-bind="click: clearGGAUser" style="font-size:1em;">Delete</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="bold " style="vertical-align:middle;">Role:</span>
+    <select id="inpGGAGroupRole" class="form-control" data-bind="options: Roles, optionsText: 'name', optionsValue: 'id', value:role, event:{ change: selectPrimAltUser4Company}, optionsCaption: 'Choose Role'" style="width:180px;"></select>
+</p>
+<ul data-bind="foreach:Companies">
+    <li>
+        <h2 class="text-justify text-info bold niceLabel" data-bind="text:name"></h2>
+        <ul data-bind="foreach: $parent.people.index.CompanyName()[$data.name]">
+            <li style="margin-left:20px;">
+                <div class="row padding-4">
+                    <div class="col-lg-3">
+                        <input type="checkbox" name="EmailAdmin" data-bind="value:UserId, checked:EmailAdmin" onchange="EmailAdmin(this)"/>
+                        <span data-bind="text: Name"></span>
+                    </div>
+                    <div class="col-lg-1">
+                        <span class="niceLabel-default italic text-info" data-bind="text: Type"></span>
+                    </div>
+                    <div class="col-lg-1">
+                        <a href="#" class="text-danger btndelete" data-bind="click:$parents[1].removeCommitteePrimAlt">Delete</a>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <hr />
+    </li>
+</ul>
+<br />

@@ -1,0 +1,26 @@
+[
+  {
+    "outputFileName": "Content/Site.min.css",
+    "inputFiles": [
+      "Content/Site.css"
+    ]
+  },
+  {
+    "outputFileName": "Content/bootstrap.min.css",
+    "inputFiles": [
+      "Content/bootstrap.css"
+    ]
+  },
+  {
+    "outputFileName": "KnockoutModels/GroupRegisterViewModel.min.js",
+    "inputFiles": [
+      "KnockoutModels/GroupRegisterViewModel.js"
+    ]
+  },
+  {
+    "outputFileName": "KnockoutModels/UserRegisterViewModel.min.js",
+    "inputFiles": [
+      "KnockoutModels/UserRegisterViewModel.js"
+    ]
+  }
+]

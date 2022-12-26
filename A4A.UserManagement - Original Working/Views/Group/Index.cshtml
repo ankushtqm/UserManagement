@@ -1,0 +1,341 @@
+﻿@*@model ATA.ObjectModel.ATAGroup*@
+
+@{
+    ViewBag.Title = "Group Register";
+} 
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js"></script> 
+<script src="~/Scripts/knockout.validation.min.js"></script>
+<script src="~/KnockoutModels/GroupRegisterViewModel.min.js"></script> 
+  
+@section heading{<h4 class="niceLabel-bold" id="Headtitle">Create/Edit Group</h4>}
+<style>
+    .preloader {
+        background: rgba(255,255,255,0.9);
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9998;
+        opacity: 1;
+        transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        -webkit-transition: all 0.5s ease-in-out;
+    }
+    .preloader img {
+            position: fixed;
+            z-index: 9999;
+            top: 40%;
+            left: 45%;
+    }
+</style>
+<div class="preloader">
+    <div><img src="~/images/Preloader-2.gif" /></div>
+</div>
+<!-- Zozo Tabs Start-->
+<div id="tabbed-nav">
+    <!-- Tab Navigation Menu -->
+    <h2><i><span id="spGroupName" class="niceLabel right"></span></i></h2> 
+    <ul> 
+        <li id="z-tab0" data-link="1"><a>Group Type<span>Groups</span></a></li>
+        <li id="z-tab1" data-link="2"><a>Group Details<span>Group Main Details</span></a></li>
+        <li id="z-tab2" data-link="3"><a>A4A Staff <span>A4A Employee Lists</span></a></li>
+        <li id="z-tab3" data-link="4"><a>Council/Committee Members<span>Primary/Alt/Chair/Vice Chair</span></a></li>
+        <li id="z-tab7" data-link="5"><a>Council/Committee Unlimited Alternates<span>Primary/Alt/Chair/Vice Chair</span></a></li>
+        <li id="z-tab4" data-link="6"><a>Informational Members<span>Council and Committee Lists</span></a></li>
+        <li id="z-tab5" data-link="7"><a>Members/Non-members<span>Secuirty/Distribution</span></a></li>
+        <li id="z-tab6" data-link="8"><a>Taskforce,Work Groups, Industry & Networks <span>subscribe</span></a></li> 
+    </ul>
+    <!---data-disabled="true"-->
+    <!-- Content container -->
+    <div>
+        <!--TAB 0 -->
+        <div>
+            <div>
+                <h4 class="niceLabel-bold text-warning">Choose Group Type</h4>
+                <hr />
+                <select class="form-control" id="drpGroupType"> 
+                </select>
+                <label id="lblGroupType" class="niceLabel"></label>
+                <input type="hidden" id="hdnGroupTypeId" />
+                <input type="hidden" id="hdnSubscribeInformational" />
+                <input type="hidden" id="hdnGroupId" />
+                <input type="hidden" id="hdnBounceReport" />
+                <input type="hidden" id="hdnGroupName" />
+                <input type="hidden" id="hdnChairComp" />
+                <input type="hidden" id="hdnViceChairComp" />
+            </div> 
+        </div>
+        <!-- TAB 1 -->
+        <div>
+            <div data-bind="with: addGroupViewModel">
+                <span class="GroupTitle niceLabel-bold text-warning">Group Properties</span>
+                <hr />
+                @Html.Partial("_CreateGroup")
+            </div> 
+        </div>
+        <!--  TAB 2 -->
+        <div>
+            <div data-bind="with: addA4AStaffViewModel">
+                <span class="GroupTitle niceLabel-bold text-warning">A4A Staff</span>
+                <hr />
+                @Html.Partial("_A4AStaff")
+            </div>
+        </div>
+        <!--  TAB 3 -->
+        <div>
+            <span class="GroupTitle niceLabel-bold text-warning">Council/Committee Users</span>
+            <hr />
+            <div data-bind="with: UMSubscribeModel">
+                <span id="spnMessage" class="text-danger margin-topbot10 niceLabel bold"></span>
+                <span class="text-danger margin-topbot10 niceLabel  bold" data-bind='text: $data.errorMessage()'></span>
+                <br /><br />
+                <span class="bold" style="vertical-align:middle;">Chair:</span>
+                <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectChair ,minLength: 3 }" />
+                <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeChairGroupUser'>X</a>
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="bold" style="vertical-align:middle;">Vice Chair:</span>
+                <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupViceChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectViceChair ,minLength: 3 }" />
+                <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeViceChairGroupUser'>X</a>
+                <br /><br />
+            </div>
+            @Html.Partial("_CouncilCommittee")
+        </div>
+        <!--  TAB 7 -->
+        <div>
+            <span class="GroupTitle niceLabel-bold text-warning">Council/Committee Unlimited Alternates</span>
+            <hr />
+            <div data-bind="with: UMSubscribeModel">
+                <span id="spnMessage" class="text-success margin-topbot10 niceLabel"></span>
+                <br /><br />
+                <span class="bold" style="vertical-align:middle;">Chair:</span>
+                <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChairGGA" data-bind="ko_autocomplete: { source: getLanguages, select: selectChair ,minLength: 3 }" />
+                <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeChairGroupUser'>X</a>
+                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="bold" style="vertical-align:middle;">Vice Chair:</span>
+                <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupViceChairGGA" data-bind="ko_autocomplete: { source: getLanguages, select: selectViceChair ,minLength: 3 }" />
+                <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeViceChairGroupUser'>X</a>
+                <br /><br />
+            </div>
+            <div data-bind="with: addCouncilCommitteeGGA">
+
+                @Html.Partial("_CouncilCommitteeGGA")
+            </div>
+        </div>
+        <!-- TAB 4 -->
+        <div>
+            <span class="GroupTitle niceLabel-bold text-warning">Informational List Users</span>
+            <hr />
+            <div data-bind="with: UMSubscribeModel">
+                @Html.Partial("_MemberSubscribe")
+            </div>
+        </div>
+
+        <!-- TAB 5 -->
+        <div>
+            <span class="GroupTitle niceLabel-bold text-warning">Subscribe Users</span>
+            <hr />
+            <div data-bind="with: UMSubscribeModel">
+                @Html.Partial("_MemberSubscribe")
+            </div>
+        </div>
+
+        <!-- TAB 6 -->
+        <div>
+            <span class="GroupTitle niceLabel-bold text-warning">Task Force, Work Groups, Industry Groups & Networks </span>
+            <hr />
+            <div data-bind="with: addTaskForceWorkGroup">
+                @Html.Partial("_TaskforceWorkGroup")
+            </div>
+        </div>
+
+    </div>
+</div> 
+@section scripts {
+<script type="text/javascript">
+    $(document).ready(function () { 
+        /* jQuery activation and setting options for second tabs, enabling multiline*/
+       var tabbedNav = $("#tabbed-nav").zozoTabs({
+            position: "top-left",
+            theme: "blue",
+            shadows: true,
+            multiline: true, 
+            deeplinking: true,
+            orientation: "vertical",
+            size: "medium",
+            animation: {
+                easing: "easeInOutExpo",
+                duration: 500,
+                effects: "slideV"
+            }
+       }), disable = function (e) {
+           /*disable tab via given index*/ 
+           tabbedNav.data("zozoTabs").disable(getItem());
+       },
+         enableA4AStaff = function (e) { 
+             tabbedNav.data("zozoTabs").enable(1);
+             tabbedNav.data("zozoTabs").next(); 
+          },
+         enableInformational = function (e) { 
+             tabbedNav.data("zozoTabs").next(); 
+         },
+         next = function (e) {
+                tabbedNav.data("zozoTabs").next();
+            }; 
+       $(".enableA4AStaff").click(enableA4AStaff);
+       $(".disableTab").click(disable); 
+       $(".nextTab").click(next);
+       $(".enableInformational").click(enableInformational);
+        
+       var remove = function (e) {
+           tabbedNav.data("zozoTabs").remove(getItem());
+       } 
+       var isAdmin = false;
+       var checkIfEdit = function () { 
+           var gid = parseInt(getUrlParameter('gid'));
+           var tab = parseInt(getUrlParameter('tab')); 
+           var gtype = 0;
+           if (gid > 0) {
+               //Set GroupID
+               $('#hdnGroupId').val(gid);
+               var group = $.getJSON('/api/group/?gid=' + gid, function (data) {
+                   gtype = data.GroupTypeId;
+                   $('#hdnGroupTypeId').val(gtype); 
+                   if (gtype == '5' || gtype == '6') {
+                       $("#hdnSubscribeInformational").val(1);
+                   } else if (gtype == '1' || gtype == '2') {
+                       $("#hdnSubscribeInformational").val(2);
+                   }
+
+
+                   $("#Headtitle").html("Edit User Management Group");
+                   $(".GroupTitle").append("<br/> <span  class='spnGroupName niceLabel-black  margin-topbot10'>Group:" + data.GroupName + "</span");
+
+                   if (gid > 0 && gtype > 0) {
+                       if (tab > -1)
+                           GoToAptTabs(tab);
+                       else
+                           GoToAptTabs(1); 
+                       $('#z-tab0').hide();
+                       ShowAptTabs(gtype);
+                       groupRegisterViewModel.addA4AStaffViewModel.gId(gid);
+                       groupRegisterViewModel.UMSubscribeModel.gId(gid);
+                       groupRegisterViewModel.addTaskForceWorkGroup.gId(gid);
+                       councilCommitteeViewModel.gId = gid;
+                       groupRegisterViewModel.addCouncilCommitteeGGA.gId(gid);
+                       groupRegisterViewModel.addGroupViewModel.load(group);
+                       groupRegisterViewModel.addA4AStaffViewModel.load();
+                   }
+                   else {
+                       GoToAptTabs(1);
+                   }
+               });
+           }
+           setTimeout(function () { $(".preloader").fadeOut("slow"); }, 3000);
+       }
+       var getUrlParameter = function getUrlParameter(sParam) {
+           var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+               sURLVariables = sPageURL.split('&'), sParameterName, i;
+           for (i = 0; i < sURLVariables.length; i++) {
+               sParameterName = sURLVariables[i].split('=');
+               if (sParameterName[0] === sParam) {
+                   return sParameterName[1] === undefined ? true : sParameterName[1];
+               }
+           }
+       };
+       function isUserAdmin() {
+           //Bind GroupType options.
+           var group = $.getJSON('/api/getGroupType', function (data) {
+               var count = 0;
+               var keyo = 0;
+               var result = JSON.parse(data);
+               $('#drpGroupType').append($('<option>', { value: 0 }).text("Choose Group Type..."));
+               $.each(result, function (key, value) {
+                   count++;
+                   keyo = value.GroupTypeId;
+                   $('#drpGroupType').append($('<option>', { value: value.GroupTypeId })
+                        .text(value.GroupTypeName));
+               });
+               if (count == 1) {
+                   ShowAptTabs(keyo);
+                   GoToAptTabs(1);
+               }
+           }).done(function () {
+               checkIfEdit();
+           });
+       } 
+       isUserAdmin();           
+       $('#drpGroupType').on('change', function () {
+           /*disable tab via given index*/
+           $(".preloader").show();
+           ShowAptTabs(this.value);
+           GoToAptTabs(1); 
+       });
+       function GoToAptTabs(tab)
+       { 
+           tabbedNav.data("zozoTabs").select(tab);
+       } 
+       function ShowAptTabs(grouptypeid)
+       {
+           var txt = $("#drpGroupType option[value='" + grouptypeid + "']").text();
+           $("#lblGroupType").text(txt); 
+           $("#drpGroupType").hide(); 
+           var value = grouptypeid;
+           var gid = parseInt(getUrlParameter('gid')); 
+           if (value == '1' || value == '2')
+           {
+               $('#overlayHome').show();
+               $('#z-tab5').hide();
+               $('#z-tab6').hide();
+               $('#z-tab7').hide(); //CouncilCommitee GGA
+               $("#hdnSubscribeInformational").val(2);// 2 means informational - For Council/Committee
+               if (gid > 0) {
+                   groupRegisterViewModel.UMSubscribeModel.load(gid,5); //load tsk group //5 is for Informational roleid
+               }
+               $('#overlayHome').hide(); 
+           }
+           else if (value == '3')
+           {
+               $("#hdnSubscribeInformational").val(0);// 0 means no sub/info tab 
+               $('#z-tab3').hide();
+               $('#z-tab4').hide();
+               $('#z-tab5').hide();
+               $('#z-tab7').hide(); //CouncilCommitee GGA
+               if (gid > 0) {
+                   groupRegisterViewModel.addTaskForceWorkGroup.load(gid); //load tsk group
+               }
+           }
+           else if (value == '5' || value == '6') {
+               $("#hdnSubscribeInformational").val(1);// 1 means subscribe/Security and Distribution Group
+               $('#z-tab3').hide();
+               $('#z-tab4').hide();
+               $('#z-tab6').hide();
+               $('#z-tab7').hide(); //CouncilCommitee GGA
+               if (value == 6) //Requirment was to disable Group Url for distribution groups
+               {
+                   $("#inpGroupSiteUrl").prop("disabled", true).css("background-color", "lightgrey");
+               }
+               if (gid > 0) {
+                   groupRegisterViewModel.UMSubscribeModel.load(gid, 12); //load tsk group //12 is for subscribe roleid 
+               }
+           }
+           if (value == '7') {
+               $('#overlayHome').show();
+               $('#z-tab3').hide();
+               $('#z-tab5').hide();
+               $('#z-tab6').hide();
+               $("#hdnSubscribeInformational").val(2);// 2 means informational - For Council/Committee
+               if (gid > 0) { 
+                   groupRegisterViewModel.UMSubscribeModel.load(gid, 5); //load tsk group //5 is for Informational roleid                   
+                   groupRegisterViewModel.addCouncilCommitteeGGA.load(gid, 5); //load Council committee for GGA
+               }
+               $('#overlayHome').hide();
+           }
+           groupRegisterViewModel.addGroupViewModel.GroupTypeId(grouptypeid); 
+           $("#inpGroupType").val(txt);
+           groupRegisterViewModel.UMSubscribeModel.SorI = $("#hdnSubscribeInformational").val();// 2 means informational;
+           $('#z-tab0').hide();
+           setTimeout(function () { $(".preloader").fadeOut("slow"); }, 60);
+       } 
+    });
+</script>
+ }

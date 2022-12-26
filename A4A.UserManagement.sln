@@ -1,0 +1,85 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2000
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A4A.UM", "A4A.UserManagement\A4A.UM.csproj", "{433C5454-E9F0-4A27-9C40-F932EEA037E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATA.CodeLibrary", "ATA.CodeLibrary\ATA.CodeLibrary.csproj", "{0A6D9586-DE36-4427-B46E-C46B169EAE7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATA.ActiveDirectoryServices", "ATA.ActiveDirectoryServices\ATA.ActiveDirectoryServices.csproj", "{A38A3C57-7FD8-45D9-A70A-A017CCDA90D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATA.LyrisProxy", "ATA.LyrisManager\ATA.LyrisProxy.csproj", "{2736FAAF-B103-4854-A735-B1298A5F3AFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATA.Member.Util", "ATA.Member.Util\ATA.Member.Util.csproj", "{09C5E912-7F85-4982-9742-2238C5CF0494}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATA.Authentication", "ATA.Authentication\ATA.Authentication.csproj", "{54F298C0-EA01-4818-A6AA-F5AC7E28E01B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A4A.UMTests", "A4A.UMTests\A4A.UMTests.csproj", "{3D9CC208-88C2-434A-A19F-9AD306B3D7FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A4A.UMShowdifference", "UMShowdifference\A4A.UMShowdifference.csproj", "{0DFF1246-70C1-4C63-A476-76E9EB11A9B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ATA.LyrisProxyUpgraded", "ATA.LyrisManagerUpgraded\ATA.LyrisProxyUpgraded.csproj", "{1ADF16B9-D301-4A2D-ACDC-179FF4F975D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A4A.SharePoint16.Webparts", "A4A.SharePoint16.Webparts\A4A.SharePoint16.Webparts.csproj", "{468A1D9B-BEEB-45FE-AF4E-271390DC78B0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{433C5454-E9F0-4A27-9C40-F932EEA037E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{433C5454-E9F0-4A27-9C40-F932EEA037E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{433C5454-E9F0-4A27-9C40-F932EEA037E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{433C5454-E9F0-4A27-9C40-F932EEA037E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A6D9586-DE36-4427-B46E-C46B169EAE7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A6D9586-DE36-4427-B46E-C46B169EAE7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A6D9586-DE36-4427-B46E-C46B169EAE7D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{0A6D9586-DE36-4427-B46E-C46B169EAE7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A6D9586-DE36-4427-B46E-C46B169EAE7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A38A3C57-7FD8-45D9-A70A-A017CCDA90D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A38A3C57-7FD8-45D9-A70A-A017CCDA90D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A38A3C57-7FD8-45D9-A70A-A017CCDA90D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A38A3C57-7FD8-45D9-A70A-A017CCDA90D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2736FAAF-B103-4854-A735-B1298A5F3AFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2736FAAF-B103-4854-A735-B1298A5F3AFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2736FAAF-B103-4854-A735-B1298A5F3AFE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{2736FAAF-B103-4854-A735-B1298A5F3AFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2736FAAF-B103-4854-A735-B1298A5F3AFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09C5E912-7F85-4982-9742-2238C5CF0494}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09C5E912-7F85-4982-9742-2238C5CF0494}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09C5E912-7F85-4982-9742-2238C5CF0494}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09C5E912-7F85-4982-9742-2238C5CF0494}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54F298C0-EA01-4818-A6AA-F5AC7E28E01B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54F298C0-EA01-4818-A6AA-F5AC7E28E01B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54F298C0-EA01-4818-A6AA-F5AC7E28E01B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{54F298C0-EA01-4818-A6AA-F5AC7E28E01B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54F298C0-EA01-4818-A6AA-F5AC7E28E01B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D9CC208-88C2-434A-A19F-9AD306B3D7FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D9CC208-88C2-434A-A19F-9AD306B3D7FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D9CC208-88C2-434A-A19F-9AD306B3D7FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D9CC208-88C2-434A-A19F-9AD306B3D7FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DFF1246-70C1-4C63-A476-76E9EB11A9B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DFF1246-70C1-4C63-A476-76E9EB11A9B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DFF1246-70C1-4C63-A476-76E9EB11A9B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DFF1246-70C1-4C63-A476-76E9EB11A9B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1ADF16B9-D301-4A2D-ACDC-179FF4F975D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ADF16B9-D301-4A2D-ACDC-179FF4F975D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ADF16B9-D301-4A2D-ACDC-179FF4F975D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ADF16B9-D301-4A2D-ACDC-179FF4F975D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{468A1D9B-BEEB-45FE-AF4E-271390DC78B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{468A1D9B-BEEB-45FE-AF4E-271390DC78B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{468A1D9B-BEEB-45FE-AF4E-271390DC78B0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{468A1D9B-BEEB-45FE-AF4E-271390DC78B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{468A1D9B-BEEB-45FE-AF4E-271390DC78B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{468A1D9B-BEEB-45FE-AF4E-271390DC78B0}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {032A0B84-0164-46E9-A727-F4016917E29A}
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Data.6.0.1304.0\lib\NET45
+	EndGlobalSection
+EndGlobal

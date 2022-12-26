@@ -1,0 +1,210 @@
+﻿<br /><br />
+<div class="fleft">
+    <input type="button" id="btnAddGroupTop" class="btn btn-primary" value="Save User Details" data-bind="click: SaveUser" />
+</div>
+<br /><br />
+<p class="row">
+    The user's email address will be used as their username. They will have the ability
+    to change their contact email address later, however their username will always
+    remain the same. If they wish to change their username, a new user must be created.
+</p>
+<input type="button" id="btnInactive" class="btn btn-primary" value="Remove" data-bind='visible:removebtn(),click: InActivateUser' /> 
+<form id="A4AUserProperties" role="form" class="form-horizontal">
+    <div class="overlay">
+        <div id="loading-img"></div>
+    </div>
+    <div class="text-danger niceLabel" data-bind="visible: ShowErr, text: 'Please fix all errors before submitting!'"></div><br />
+    <div class="text-danger niceLabel  bold " data-bind="html: ErrorMessage"></div>    
+    <div class="text-success niceLabel bold" data-bind="html: InfoMessage"></div>
+    <br /> 
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="form-group">
+                <span class="niceLabel col-sm-3 bold">Email:<span class="text-danger">*</span></span>
+                <input id="inpEmail" class="form-control" type="text" data-rel="none" data-bind="value: UserName,css:{'error':ShowErr}, valueUpdate: 'afterkeydown'" />
+                <span class="validation-error" data-bind="validationMessage:  $data.UserName "></span>
+                <br /><span class="font-small  text-muted"> <i> Must Contain "&#64;". Email addresses ending in 'airlines.org' are not allowed.</i></span>
+           </div>
+           <div class="form-group" style="margin-bottom:0px;"> 
+                    <span class="niceLabel col-sm-3 bold">Company:<span class="text-danger">*</span></span>
+                    <input type="text" data-rel="none" class="chosen form-control col-sm-9" style="width:300px;" id="txtCompanyName"
+                           data-bind="ko_autocomplete: { source: getCompany, select: selectedCompany ,minLength: 3 },css:{'error':ShowErr}" />
+                    <span class="validation-error" data-bind="validationMessage:  $data.CompanyName "></span>
+                    <a id="hypCreateNewCompany" target="_blank"  href="http://fuelportal.airlines.org/_layouts/15/A4A.UMtoFPAddCompany/AddCompany.aspx">Create A New Company</a>
+                    <span id="spnCompanyName" class="niceLabel" data-bind="visible:showCompanyLabel,text: CompanyName"></span>  
+           </div>  
+            <div class="form-group">
+                <span class="col-sm-3"></span>
+                <span class="col-sm-9 font-small  text-muted" style="padding-left:0px;" data-bind="visible:!showCompanyLabel()">
+                    <i>Member companies have access to all groups. Non-member companies have access to all groups except for council and committees</i>
+                </span> 
+            </div>
+            <div class="form-group">
+                <span class="niceLabel col-sm-3 bold">First Name:<span class="text-danger">*</span></span>
+                <input id="inpFirstname" class="form-control" type="text" data-rel="none" data-bind="value: FirstName,css:{'error':ShowErr}, valueUpdate: 'afterkeydown'" />
+                <span class="validation-error" data-bind="validationMessage:  $data.FirstName "></span>
+            </div>
+            <div class="form-group">
+                <span class="niceLabel col-sm-3 bold">Last Name:<span class="text-danger">*</span></span>
+                <input id="inpLastname" class="form-control" type="text" data-rel="none" data-bind="value: LastName,css:{'error':ShowErr}, valueUpdate: 'afterkeydown'" /> 
+                <span class="validation-error" data-bind="validationMessage:  $data.LastName "></span>                
+            </div>
+            <div class="form-group">
+                <label for="inpJobTitle" class="niceLabel col-sm-3">Job Title:</label>
+                <input id="inpJobTitle" class="form-control" type="text" data-rel="none" data-bind="value: JobTitle,css:{'error':ShowErr}, valueUpdate: 'afterkeydown'" />
+            </div>
+            <div class="form-group">
+                <label for="inpHomePhone" class="niceLabel col-sm-3">Home Phone:</label>
+                <input id="inpHomePhone" type="text" data-rel="none" class="form-control" data-bind="value:HomePhone" /><span class="validation-error" data-bind="validationMessage:  $data.HomePhone "></span>
+                <br /><span class="font-small  text-muted"><i>Enter only digits</i></span>
+                
+            </div>
+            <div class="form-group">
+                <label for="inpOfficePhone" class="niceLabel col-sm-3">Office Phone:</label>
+                <input id="inpOfficePhone" type="text" data-rel="none" class="form-control" data-bind="value:OfficePhone" />
+                <label for="inpOfficePhoneExt" class="niceLabel">Ext:</label>
+                <input id="inpOfficePhoneExt" type="text" data-rel="none" class="form-control" data-bind="value:OfficePhoneExtension" style="width: 110px;" />
+                <span class="validation-error" data-bind="validationMessage:  $data.OfficePhone "></span>
+                <span class="validation-error" data-bind="validationMessage:  $data.OfficePhoneExtension "></span>
+                <br /><span class="font-small  text-muted"><i>Enter only digits</i></span> 
+            </div>
+            <div class="form-group">
+                 <label for="inpOfficePhone" class="niceLabel col-sm-3">Mobile Phone:</label>
+                 <input id="inpOfficePhone" type="text" data-rel="none" class="form-control" data-bind="value:MobilePhone" />
+                 <span class="validation-error" data-bind="validationMessage:  $data.MobilePhone "></span>
+                 <br /><span class="font-small  text-muted"><i>Enter only digits</i></span>                 
+            </div>
+            <div class="form-group">
+                 <label for="inpFax" class="niceLabel col-sm-3">Fax:</label>
+                 <input id="inpFax" type="text" data-rel="none" class="form-control" data-bind="value:PrimaryFax" />
+                 <span class="validation-error" data-bind="validationMessage:  $data.PrimaryFax "></span> 
+                 <br />
+                 <span class="font-small  text-muted"><i>Enter only digits</i></span>                
+            </div>
+            <div class="form-group">
+                 <label for="inpWebPage" class="niceLabel col-sm-3">Web Page:</label>
+                 <input id="inpFax" type="text" data-rel="none" class="form-control" data-bind="value:WebPage" />
+                 <span class="validation-error" data-bind="validationMessage:  $data.WebPage "></span>
+                 <br /><span class="font-small  text-muted"><i>Ex: http://www.airlines.org</i></span>                 
+            </div>
+            <div class="form-group">
+                 <label for="inpTwitter" class="niceLabel col-sm-3">Twitter:</label>
+                 <input id="inpTwitter" type="text" data-rel="none" class="form-control" data-bind="value:Twitter" />
+            </div>
+            <div class="form-group">
+                 <label for="inpFacebook" class="niceLabel col-sm-3">Facebook:</label>
+                 <input id="inpFacebook" type="text" data-rel="none" class="form-control" data-bind="value:Facebook" />
+            </div>
+            <div class="form-group">
+                 <label for="inpLinkedIn" class="niceLabel col-sm-3">LinkedIn:</label>
+                 <input id="inpLinkedIn" type="text" data-rel="none" class="form-control" data-bind="value:LinkedIn" />
+            </div>
+            <div class="form-group">
+                 <label for="inpGooglePlus" class="niceLabel col-sm-3">Google+:</label>
+                 <input id="inpGooglePlus" type="text" data-rel="none" class="form-control" data-bind="value:GooglePlus" />
+            </div>
+            <div class="form-group">
+                 <label for="inpPinterest" class="niceLabel col-sm-3">Pinterest:</label>
+                 <input id="inpPinterest" type="text" data-rel="none" class="form-control" data-bind="value:Pinterest" />
+            </div>
+         </div> 
+        <div class="col-lg-4"> 
+            <fieldset>
+                <legend class="niceLabel-bold text-warning">Site Access</legend>  
+                <div style="padding-bottom: 0.8em;" data-bind="visible:!isNew()">
+                    <span style="font-weight: bold;" class="niceLabel text-warning">Active Contact</span> <a id="opener"><img src="~/images/Help-icon.png" style="height: 17px;" /></a>
+                    <br />
+                    <label for="chkActiveContact" class="niceLabel">Is Active Contact:</label>
+                    <input ID="chkActiveContact" type="checkbox" data-bind="checked: IsActiveContact,enable: $data.UserGroups().length < 1" style="width: 17px;" /> 
+                </div>
+                <div id="dlgActiveContact" title="Active Contact">
+                    <p>
+                        <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+                        It will take up to 48 hours for this contact to appear in the global address book in Outlook and any mobile devices.
+                        This contact will be available for any distribution list you assign as soon as you complete this form.
+                    </p>
+                    <p>
+                        This contact will be available for any distribution list you assign as soon as you complete this form.
+                    </p>
+                </div> 
+                <div class="form-group"  data-bind="visible: isEconUser">
+                    <label for="FuelPortal" class="niceLabel col-sm-6">Fuel Portal:</label>
+                    <input type="radio" name="FuelPortal" value="Yes" data-bind="checked: rdoFuel, enable: IsActiveContact" /> Yes
+                    <input type="radio" name="FuelPortal" value="No" data-bind="checked: rdoFuel, enable: IsActiveContact" /> No
+                </div>
+                <div class="form-group" >
+                    <label for="MemberPortal" class="niceLabel col-sm-6">Member Portal:</label>
+                    <input type="radio" name="MemberPortal" id="rdoMembers" value="Yes" data-bind="checked: rdoMembers, enable:(IsActiveContact()&&(!isMemberCompany()))" /> Yes
+                    <input type="radio" name="MemberPortal" id="rdoMembers" value="No" data-bind="checked: rdoMembers, enable:(IsActiveContact()&&(!isMemberCompany()))" /> No
+                    <div class="text-success niceLabel bold" data-bind="html: InfoMessageMembers"></div> 
+                </div>
+                <div class="form-group"  data-bind="visible: isEconUser">
+                    <label for="SAS" class="niceLabel col-sm-6">SAS:</label>
+                    <input type="radio" name="SAS" value="Yes" data-bind="checked: rdoSAS, enable: IsActiveContact" /> Yes
+                    <input type="radio" name="SAS" value="No" data-bind="checked: rdoSAS, enable: IsActiveContact" /> No
+                </div>                
+                <div style="padding-bottom: 0.8em;" data-bind="visible:!isNew()">
+                    <span style="font-weight: bold;" class="niceLabel text-warning">Password</span>
+                    <br />
+                    <input id="inpPassword" type="text" data-rel="none" class="form-control" data-bind="value:Password" />
+                </div>
+            </fieldset>           
+        </div>
+    </div>
+</form>
+<div class="row">
+    <div class="fleft">
+        <input type="button" id="btnAddGroup" class="btn btn-primary" value="Save User Details" data-bind="click: SaveUser" />
+    </div>
+</div> 
+<script>
+         $(function () {
+             $(function () {  
+                 $("#dlgActiveContact").dialog({
+                     autoOpen: false,
+                     modal: true,
+                     show: {
+                               effect: "blind",
+                               duration: 1000
+                             },
+                             hide: {
+                                 effect: "explode",
+                                 duration: 1000
+                             },
+                     buttons: {
+                         Ok: function () {
+                             $(this).dialog("close");
+                         }
+                     }
+                 });
+
+                 $("#dlgSiteAccess").dialog({
+                     autoOpen: false,
+                     modal: true,
+                     show: {
+                         effect: "blind",
+                         duration: 1000
+                     },
+                     hide: {
+                         effect: "explode",
+                         duration: 1000
+                     },
+                     buttons: {
+                         Ok: function () {
+                             $(this).dialog("close");
+                         }
+                     }
+                 });
+
+                 $("#opener").on("click", function () {
+                     $("#dlgActiveContact").dialog("open");
+                 });
+                 $("#opener1").on("click", function () {
+                     $("#dlgSiteAccess").dialog("open");
+                 });
+             }); 
+      });
+</script> 
+
+
+
