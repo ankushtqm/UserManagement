@@ -42,7 +42,7 @@ function Group(HiddenGroupId, GroupName, AppliesToSiteId, GroupTypeId, LyrisList
     self.InfoMessage = ko.observable();
     self.gId = ko.observable();
     self.edit = ko.observable(false);
-    
+
     ///^[a-z0-9]+$/i
     var patterns = {
         groupemail: /^[a-z0-9_-]+$/i
@@ -74,7 +74,7 @@ function Group(HiddenGroupId, GroupName, AppliesToSiteId, GroupTypeId, LyrisList
         else
             return false;
     });
-    
+
     self.requestedTeamMembers = ko.observableArray(requestedTeamMembers);
     self.requestedSelectedMembers = ko.observableArray(requestedSelectedMembers);
     /***************************************/
@@ -296,7 +296,7 @@ function Group(HiddenGroupId, GroupName, AppliesToSiteId, GroupTypeId, LyrisList
                 self.ShowL2(true);
             }
             self.Mission(ATAgroup.Mission);
-            self.LyrisSendId(""+ATAgroup.LyrisSendId);
+            self.LyrisSendId("" + ATAgroup.LyrisSendId);
             self.DepartmentId(ATAgroup.DepartmentId);
 
             if (ATAgroup.BounceReports)
@@ -414,7 +414,6 @@ var A4AStaffModel = function (A4AStaff) {
         var gtypeid = $('#hdnGroupTypeId').val();
 
         ////IMPORTANT NOTE- Changing to this so we remove all roles for the staff even if users deselect some checkboxes
-
         var url = '/api/deletea4ausergroups?GroupId=' + staff["GroupId"] + '&UserId=' + staff["UserId"] + '&IsA4AStaff=true';
         var dataObject = ko.utils.stringifyJson(staff);
         dataObject = "[" + dataObject + "]"; //Otherwise the dataobject at the API is null 
@@ -642,10 +641,6 @@ var AutoCompleteExample;
                         try {
                             ViewModel.prototype.errorMessage("Error in adding user to the group:" + exception.responseText); //started working after changing the errorMessage from div to span. 
                             setTimeout(function () { ViewModel.prototype.errorMessage(""); }, 15000);
-                            // alert("Error" + ViewModel.prototype.errorMessage());
-                            //$('#ErrMessageMemSub').val("Error in adding user to the group:" + exception.responseText);
-                            // alert("Error" + ViewModel.prototype.errorMessage());
-                            //setTimeout(function () {$('#ErrMessageMemSub').val(""); }, 6000);
                         }
                         catch (Err) {
                             alert("Error in adding user to group:" + exception.responseText);
@@ -657,16 +652,13 @@ var AutoCompleteExample;
                 $(".overlay").hide();
             }
             setTimeout(function () { $(".overlay").hide(); }, 1000);
-
             return '';
-
-
         };
+
         /////////////////////////////////////////////////////////////////////////////////
         /* CHAIR SAVING   
          * Works for CouncilCommitteeGGA & Regular Councilcommitee Chair/Vice Chair Add and delete */
         ////////////////////////////////////////////////////////////////////
-
         ViewModel.prototype.selectChair = function (event, ui) {
             try {
                 $(".overlay").show();
@@ -728,12 +720,10 @@ var AutoCompleteExample;
                     error: function (exception) {
                         $('.spnMessage').html("Error in saving Group Chair" + exception.responseText).css("color", "red");
                         ui["item"]["value"] = ""; //Yay figured out how to clear autocomplete ui 
-                        //alert($('#hdnViceChairComp').val() + "  " + $('#hdnChairComp').val());
                         if ($('#hdnViceChairComp').val().indexOf($('#hdnChairComp').val()) < 0) //**Enable only if there is no vice chair from the company**
                         {
                             $("#Prim" + company.replace(/\s/g, '')).prop("disabled", false);
                             $("#Alt" + company.replace(/\s/g, '')).prop("disabled", false);//enable the primary for that company as chair not saved
-                            //setTimeout(function () { $('.spnMessage').html(""); }, 6000); //Commenting this because we wanted the message to show until it is replaced.
                         }
                         $('#hdnChairComp').val(""); //Clear the company hidden field too
                     }
@@ -814,8 +804,6 @@ var AutoCompleteExample;
                             $("#Alt" + company.replace(/\s/g, '')).prop("disabled", false); //enable the primary for that company as vice chair not saved
                         }
                         $('#hdnViceChairComp').val(""); //Clear the company hidden field too
-                        // setTimeout(function () { $('.spnMessage').html(""); }, 6000); //Commented this because Scott wanted this message to stay there until the user adds another primary.
-
                     }
                 }).done(function (data) {
                     $(".overlay").hide();
@@ -940,7 +928,6 @@ var AutoCompleteExample;
                 $(".overlay").show();
                 /* Note: Reset the hidden value */
                 $('#hdnViceChairComp').val('');
-                //alert("GroupViceChair" + $('#GroupViceChair').val() + "GroupViceChairGGA" + $('#GroupViceChairGGA').val());
                 if (isNaN(ViewModel.prototype.gId())) {
                     gId = $('#hdnGroupId').val();
                 }
@@ -949,16 +936,9 @@ var AutoCompleteExample;
 
                 $('#GroupViceChair').val('');
                 $('#GroupViceChairGGA').val('');
-                //alert($('#GroupChair').val() + "GGA: " + $('#GroupChairGGA').val()); 
-
-
                 var URL = "/api/RemoveGrpUsrbyRole/?GroupId=" + gId + "&RoleId=" + 4;
                 /* Note: Delete the user from database and clear the field  */
                 var result = ViewModel.prototype.RemoveGroupUser(URL, '', 'Vice Chair');
-                //if (!result) {
-                //    $('#GroupViceChair').val("");
-                //    $('#GroupViceChairGGA').val("");
-                //}
                 $(event.target).prev().val('');
             }
             catch (Err) {
@@ -986,9 +966,6 @@ var AutoCompleteExample;
                 if (undefined !== $('#hdnChairComp').val().replace(/\s/g, '') && undefined !== $("#Alt" + $('#hdnChairComp').val().replace(/\s/g, '')).val() && $("#Alt" + $('#hdnChairComp').val().replace(/\s/g, '')).val().length > 0) {
                     $("#Prim" + $('#hdnChairComp').val().replace(/\s/g, '')).attr("disabled", "disabled");
                 }
-
-                //$("#Prim" + $('#hdnChairComp').val().replace(/\s/g, '')).attr("disabled", "disabled");
-                //$("#Prim" + $('#hdnViceChairComp').val().replace(/\s/g, '')).attr("disabled", "disabled");
             }
             catch (err) {
                 // TODO: Thinkhow to handle this  $('.spnMessage').append("Error disabling the Primary!!");
@@ -1011,7 +988,6 @@ var AutoCompleteExample;
                     $('.spnMessage').text("Error removing user:" + xhr.responseText).css("color", "red");
                     setTimeout(function () { $('.spnMessage').text(""); }, 15000);
                     $(event.target).parent().append("<span id='" + compPrimError + "' class='text-danger'><br/><i class='fa fa-times-circle'>&nbsp;</i>" + err.Message + "</span>");
-
                     return false;
                 }
             });
@@ -1026,7 +1002,6 @@ var AutoCompleteExample;
 /////////////////////////////////////////////////////////////////////
 var TaskForceWorkGroup;
 (function (TaskForceWorkGroup) {
-
     var ViewModel = (function () {
         function ViewModel() {
             this.selectedValue = ko.observable();
@@ -1206,7 +1181,6 @@ var TaskForceWorkGroup;
         /***   taskforce- LOAD Users from UserGroup in the DB     ***/
         ////////////////////////////////////////////////////////////////////
         ViewModel.prototype.load = function (groupid) {
-            //("in tsk load");
             var query = "/api/GetGroupUserlineItem/?GroupId=" + groupid;
             ViewModel.prototype.errorMessage();
             $.ajax({
@@ -1325,19 +1299,6 @@ function councilCommitteeViewModel(params) {
     self.selectPrimary = function (event, ui) {
         try {
             $(".overlay").show()
-            //if ($('#hdnChairComp').val().trim() === params.Company.trim()) {
-            //    $('.spnMessage').html(params.Company + " representative has been set as Chair. So cannot add Primary/Alternate contact for them").css("color", "red");
-            //    setTimeout(function () { $('.spnMessage').html(""); }, 6000);
-            //    $(".overlay").hide();
-            //    return false;
-            //}
-            //if ($('#hdnViceChairComp').val().trim() === params.Company.trim()) {
-            //    $('.spnMessage').html(params.Company + " representative has been set as Vice Chair. So cannot add Primary/Alternate contact").css("color", "red");
-            //    setTimeout(function () { $('.spnMessage').html(""); }, 6000);
-            //    $(".overlay").hide();
-            //    return false;
-            //}
-
             var compPrimError = (params.Company).replace(/\s+/g, '') + "PrimError";
             /**Remove Error Message*/
             var primErrItem = $('#' + compPrimError);
@@ -1370,14 +1331,8 @@ function councilCommitteeViewModel(params) {
                     var err = eval("(" + xhr.responseText + ")");
                     var par = $(event.target).parent();
                     par.append("<div id='" + compPrimError + "' class='error'><br/><i class='fa fa-times-circle'>&nbsp;</i>" + err.Message); // + " Please clear it manually by selecting Ctrl + A in the box. And try again</div>"
-
                     $("#Prim" + (params.Company).replace(/\s+/g, '')).val("");
-                    //alert($(event.target).val());
-                    //$(event.target).val('');
-
                     console.log("In Primary" + $("#Prim" + (params.Company).replace(/\s+/g, '')).val());
-
-
                     $(".overlay").hide();
                     return false;
                 }
@@ -1497,14 +1452,8 @@ function councilCommitteeViewModel(params) {
                 error: function (xhr, status, error) {
                     var err = eval("(" + xhr.responseText + ")");
                     $(event.target).parent().append("<div id='" + compAltError + "' class='error'><br/><i class='fa fa-times-circle'>&nbsp;</i>" + err.Message); //+ " Please clear it manually by selecting Ctrl + A in the box. And try again</div>"
-                    //alert("$(event.target).prev().val('')" + $(event.target).prev().val() + " $(event.target).val('')" + $(event.target).val());
                     $("#Alt" + (params.Company).replace(/\s+/g, '')).val("");
-                    //alert($(event.target).val());
-                    //$(event.target).val('');   
-
                     console.log("In Alternate" + $("#Prim" + (params.Company).replace(/\s+/g, '')).val());
-
-                    //$(event.target).prev().val('');
                     $(".overlay").hide();
                     return false;
                 }
@@ -1517,6 +1466,7 @@ function councilCommitteeViewModel(params) {
 }
 /// END OF Council/Committee
 /////////////////////////////////////////////////////////////////////////////
+
 // BEgin Council/Committee GGA
 ///////////////////////////////////////////////////////////
 
@@ -1575,13 +1525,6 @@ var councilCommitteeGGAViewModel = function () {
             setTimeout(function () { self.errorMessage(""); }, 6000);
         }
         else {
-            //if (typeof self.userSelected() === 'undefined' && typeof self.role() != 'undefined') {
-            //    self.role("-1");
-            //    self.company(null);
-            //    self.errorMessage("Role or User is Missing. The user cannot be added to the group.");
-            //    setTimeout(function () { self.errorMessage(""); }, 6000);
-            //    return;
-            //}
             var UsernCompname = self.userSelected();
             var startindex = UsernCompname.indexOf('(');
             var CompanyName = UsernCompname.substring(startindex + 1).replace(')', '').trim(); //Get the Company out of the Company Name string.
@@ -1589,164 +1532,135 @@ var councilCommitteeGGAViewModel = function () {
             var role = self.role();
             var roleName = $("#inpGGAGroupRole option[value='" + role + "']").text();
             var comp = CompanyName;
-            //var CompanyName = $("#inpGGACompanies option[value='" + comp + "']").text();
+            if (($('#hdnGroupTypeId').val() != 9 && $('#hdnGroupTypeId').val() != 10) && roleName.toLowerCase().trim().indexOf('primary') !== -1 && ($('#hdnChairComp').val().trim().indexOf(CompanyName) !== -1 || $('#hdnViceChairComp').val().trim().indexOf(CompanyName) !== -1)) {
+                self.errorMessage("This company already has a representative assigned for Chair/ViceChair. So cannot add Primary!"); //Removed the alternate and added clause check only for adding primary users if a chair/vice chair is selected
+                setTimeout(function () { self.errorMessage(""); }, 6000);
+            }
+            else {
+                //Set the item to push to DB & knockout array
+                var temp = {};
+                temp['Name'] = usrname;
+                temp['UserId'] = self.userSelectedId();
+                temp['Type'] = roleName;
+                temp[roleName.replace(/\s/g, '').trim()] = true;
+                temp['GroupId'] = self.gId();
+                temp['CompanyName'] = CompanyName;
+                var dataObject = ko.utils.stringifyJson(temp);
+                dataObject = "[" + dataObject + "]"; //Otherwise the dataobject at the API is null
 
-            //Get the Primary & Alternate companies so there is no primary selected for that company  
-            //if (typeof comp === 'undefined') {
-            //    self.errorMessage("Role or User is Missing. The user cannot be added to the group.");
-            //    setTimeout(function () { self.errorMessage(""); }, 6000);
-            //}
-            //else
-                if (($('#hdnGroupTypeId').val() != 9 && $('#hdnGroupTypeId').val() != 10) && roleName.toLowerCase().trim().indexOf('primary') !== -1 && ($('#hdnChairComp').val().trim().indexOf(CompanyName) !== -1 || $('#hdnViceChairComp').val().trim().indexOf(CompanyName) !== -1)) {
-                    //alert($('#hdnChairComp').val() + "  " + $('#hdnViceChairComp').val());
-                    self.errorMessage("This company already has a representative assigned for Chair/ViceChair. So cannot add Primary!"); //Removed the alternate and added clause check only for adding primary users if a chair/vice chair is selected
-                    setTimeout(function () { self.errorMessage(""); }, 6000);
+                //First check if the user already exists in the array
+                var match = ko.utils.arrayFirst(self.people(),
+                    function (item) {
+                        return self.userSelectedId() == item.UserId();
+                    });
+                if (!match) {
+                    //Now check if its a primary and some primary already exists for the company
+                    if (roleName === "Primary") {
+                        var PrimaryExists = false;
+                        var k = $.getJSON('/api/checkifcompanyhasrole?GroupId=' + self.gId() + "&CompanyName=" + CompanyName + "&RoleId=" + 1, function (data) {
+                            PrimaryExists = data
+                        }).done(
+                            function () {
+                                if (!PrimaryExists || $('#hdnGroupTypeId').val() == 9 || $('#hdnGroupTypeId').val() == 10) {
+                                    $.ajax({
+                                        url: '/api/UserGroupGGA',
+                                        type: 'post',
+                                        data: dataObject,
+                                        contentType: 'application/json',
+                                        success: function (data) {
+                                            //Values to push to Json when Role Type is Primary
+                                            self.people.push(new CommitteePrimAlt(usrname, self.userSelectedId(), roleName, CompanyName, true, false, false, false));
+                                            self.infoMessage("Successfully added a Primary user to " + CompanyName);
+                                            setTimeout(function () { self.infoMessage(""); }, 6000);
+                                            //Reset values
+                                            $("#ggaUser").val("");
+                                            self.role("");
+                                            self.company(null);
+                                            enableForm();
+                                            return false;
+                                        },
+                                        error: function (xhr, status, error) {
+                                            self.errorMessage("Error in adding user: " + xhr.responseText);
+                                            self.role("");
+                                            setTimeout(function () { self.errorMessage(""); }, 6000);
+                                        }
+                                    });
+                                }
+                                else {
+                                    self.errorMessage("A primary has already been set for this " + CompanyName + ".Please delete the current primary and then add this user!");
+                                    setTimeout(function () { self.errorMessage(""); }, 6000);
+                                    //Reset values
+                                    $("#ggaUser").val("");
+                                    self.role("");
+                                    self.company(null);
+                                }
+                            });
+                    }//End of IsPrimaryRole
+                    else if (roleName === "Informational") {
+                        //Just add informational to the group
+                        $.ajax({
+                            url: '/api/UserGroupGGA',
+                            type: 'post',
+                            data: dataObject,
+                            contentType: 'application/json',
+                            success: function (data) {
+                                //Values to push to Json when Role Type is Alternate
+                                self.people.push(new CommitteePrimAlt(usrname, self.userSelectedId(), roleName, CompanyName, false, false, true, false));
+                                self.infoMessage("Successfully added an Informational user to " + CompanyName);
+                                setTimeout(function () { self.infoMessage(""); }, 6000);
+                                //Reset values
+                                $("#ggaUser").val("");
+                                self.role("");
+                                self.company(null);
+                                //self.people([]);
+                                //self.load(gId);
+                                enableForm();
+                                return false;
+                            },
+                            error: function (xhr, status, error) {
+                                self.errorMessage("Error in adding user: " + xhr.responseText);
+                                self.role("");
+                                setTimeout(function () { self.errorMessage(""); }, 6000);
+                            }
+                        });
+                    }
+                    else if (roleName === "Alternate") {
+                        //Just add Alternates to the group
+                        $.ajax({
+                            url: '/api/UserGroupGGA',
+                            type: 'post',
+                            data: dataObject,
+                            contentType: 'application/json',
+                            success: function (data) {
+                                //Values to push to Json when Role Type is Alternate
+                                self.people.push(new CommitteePrimAlt(usrname, self.userSelectedId(), roleName, CompanyName, false, true, false, false));
+                                self.infoMessage("Successfully added an Alternate user to " + CompanyName);
+                                setTimeout(function () { self.infoMessage(""); }, 6000);
+                                //Reset values
+                                $("#ggaUser").val("");
+                                self.role("");
+                                self.company(null);
+                                //self.people([]);
+                                //self.load(gId);
+                                enableForm();
+                                return false;
+                            },
+                            error: function (xhr, status, error) {
+                                self.errorMessage("Error in adding user: " + xhr.responseText);
+                                self.role("");
+                                setTimeout(function () { self.errorMessage(""); }, 6000);
+                            }
+                        });
+                    }
                 }
                 else {
-                    //Set the item to push to DB & knockout array
-                    var temp = {};
-                    temp['Name'] = usrname;
-                    temp['UserId'] = self.userSelectedId();
-                    temp['Type'] = roleName;
-                    temp[roleName.replace(/\s/g, '').trim()] = true;
-                    temp['GroupId'] = self.gId();
-                    temp['CompanyName'] = CompanyName;
-                    var dataObject = ko.utils.stringifyJson(temp);
-                    dataObject = "[" + dataObject + "]"; //Otherwise the dataobject at the API is null
-
-                    //First check if the user already exists in the array
-                    var match = ko.utils.arrayFirst(self.people(),
-                        function (item) {
-                            return self.userSelectedId() == item.UserId();
-                        });
-                    if (!match) {
-                        //Now check if its a primary and some primary already exists for the company
-                        if (roleName === "Primary") {
-                            var PrimaryExists = false;
-                            var k = $.getJSON('/api/checkifcompanyhasrole?GroupId=' + self.gId() + "&CompanyName=" + CompanyName + "&RoleId=" + 1, function (data) {
-                                PrimaryExists = data
-                            }).done(
-                                function () {
-                                    if (!PrimaryExists || $('#hdnGroupTypeId').val() == 9 || $('#hdnGroupTypeId').val() == 10) {
-                                        $.ajax({
-                                            url: '/api/UserGroupGGA',
-                                            type: 'post',
-                                            data: dataObject,
-                                            contentType: 'application/json',
-                                            success: function (data) {
-                                                //Values to push to Json when Role Type is Primary
-                                                self.people.push(new CommitteePrimAlt(usrname, self.userSelectedId(), roleName, CompanyName, true, false, false,false));
-                                                self.infoMessage("Successfully added a Primary user to " + CompanyName);
-                                                setTimeout(function () { self.infoMessage(""); }, 6000);
-                                                //Reset values
-                                                $("#ggaUser").val("");
-                                                self.role("");
-                                                self.company(null);
-                                                //self.people([]);
-                                                //self.load(gId);
-
-                                                enableForm();
-                                                return false;
-                                               
-                                            },
-                                            error: function (xhr, status, error) {
-                                                self.errorMessage("Error in adding user: " + xhr.responseText);
-                                                self.role("");
-                                                setTimeout(function () { self.errorMessage(""); }, 6000);
-                                            }
-                                        });
-                                    }
-                                    else {
-                                        self.errorMessage("A primary has already been set for this " + CompanyName + ".Please delete the current primary and then add this user!");
-                                        setTimeout(function () { self.errorMessage(""); }, 6000);
-                                        //Reset values
-                                        $("#ggaUser").val("");
-                                        //ui["item"]["value"] = '';
-                                        self.role("");
-                                        self.company(null);
-
-                                    }
-                                });
-                        }//End of IsPrimaryRole
-                        else if (roleName === "Informational") {
-                            //Just add informational to the group
-                            $.ajax({
-                                url: '/api/UserGroupGGA',
-                                type: 'post',
-                                data: dataObject,
-                                contentType: 'application/json',
-                                success: function (data) {
-                                    //Values to push to Json when Role Type is Alternate
-                                    self.people.push(new CommitteePrimAlt(usrname, self.userSelectedId(), roleName, CompanyName, false, false, true,false));
-                                    self.infoMessage("Successfully added an Informational user to " + CompanyName);
-                                    setTimeout(function () { self.infoMessage(""); }, 6000);
-                                    //Reset values
-                                    $("#ggaUser").val("");
-                                    self.role("");
-                                    self.company(null);
-                                    //self.people([]);
-                                    //self.load(gId);
-
-                                    enableForm();
-
-                                    return false;
-                                },
-                                error: function (xhr, status, error) {
-                                    self.errorMessage("Error in adding user: " + xhr.responseText);
-                                    self.role("");
-                                    //ui["item"]["value"] = '';
-                                    setTimeout(function () { self.errorMessage(""); }, 6000);
-                                }
-                            });
-                        }
-                        else if (roleName === "Alternate") {
-                            //Just add Alternates to the group
-                            $.ajax({
-                                url: '/api/UserGroupGGA',
-                                type: 'post',
-                                data: dataObject,
-                                contentType: 'application/json',
-                                success: function (data) {
-                                    //Values to push to Json when Role Type is Alternate
-                                    self.people.push(new CommitteePrimAlt(usrname, self.userSelectedId(), roleName, CompanyName, false, true, false,false));
-                                    self.infoMessage("Successfully added an Alternate user to " + CompanyName);
-                                    setTimeout(function () { self.infoMessage(""); }, 6000);
-                                    //Reset values
-                                    $("#ggaUser").val("");
-                                    self.role("");
-                                    self.company(null);
-                                    //self.people([]);
-                                    //self.load(gId);
-
-                                    enableForm();
-
-                                    return false;
-                                },
-                                error: function (xhr, status, error) {
-                                    self.errorMessage("Error in adding user: " + xhr.responseText);
-                                    self.role("");
-                                    //ui["item"]["value"] = '';
-                                    setTimeout(function () { self.errorMessage(""); }, 6000);
-                                }
-                            });
-                        }
-                        //else {
-                        //    self.errorMessage("Role or User is Missing. The user cannot be added to the group.");
-                        //    self.role("");
-                        //    $("#ggaUser").val("");
-                        //    //ui["item"]["value"] = '';
-                        //    setTimeout(function () { self.errorMessage(""); }, 6000);
-                        //}
-                    }
-                    else {
-                        self.errorMessage("The user " + match.Name() + " already exists under " + match.CompanyName() + " ");
-                        setTimeout(function () { self.errorMessage(""); }, 6000);
-                    }
-                    
-                    $("#ggaUser").val('');
-                    self.role("");
-                    //ui["item"]["value"] = '';
+                    self.errorMessage("The user " + match.Name() + " already exists under " + match.CompanyName() + " ");
+                    setTimeout(function () { self.errorMessage(""); }, 6000);
                 }
+
+                $("#ggaUser").val('');
+                self.role("");
+            }
         }
     };
 
@@ -1769,14 +1683,8 @@ var councilCommitteeGGAViewModel = function () {
                 role = 2;
             if (CommitteePrimAlt.Type() === "Informational")
                 role = 5;
-            //alert("UserId()" + CommitteePrimAlt.UserId() + "CompanyName" + CommitteePrimAlt.CompanyName + "Type" + CommitteePrimAlt.Type);
             var URL = "/api/RemoveGrpUsrbyUserId/?UserId=" + CommitteePrimAlt.UserId() + "&GroupId=" + self.gId() + "&RoleId=" + role;
             RemoveGroupUser(URL);//, CommitteePrimAlt.CompanyName, CommitteePrimAlt.Type);  
-
-            //Commented on 4/7/2020
-            //if (role === 1 && self.company() !== "undefined") { 
-            //    $("#Prim" + self.company().replace(/\s/g, '')).val(''); 
-            //}
             $(".overlay").hide();
             return false;
         }
@@ -1860,7 +1768,6 @@ var councilCommitteeGGAViewModel = function () {
     /***   Council Committe GGA- LOAD Users from UserGroup in the DB     ***/
     ////////////////////////////////////////////////////////////////////
     self.load = function (groupid) {
-        debugger;
         var query = "/api/GetGroupUserlineItem/?GroupId=" + groupid + "&RoleId=1,2,3,4";
         self.errorMessage("");
         $.ajax({
@@ -1870,7 +1777,6 @@ var councilCommitteeGGAViewModel = function () {
             success: function (data) {
                 var result = JSON.parse(data);
                 for (i = 0; i < result.length; i++) {
-                    debugger;
                     if (result[i].RoleId === 1) {
                         self.people.push(new CommitteePrimAlt(result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, true, false, false, result[i].EmailAdmin));
                     }
@@ -1907,13 +1813,6 @@ var councilCommitteeGGAViewModel = function () {
             success: function (data) {
                 var result = JSON.parse(data);
                 for (i = 0; i < result.length; i++) {
-                    //var role = '';
-                    //var temp = {};
-                    //temp['Name'] = result[i].UserName;
-                    //temp['CompanyName'] = result[i].CompanyName;//'('+result[i].CompanyName+')';
-                    //temp['UserId'] = result[i].UserId;
-                    //temp[result[i].Role.trim()] = true;
-                    //temp['GroupId'] = result[i].GroupId;
                     self.people.push(new CommitteePrimAlt(result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, false, false, true, result[i].EmailAdmin));
                 }
             },
@@ -1923,16 +1822,9 @@ var councilCommitteeGGAViewModel = function () {
 };
 function DisablePrimary() {
     try {
-        /* Note: Enabling Prim text boxes because the Chair/ViceChair user has been removed **/
-        //$("[id*=Prim]").prop("disabled", true);
-        //$("[id*=Alt]").prop("disabled", true);
-
-        $('#z-tab3').find('input').prop('disabled', true);
-
+        debugger;
+        $('#z-tab3').find('input').prop('disabled, button', true);
         var obj = $("#Prim" + $('#hdnChairComp').val().replace(/\s/g, ''));
-        /* Note:  Disabling just the chair and vice chair company */
-        //$("#Prim" + $('#hdnChairComp').val().replace(/\s/g, '')).attr("disabled", "disabled");
-        //$("#Prim" + $('#hdnViceChairComp').val().replace(/\s/g, '')).attr("disabled", "disabled");
         if (undefined !== $('#hdnViceChairComp').val().replace(/\s/g, '') && undefined !== $("#Prim" + $('#hdnViceChairComp').val().replace(/\s/g, '')).val() && $("#Prim" + $('#hdnViceChairComp').val().replace(/\s/g, '')).val().length > 0) {
             $("#Alt" + $('#hdnViceChairComp').val().replace(/\s/g, '')).attr("disabled", "disabled");
         }
@@ -1946,7 +1838,6 @@ function DisablePrimary() {
         if (undefined !== $('#hdnChairComp').val().replace(/\s/g, '') && undefined !== $("#Alt" + $('#hdnChairComp').val().replace(/\s/g, '')).val() && $("#Alt" + $('#hdnChairComp').val().replace(/\s/g, '')).val().length > 0) {
             $("#Prim" + $('#hdnChairComp').val().replace(/\s/g, '')).attr("disabled", "disabled");
         }
-
     }
     catch (err) {
         // TODO: Thinkhow to handle this  $('.spnMessage').append("Error disabling the Primary!!");
@@ -1992,15 +1883,8 @@ $(document).ready(function () {
             contentType: 'application/json',
             success: function (data) {
                 var result = JSON.parse(data);
-                //alert("In SetPrimaryAlternate ");
                 for (i = 0; i < result.length; i++) {
                     try {
-                        //var CheckStatus = result[i].EmailAdmin;
-                        //if (CheckStatus == true) {
-                        //    $('input[id=chkEmailAdmin]').attr("checked", "checked"); 
-                        //}
-
-
                         var Name = result[i].UserName;
                         var t = result[i].CompanyName.replace(/\s/g, '');
                         if (result[i].RoleId === 1) {
@@ -2014,14 +1898,12 @@ $(document).ready(function () {
                                 if (result[i].RoleId === 3) {
                                     $('#GroupChair').val(Name + ' (' + t + ')');
                                     $('#hdnChairComp').val(result[i].CompanyName);
-                                    //DisablePrimary();
                                 }
                                 else
                                     if (result[i].RoleId === 4) {
                                         6
                                         $('#GroupViceChair').val(Name + ' (' + t + ')');
                                         $('#hdnViceChairComp').val(result[i].CompanyName);
-                                        //DisablePrimary();
                                     }
                     }
                     catch (err) {
@@ -2073,6 +1955,7 @@ $(document).ready(function () {
             groupRegisterViewModel.addTaskForceWorkGroup.gettaskRoles()).done();
     }
 });
+
 function getManagedGroupCount(groupid) {
     $.getJSON('/api/getManageGroupCount?groupId=' + groupid, function (data) {
         manageGroup = data;
@@ -2091,37 +1974,12 @@ function getManagedGroupCount(groupid) {
 
 function disableForm() {
     $('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('input, button, submit, textarea, select').prop('disabled', true);
-    /*$('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('a').hide();*/
-    //$('#z-tab3').find('input, button, submit, textarea, select').prop('disabled', true)
-    //$('#z-tab4').find('input, button, submit, textarea, select').prop('disabled', true)
-    //$('#z-tab5').find('input, button, submit, textarea, select').prop('disabled', true)
-    //$('#z-tab6').find('input, button, submit, textarea, select').prop('disabled', true)
-    //$('#z-tab7').find('input, button, submit, textarea, select').prop('disabled', true)
-    //$("input").prop("disabled", false);
-    //$("#z-tab2").find("a").hide();
-    //$("#z-tab7").find("a").hide();
 }
 
 function enableForm() {
     $('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('input, button, submit, textarea, select').prop('disabled', false);
     $('.btndelete').css('display', 'inline-block !important');
     $('#z-tab3').find('input').prop('disabled', false);
-
-    //a.disabled {
-    //    pointer - events: none;
-    //    cursor: default ;
-    //}
-    /*$('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('a').show();*/
-    //setTimeout(() => {
-    //    $('#z-tab2').find('a').show(); $('#z-tab2').find('input').prop('disabled', false)
-    //}, 100)
-    //$('#z-tab3').find('input, button, submit, textarea, select').prop('disabled', false)
-    //$('#z-tab4').find('input, button, submit, textarea, select').prop('disabled', false)
-    //$('#z-tab5').find('input, button, submit, textarea, select').prop('disabled', false)
-    //$('#z-tab6').find('input, button, submit, textarea, select').prop('disabled', false)
-    //$('#z-tab7').find('input, button, submit, textarea, select').prop('disabled', false)
-    //$("#z-tab2").find("a").show();
-    //$("#z-tab7").find("a").show();
 }
 
 function handleClick(myRadio) {
@@ -2136,12 +1994,10 @@ function handleClick(myRadio) {
 }
 
 function EmailAdmin(e) {
-    debugger;
     SendEmailAdmin.set(e.value, e.checked)
 }
 
 function saveA4ACommitteeRoles() {
-    debugger;
     for (var key of SendEmailAdmin.keys()) {
         A4AModelEmailAdmin.push({
             groupId: self.gId(),
@@ -2167,59 +2023,3 @@ function saveA4ACommitteeRoles() {
     SendEmailAdmin = new Map();
     A4AModelEmailAdmin = new Array();
 }
-
-//self.saveCouncilCommitteeDtl = function (form) {
-//    debugger;
-//    var dataObject = ko.utils.stringifyJson(self.A4AStaff);
-//    var hasRole = true;
-//};
-
-//self.save = function (form) {
-//    debugger;
-//    $('.overlay').show();
-//    var dataObject = ko.utils.stringifyJson(self.A4AStaff);
-//    var hasRole = true; //Setting the bool for checking that roles are selcted for all 
-
-//    for (var i = 0; i < self.A4AStaff().length; i++) {
-//        var GroupId = self.A4AStaff()[i].GroupId;
-//        var Name = self.A4AStaff()[i].Name;
-//        var ManageGroup = self.A4AStaff()[i].ManageGroup;
-//        var EmailAdmin = self.A4AStaff()[i].EmailAdmin;
-//        var BounceReports = self.A4AStaff()[i].BounceReports;
-//        var StaffSubscribe = self.A4AStaff()[i].StaffSubscribe;
-//        //Set bool to see if a role was selected
-//        if (ManageGroup || EmailAdmin || BounceReports || StaffSubscribe)
-//            hasRole = true;
-//        else
-//            hasRole = false;
-//        if (!hasRole) {
-//            self.ErrorMessage("All staff members in this list should have at least one role. Please choose a role for staff member - " + Name + " before saving!");
-//            setTimeout(function () {
-//                self.ErrorMessage("");
-//            }, 10000);
-//            $(".overlay").hide(); //hide the overlay before stopping the execution
-//            return;
-//        }
-//    }
-//    $.ajax({
-//        url: '/api/A4AUserGroup/?IsStaff=true&IsGGA=false',
-//        type: 'post',
-//        data: dataObject,
-//        contentType: 'application/json',
-//        success: function (data) {
-//            self.InfoMessage("A4A Staff changes saved successfully");
-//            getManagedGroupCount(self.A4AStaff()[0].GroupId);
-//            setTimeout(function () {
-//                self.InfoMessage("");
-//            }, 6000);
-//        },
-//        error: function (xhr, status, error) {
-//            self.ErrorMessage("Error:" + xhr.responseText);
-//            $(".overlay").hide();
-//            setTimeout(function () { self.ErrorMessage(""); }, 10000);
-//            return false;
-//        }
-//    }).done(function (data) {
-//        $(".overlay").hide();
-//    });
-//};

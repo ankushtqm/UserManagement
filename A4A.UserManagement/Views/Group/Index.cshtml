@@ -1,5 +1,4 @@
 ﻿@*@model ATA.ObjectModel.ATAGroup*@
-
 @{
     ViewBag.Title = "Group Register";
 }
@@ -7,9 +6,6 @@
 <script src="~/Scripts/knockout.validation.min.js"></script>
 <script src="~/KnockoutModels/GroupRegisterViewModel.js"></script>
 <script type="text/javascript" src="~/ckeditor/ckeditor.js"></script>
-
-
-
 
 <style>
     .btndelete {
@@ -40,11 +36,7 @@
             top: 40%;
             left: 45%;
         }
-    /*.cke_chrome {
-        display: -ms-inline-grid !important;
-        border: 1px solid #d1d1d1;
-        padding: 0;
-    }*/
+
     .cke_top {
         border-bottom: none !important;
     }
@@ -58,18 +50,8 @@
 <!-- Zozo Tabs Start-->
 <div>
     <!-- Tab Navigation Menu -->
-    @*<input type="button" id="btnAddGroupTop" class="btn btn-primary" value="Save" />*@
     <h2><i><span id="spGroupName" class="niceLabel right"></span></i></h2>
     <ul>
-        @*
-            <li id="z-tab0" data-link="1"><a>Group Type<span>Groups</span></a></li>
-            <li id="z-tab1" data-link="2"><a>Group Details<span>Group Main Details</span></a></li>
-            <li id="z-tab2" data-link="3"><a>A4A Staff <span>A4A Employee Lists</span></a></li>
-            <li id="z-tab3" data-link="4"><a>Council/Committee Members<span>Primary/Alt/Chair/Vice Chair</span></a></li>
-            <li id="z-tab7" data-link="5"><a>Council/Committee Unlimited Alternates<span>Primary/Alt/Chair/Vice Chair</span></a></li>
-            <li id="z-tab4" data-link="6"><a>Informational Members<span>Council and Committee Lists</span></a></li>
-            <li id="z-tab5" data-link="7"><a>Members/Non-members<span>Security/Distribution</span></a></li>
-            <li id="z-tab6" data-link="8"><a>Taskforce,Work Groups, Industry & Networks <span>subscribe</span></a></li>*@
     </ul>
     <!-- Content container -->
     <div style="margin-left:40px">
@@ -173,7 +155,6 @@
             <div data-bind="with: UMSubscribeModel">
                 <div id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></div>
                 <span class="text-danger margin-topbot10 niceLabel  bold" data-bind='text: $data.errorMessage()'></span>
-                @*<button id="btnSaveCouncilCommittee" class="btn btn-primary" type='submit'>Save Council/Committee Staff Roles</button>*@
                 <button class="btn btn-primary" type='submit' onclick="saveA4ACommitteeRoles()">Save Council/Committee Staff Roles</button>
                 <br />
                 <br />
@@ -198,7 +179,6 @@
                 @Html.Partial("_MemberSubscribe")
             </div>
         </div>
-
         <!-- TAB 5 -->
         <div id="z-tab5">
             <br />
@@ -255,46 +235,8 @@
                 $("#btnAddGroupTop").show();
                 $('#A4AStaffContainer').find("button").show();
                 $('#z-tab2').find('a').show(); $('#z-tab2').find('input').prop('disabled', false)
-                //setTimeout(()=>$('#z-tab2').find('a').show(),100)
-                //setInterval(() => {
-                //    $('#z-tab2').find('a').show(); $('#z-tab2').find('input').prop('disabled',false) }, 100)
             })
             /* jQuery activation and setting options for second tabs, enabling multiline*/
-            //var tabbedNav = $("#tabbed-nav").zozoTabs({
-            //    position: "top-left",
-            //    theme: "blue",
-            //    shadows: true,
-            //    multiline: true,
-            //    deeplinking: true,
-            //    orientation: "vertical",
-            //    size: "medium",
-            //    animation: {
-            //        easing: "easeInOutExpo",
-            //        duration: 500,
-            //        effects: "slideV"
-            //    }
-            //}), disable = function (e) {
-            //    /*disable tab via given index*/
-            //    tabbedNav.data("zozoTabs").disable(getItem());
-            //},
-            //    enableA4AStaff = function (e) {
-            //        tabbedNav.data("zozoTabs").enable(1);
-            //        tabbedNav.data("zozoTabs").next();
-            //    },
-            //    enableInformational = function (e) {
-            //        tabbedNav.data("zozoTabs").next();
-            //    },
-            //    next = function (e) {
-            //        tabbedNav.data("zozoTabs").next();
-            //    };
-            //$(".enableA4AStaff").click(enableA4AStaff);
-            //$(".disableTab").click(disable);
-            //$(".nextTab").click(next);
-            //$(".enableInformational").click(enableInformational);
-
-            //var remove = function (e) {
-            //    tabbedNav.data("zozoTabs").remove(getItem());
-            //}
             var isAdmin = false;
             var checkIfEdit = function () {
                 var gid = parseInt(getUrlParameter('gid'));
@@ -307,7 +249,6 @@
                     $('#hdnGroupId').val(gid);
                     var group = $.getJSON('/api/group/?gid=' + gid, function (data) {
                         gtype = data.GroupTypeId;
-
                         $('#hdnMission').val(data.Mission);
                         $('#hdnGroupTypeId').val(gtype);
 
@@ -318,20 +259,13 @@
 
                         if (gtype == '5' || gtype == '6') {
                             $("#hdnSubscribeInformational").val(1);
-                        } else if (gtype == '1' || gtype == '2') {
+                        }
+                        else if (gtype == '1' || gtype == '2') {
                             $("#hdnSubscribeInformational").val(2);
                         }
-
                         $("#Headtitle").html("Edit User Management Group");
-                        //$(".GroupTitle").append("<br/> <a  href='/group/show/?gid=" + gid + "' class='spnGroupName niceLabel-black   margin-topbot10'>Group: " + data.GroupName + "</a");
-                        //$(".GroupTitle").append("<br/><a href='/group/show/?gid=" + gid + "' class='niceLabel text-info'>View Group</a>");
 
                         if (gid > 0 && gtype > 0) {
-
-                            //if (tab > -1)
-                            //    GoToAptTabs(tab);
-                            //else
-                            //    GoToAptTabs(1);
                             $('#z-tab0').hide();
                             $('#chooseGroupType').hide();
                             $('#btnAddGroupTop').show();
@@ -348,7 +282,6 @@
                         }
                         else {
                             $("#btnEdit").hide();
-                            //GoToAptTabs(1);
                         }
                     });
                 }
@@ -367,7 +300,6 @@
 
             function hideTabs() {
                 var gid = parseInt(getUrlParameter('gid'));
-
                 if (isNaN(gid) || gid <= 0) {
                     $('#z-tab1').hide();
                     $('#z-tab2').hide();
@@ -432,13 +364,13 @@
                             checkIfEdit();
                             if ((!isAdmin) && !(parseInt(getUrlParameter('gid')) > 0)) /*count == 1*/ {
                                 ShowAptTabs(6); //TODO: hard coding the distribution Group Id. Make it better later
-                                //GoToAptTabs(1);
                                 $('#UMNote').attr('display', 'block');
                                 $('#UMNote').show();
                             }
                         });
                     });
             }
+
             isUserAdmin();
             $('#drpGroupType').on('change', function () {
                 /*disable tab via given index*/
@@ -451,11 +383,8 @@
                 ShowAptTabs(this.value);
                 $('#chooseGroupType').hide();
                 $("#btnAddGroupTop").css("margin-right", "400px");
-                //GoToAptTabs(1);
             });
-            //function GoToAptTabs(tab) {
-            //    tabbedNav.data("zozoTabs").select(tab);
-            //}
+
             function ShowAptTabs(grouptypeid) {
                 //Set GrouptypeId hidden value
                 $('#hdnGroupTypeId').val(grouptypeid);
@@ -504,7 +433,6 @@
                     $('#z-tab5').hide();
                     $('#z-tab6').hide();
                     if (value == '9' || value == '10') {
-                        //$('#z-tab7').html('<a>Council/Committee - Double Primaries With Unlimited Alternates<span style="font-size:.9em;font-weight:normal;line-height: 1.65em;opacity: 1;letter-spacing:0px;margin-top: 0.05em;"><br/>Primary/Alt/Chair/Vice Chair</span></ a>')
                         $('#ccua').html('Council/Committee - Double Primaries With Unlimited Alternates')
                     }
                     $("#hdnSubscribeInformational").val(2);// 2 means informational - For Council/Committee
@@ -515,7 +443,6 @@
                     $('#overlayHome').hide();
                 }
                 groupRegisterViewModel.addGroupViewModel.GroupTypeId(grouptypeid);
-                //$("#inpGroupType").val(txt);
                 $("#spnGroupType").html(txt); /*Setting the Group Type text - instead of the disabled dropdown*/
                 $("#lblGroupType").val(txt);
                 groupRegisterViewModel.UMSubscribeModel.SorI = $("#hdnSubscribeInformational").val();// 2 means informational;
@@ -526,7 +453,6 @@
             CKEDITOR.on('instanceReady', function (ev) {
                 try {
                     var editor = ev.editor;
-                    // To fix CheckRangeError
                     var sel = editor.getSelection();
                     var range = sel.getRanges()[0];
 
@@ -536,7 +462,6 @@
                         range.selectNodeContents(editor.editable());
                         sel.selectRanges([range]);
                     }
-                    //alert("hi");
                     // Show the editor name and description in the browser status bar.
 
                     setTimeout(function () {
@@ -547,9 +472,7 @@
                 catch (err) {
                     console.log("Error in Mission loading...Contact IT" + err);
                 }
-
             });
-
         });
 
         // To check if user is admin or not for the Group to enable/disable edit functionality
@@ -575,7 +498,6 @@
                     }
                 })
             });
-
         }
         //To export the subscriber list to excel
         if (gid > 0) {
@@ -595,18 +517,9 @@
                         bAutoWidth: false,
                         dom: 'Bfrtip',
                         buttons: [
-                            //{
-                            //    extend: 'copyHtml5',
-                            //    exportOptions: {
-                            //        columns: ':contains("Office")'
-                            //    }
-                            //},
                             'excelHtml5'
-                            //,'csvHtml5'
-                            //, 'pdfHtml5'
                         ],
                         aoColumns: [
-
                             { mData: "CompanyName", "sClass": "nowrap" },
                             { mData: "LastName" },
                             { mData: "FirstName" },
@@ -624,7 +537,6 @@
                             { mData: "Province" },
                             { mData: "ZipCode" },
                             { mData: "Country" },
-                            //{ mData: "LastModified" },
                             { mData: "Roles" },
                             { mData: "View", sWidth: "30px", sClass: "hidden-print" },
                         ], "aoColumnDefs": [
@@ -635,26 +547,23 @@
                                     return '<a  href="/user/show/?uid=' + full.UserId + '"  title="View"><img alt="View"  src="/images/view_20.png" border="0" /></a>';
                                 }
 
-                            }, {
+                            },
+                            {
                                 "aTargets": [5],
                                 "mRender": function (data, type, full) {
                                     return formatphone(full.OfficePhone);
-                                    //var x = full.OfficePhone;
-                                    //return x.replace(/[^\d]+/g, '').replace(/(\d+)(\d{4})/, '$1' + '-' + '$2'); //.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
                                 }
-                            }, {
+                            },
+                            {
                                 "aTargets": [6],
                                 "mRender": function (data, type, full) {
-                                    //var x = full.MobilePhone;
                                     return formatphone(full.MobilePhone);
                                 }
                             },
                             {
                                 "aTargets": [7],
                                 "mRender": function (data, type, full) {
-                                    //var x = full.HomePhone;
                                     return formatphone(full.HomePhone);
-                                    //return x.replace(/[^\d]+/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
                                 }
                             },
                             {
