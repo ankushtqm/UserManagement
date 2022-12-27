@@ -1261,6 +1261,8 @@ function councilCommitteeViewModel(params) {
     var CheckStatusAlternate = GetCompanyNameAlternate.get("Alt" + params.Company.replace(/\s/g, ''));
     self.CheckStatusPrimary = ko.observable(CheckStatusPrimary);
     self.CheckStatusAlternate = ko.observable(CheckStatusAlternate);
+    self.ChkPrimaryID = ko.observable("ChkPrim" + params.Company.replace(/\s/g, ''));
+    self.ChkAlternateID = ko.observable("ChkAlt" + params.Company.replace(/\s/g, ''));
 
     DisablePrimary();
 
@@ -1288,7 +1290,6 @@ function councilCommitteeViewModel(params) {
     /********************************************/
     self.CompanyUsers = ko.observableArray();
     self.getCompanyUsers = function (request, response) {
-        debugger;
         var text = request.term;
         $.ajax({
             url: '/api/GetComapnyUsers/?CompanyName=' + params.Company, //term=' + request.term +
@@ -1297,7 +1298,6 @@ function councilCommitteeViewModel(params) {
             data: request,
             dataType: 'json',
             success: function (json) {
-                debugger;
                 response($.map(json, function (key, value) {
                     return {
                         label: value,
@@ -1490,9 +1490,6 @@ function councilCommitteeViewModel(params) {
             CompanyNameAlternate.set(params.Company, ui.target.checked)
         }
     };
-
-    //GetCompanyNamePrimary = new Map();
-    //GetCompanyNameAlternate = new Map();
 }
 /// END OF Council/Committee
 /////////////////////////////////////////////////////////////////////////////
@@ -1887,9 +1884,11 @@ $(document).ready(function () {
     ko.components.register('primaryalternate', {
         viewModel: councilCommitteeViewModel,
         template: "<div class='row' style='margin-bottom:8px;'> <div class='col-sm-2'> <span class='niceLabel' data-bind='text: Company'></span></div>" +
-            "<div class='col-sm-4'><input type='checkbox' name='CompanyNamePrimary' style='margin-right:10px' data-bind='event:{ change: selectCompanyNamePrimary}, checked:CheckStatusPrimary' /><input type='text' class='P1 chosen form-control' style='width:300px;' data-bind='value:PrimUserValue,attr: { id:PrimaryID()},ko_autocomplete: { source: getCompanyUsers, select: selectPrimary ,minLength: 3,close: closeSelect }'/>" +
+            "<div class='col-sm-1' style='text-align:center'><input type='checkbox' name='CompanyNamePrimary' style='margin-right:10px' data-bind='attr: { id:ChkPrimaryID()}, event:{ change: selectCompanyNamePrimary}, checked:CheckStatusPrimary' /></div>" +
+            "<div class='col-sm-3'><input type='text' class='P1 chosen form-control' style='width:300px;' data-bind='value:PrimUserValue,attr: { id:PrimaryID()},ko_autocomplete: { source: getCompanyUsers, select: selectPrimary ,minLength: 3,close: closeSelect }' />" +
             "<a href='#' class='text-danger btndelete' style='vertical-align: middle;padding-left:7px;' data-bind='click: $data.removePrimGroupUser'>Delete</a></div>" +
-            "<div class='col-sm-4'><input type='checkbox' name='CompanyNameAlternate' style='margin-right:10px' data-bind='event:{ change: selectCompanyNameAlternate}, checked:CheckStatusAlternate' /><input type='text' class='A1 chosen form-control' style='width:300px;' data-bind='value:AltUserValue,attr: { id:AlternateID() },ko_autocomplete: { source: getCompanyUsers, select: selectAlternate ,minLength:3,close: closeSelect }'/>" +
+            "<div class='col-sm-1' style='text-align:center'><input type='checkbox' name='CompanyNameAlternate' style='margin-right:10px' data-bind='attr: { id:ChkAlternateID()}, event:{ change: selectCompanyNameAlternate}, checked:CheckStatusAlternate' /></div>" +
+            "<div class='col-sm-3'><input type='text' class='A1 chosen form-control' style='width:300px;' data-bind='value:AltUserValue,attr: { id:AlternateID() },ko_autocomplete: { source: getCompanyUsers, select: selectAlternate ,minLength:3,close: closeSelect }'/>" +
             "<a href='#' class='text-danger btndelete' style='vertical-align: middle;padding-left:7px;' data-bind='click: removeAltGroupUser'>Delete</a></div></div>"
     });
 
@@ -2057,7 +2056,6 @@ function saveA4ACommitteeRoles() {
 }
 
 function saveA4ACompanyRoles() {
-    debugger;
     for (var key of CompanyNamePrimary.keys()) {
         A4AModelCompanyNamePrimary.push({
             groupId: self.gId(),
