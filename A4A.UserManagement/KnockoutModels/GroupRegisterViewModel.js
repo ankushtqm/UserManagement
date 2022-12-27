@@ -6,6 +6,11 @@ var A4AModelEmailAdmin = new Array();
 
 var CompanyNamePrimary = new Map();
 var A4AModelCompanyNamePrimary = new Array();
+var GetCompanyNamePrimary = new Map();
+
+var CompanyNameAlternate = new Map();
+var A4AModelCompanyNameAlternate = new Array();
+var GetCompanyNameAlternate = new Map();
 
 function clearalltimeouts() {
     var highestTimeoutId = setTimeout(";");
@@ -1252,6 +1257,10 @@ function councilCommitteeViewModel(params) {
     self.AltUserValue = ko.observable(t2);
     self.PrimaryID = ko.observable("Prim" + params.Company.replace(/\s/g, ''));
     self.AlternateID = ko.observable("Alt" + params.Company.replace(/\s/g, ''));
+    var CheckStatusPrimary = GetCompanyNamePrimary.get("Prim" + params.Company.replace(/\s/g, ''));
+    var CheckStatusAlternate = GetCompanyNameAlternate.get("Alt" + params.Company.replace(/\s/g, ''));
+    self.CheckStatusPrimary = ko.observable(CheckStatusPrimary);
+    self.CheckStatusAlternate = ko.observable(CheckStatusAlternate);
 
     DisablePrimary();
 
@@ -1475,6 +1484,15 @@ function councilCommitteeViewModel(params) {
             CompanyNamePrimary.set(params.Company, ui.target.checked)
         }
     };
+
+    this.selectCompanyNameAlternate = function (event, ui) {
+        if (params.Company.length > 0 && !isNaN(gId)) {
+            CompanyNameAlternate.set(params.Company, ui.target.checked)
+        }
+    };
+
+    //GetCompanyNamePrimary = new Map();
+    //GetCompanyNameAlternate = new Map();
 }
 /// END OF Council/Committee
 /////////////////////////////////////////////////////////////////////////////
@@ -1869,9 +1887,9 @@ $(document).ready(function () {
     ko.components.register('primaryalternate', {
         viewModel: councilCommitteeViewModel,
         template: "<div class='row' style='margin-bottom:8px;'> <div class='col-sm-2'> <span class='niceLabel' data-bind='text: Company'></span></div>" +
-            "<div class='col-sm-4'><input type='checkbox' name='CompanyNamePrimary' style='margin-right:10px' data-bind='event:{ change: selectCompanyNamePrimary}' /><input type='text' class='P1 chosen form-control' style='width:300px;' data-bind='value:PrimUserValue,attr: { id:PrimaryID()},ko_autocomplete: { source: getCompanyUsers, select: selectPrimary ,minLength: 3,close: closeSelect }'/>" +
+            "<div class='col-sm-4'><input type='checkbox' name='CompanyNamePrimary' style='margin-right:10px' data-bind='event:{ change: selectCompanyNamePrimary}, checked:CheckStatusPrimary' /><input type='text' class='P1 chosen form-control' style='width:300px;' data-bind='value:PrimUserValue,attr: { id:PrimaryID()},ko_autocomplete: { source: getCompanyUsers, select: selectPrimary ,minLength: 3,close: closeSelect }'/>" +
             "<a href='#' class='text-danger btndelete' style='vertical-align: middle;padding-left:7px;' data-bind='click: $data.removePrimGroupUser'>Delete</a></div>" +
-            "<div class='col-sm-4'><input type='checkbox' name='CompanyNameAlternate' style='margin-right:10px' /><input type='text' class='A1 chosen form-control' style='width:300px;' data-bind='value:AltUserValue,attr: { id:AlternateID() },ko_autocomplete: { source: getCompanyUsers, select: selectAlternate ,minLength:3,close: closeSelect }'/>" +
+            "<div class='col-sm-4'><input type='checkbox' name='CompanyNameAlternate' style='margin-right:10px' data-bind='event:{ change: selectCompanyNameAlternate}, checked:CheckStatusAlternate' /><input type='text' class='A1 chosen form-control' style='width:300px;' data-bind='value:AltUserValue,attr: { id:AlternateID() },ko_autocomplete: { source: getCompanyUsers, select: selectAlternate ,minLength:3,close: closeSelect }'/>" +
             "<a href='#' class='text-danger btndelete' style='vertical-align: middle;padding-left:7px;' data-bind='click: removeAltGroupUser'>Delete</a></div></div>"
     });
 
@@ -1898,12 +1916,15 @@ $(document).ready(function () {
                     try {
                         var Name = result[i].UserName;
                         var t = result[i].CompanyName.replace(/\s/g, '');
+
                         if (result[i].RoleId === 1) {
                             sessionStorage.setItem("Prim" + t, Name);
+                            GetCompanyNamePrimary.set("Prim" + t, result[i].CheckStatus);
                         }
                         else
                             if (result[i].RoleId === 2) {
                                 sessionStorage.setItem("Alt" + t, Name);
+                                GetCompanyNameAlternate.set("Alt" + t, result[i].CheckStatus);
                             }
                             else
                                 if (result[i].RoleId === 3) {
@@ -2046,11 +2067,11 @@ function saveA4ACompanyRoles() {
         })
     }
 
-    let dataobj = JSON.stringify(A4AModelCompanyNamePrimary)
+    let dataobjPrimary = JSON.stringify(A4AModelCompanyNamePrimary)
     $.ajax({
         url: '/api/SaveCouncilCommitteeCompanyDtl',
         type: "post",
-        data: dataobj,
+        data: dataobjPrimary,
         contentType: 'application/json',
         dataType: "Json",
         success: function (result) {
@@ -2060,6 +2081,34 @@ function saveA4ACompanyRoles() {
             alert("Error updating the records:" + exception.responseText);
         }
     });
+
+    for (var key of CompanyNameAlternate.keys()) {
+        A4AModelCompanyNameAlternate.push({
+            groupId: self.gId(),
+            CompanyName: key,
+            value: CompanyNameAlternate.get(key),
+            RoleId: "2",
+        })
+    }
+
+    let dataobjAlternate = JSON.stringify(A4AModelCompanyNameAlternate)
+    $.ajax({
+        url: '/api/SaveCouncilCommitteeCompanyDtl',
+        type: "post",
+        data: dataobjAlternate,
+        contentType: 'application/json',
+        dataType: "Json",
+        success: function (result) {
+            alert("Records updated successfully!");
+        },
+        error: function (exception) {
+            alert("Error updating the records:" + exception.responseText);
+        }
+    });
+
     CompanyNamePrimary = new Map();
     A4AModelCompanyNamePrimary = new Array();
+
+    CompanyNameAlternate = new Map();
+    A4AModelCompanyNameAlternate = new Array();
 }
