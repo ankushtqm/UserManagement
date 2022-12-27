@@ -4,6 +4,9 @@
 var SendEmailAdmin = new Map();
 var A4AModelEmailAdmin = new Array();
 
+var CompanyNamePrimary = new Map();
+var A4AModelCompanyNamePrimary = new Array();
+
 function clearalltimeouts() {
     var highestTimeoutId = setTimeout(";");
     for (var i = 0; i < highestTimeoutId; i++) {
@@ -536,12 +539,12 @@ ko.bindingHandlers.ko_autocomplete = {
 };
 var AutoCompleteExample;
 (function (AutoCompleteExample) {
-
     var ViewModel = (function () {
         function ViewModel() {
             this.selectedValue = ko.observable();
             this.selectedValuesNW = ko.observableArray();
         }
+
         ViewModel.prototype.gId = ko.observable(0);
         ViewModel.prototype.errorMessage = ko.observable();
         ViewModel.prototype.InfoMessage = ko.observable();
@@ -1238,6 +1241,7 @@ ko.observableArray.fn.distinct = function (prop) {
 /*******Tab 4 - Council/Committee View Model - FINAL********/
 /////////////////////////////////////////////////////////////////////
 function councilCommitteeViewModel(params) {
+    debugger;
     self = this;
     self.Company = ko.observable(params && params.Company || '1');
     self.errorPrimUser = ko.observable();
@@ -1275,6 +1279,7 @@ function councilCommitteeViewModel(params) {
     /********************************************/
     self.CompanyUsers = ko.observableArray();
     self.getCompanyUsers = function (request, response) {
+        debugger;
         var text = request.term;
         $.ajax({
             url: '/api/GetComapnyUsers/?CompanyName=' + params.Company, //term=' + request.term +
@@ -1283,6 +1288,7 @@ function councilCommitteeViewModel(params) {
             data: request,
             dataType: 'json',
             success: function (json) {
+                debugger;
                 response($.map(json, function (key, value) {
                     return {
                         label: value,
@@ -1463,6 +1469,12 @@ function councilCommitteeViewModel(params) {
             $(".overlay").hide();
         } $(".overlay").hide();
     };
+
+    this.selectCompanyNamePrimary = function (event, ui) {
+        if (params.Company.length > 0 && !isNaN(gId)) {
+            CompanyNamePrimary.set(params.Company, ui.target.checked)
+        }
+    };
 }
 /// END OF Council/Committee
 /////////////////////////////////////////////////////////////////////////////
@@ -1473,7 +1485,7 @@ function councilCommitteeViewModel(params) {
 ///////////////////////////////////////
 //GGA CommitteePrimAlt
 ////////////////////////////////////// 
-var CommitteePrimAlt = function (Name, UserId, Type, CompanyName, Alternate, Primary, Informational, EmailAdmin) {
+var CommitteePrimAlt = function (Name, UserId, Type, CompanyName, Alternate, Primary, Informational, CheckStatus) {
     this.Name = ko.observable(Name);
     this.UserId = ko.observable(UserId);
     this.CompanyName = ko.observable(CompanyName);
@@ -1481,7 +1493,7 @@ var CommitteePrimAlt = function (Name, UserId, Type, CompanyName, Alternate, Pri
     this.Alternate = ko.observable(Alternate);
     this.Primary = ko.observable(Primary);
     this.Informational = ko.observable(Informational);
-    this.EmailAdmin = ko.observable(EmailAdmin);
+    this.CheckStatus = ko.observable(CheckStatus);
 }
 
 var councilCommitteeGGAViewModel = function () {
@@ -1684,7 +1696,7 @@ var councilCommitteeGGAViewModel = function () {
             if (CommitteePrimAlt.Type() === "Informational")
                 role = 5;
             var URL = "/api/RemoveGrpUsrbyUserId/?UserId=" + CommitteePrimAlt.UserId() + "&GroupId=" + self.gId() + "&RoleId=" + role;
-            RemoveGroupUser(URL);//, CommitteePrimAlt.CompanyName, CommitteePrimAlt.Type);  
+            RemoveGroupUser(URL);
             $(".overlay").hide();
             return false;
         }
@@ -1778,11 +1790,11 @@ var councilCommitteeGGAViewModel = function () {
                 var result = JSON.parse(data);
                 for (i = 0; i < result.length; i++) {
                     if (result[i].RoleId === 1) {
-                        self.people.push(new CommitteePrimAlt(result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, true, false, false, result[i].EmailAdmin));
+                        self.people.push(new CommitteePrimAlt(result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, true, false, false, result[i].CheckStatus));
                     }
                     else
                         if (result[i].RoleId === 2) {
-                            self.people.push(new CommitteePrimAlt(result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, false, true, false, result[i].EmailAdmin));
+                            self.people.push(new CommitteePrimAlt(result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, false, true, false, result[i].CheckStatus));
                         }
                         else
                             if (result[i].RoleId === 3) {
@@ -1813,7 +1825,7 @@ var councilCommitteeGGAViewModel = function () {
             success: function (data) {
                 var result = JSON.parse(data);
                 for (i = 0; i < result.length; i++) {
-                    self.people.push(new CommitteePrimAlt(result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, false, false, true, result[i].EmailAdmin));
+                    self.people.push(new CommitteePrimAlt(result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, false, false, true, result[i].CheckStatus));
                 }
             },
             error: function (exception) { ViewModel.prototype.errorMessage(exception.responseText); }
@@ -1827,7 +1839,6 @@ function DisablePrimary() {
         if (undefined !== $('#hdnViceChairComp').val().replace(/\s/g, '') && undefined !== $("#Prim" + $('#hdnViceChairComp').val().replace(/\s/g, '')).val() && $("#Prim" + $('#hdnViceChairComp').val().replace(/\s/g, '')).val().length > 0) {
             $("#Alt" + $('#hdnViceChairComp').val().replace(/\s/g, '')).attr("disabled", "disabled");
         }
-
         if (undefined !== $('#hdnViceChairComp').val().replace(/\s/g, '') && undefined !== $("#Alt" + $('#hdnViceChairComp').val().replace(/\s/g, '')).val() && $("#Alt" + $('#hdnViceChairComp').val().replace(/\s/g, '')).val().length > 0) {
             $("#Prim" + $('#hdnViceChairComp').val().replace(/\s/g, '')).attr("disabled", "disabled");
         }
@@ -1842,6 +1853,7 @@ function DisablePrimary() {
         // TODO: Thinkhow to handle this  $('.spnMessage').append("Error disabling the Primary!!");
     }
 }
+
 /////////////////////////////////////////////////////////////////////
 /*******Global KO binding Object********/
 /////////////////////////////////////////////////////////////////////
@@ -1857,12 +1869,12 @@ $(document).ready(function () {
     ko.components.register('primaryalternate', {
         viewModel: councilCommitteeViewModel,
         template: "<div class='row' style='margin-bottom:8px;'> <div class='col-sm-2'> <span class='niceLabel' data-bind='text: Company'></span></div>" +
-            "<div class='col-sm-4'><input type='checkbox' name='EmailAdmin' /><input type='text' class='P1 chosen form-control' style='width:300px;' data-bind='value:PrimUserValue,attr: { id:PrimaryID()},ko_autocomplete: { source: getCompanyUsers, select: selectPrimary ,minLength: 3,close: closeSelect }'/>" +
+            "<div class='col-sm-4'><input type='checkbox' name='CompanyNamePrimary' style='margin-right:10px' data-bind='event:{ change: selectCompanyNamePrimary}' /><input type='text' class='P1 chosen form-control' style='width:300px;' data-bind='value:PrimUserValue,attr: { id:PrimaryID()},ko_autocomplete: { source: getCompanyUsers, select: selectPrimary ,minLength: 3,close: closeSelect }'/>" +
             "<a href='#' class='text-danger btndelete' style='vertical-align: middle;padding-left:7px;' data-bind='click: $data.removePrimGroupUser'>Delete</a></div>" +
-            "<div class='col-sm-4'><input type='checkbox' name='EmailAdmin' /><input type='text' class='A1 chosen form-control' style='width:300px;' data-bind='value:AltUserValue,attr: { id:AlternateID() },ko_autocomplete: { source: getCompanyUsers, select: selectAlternate ,minLength:3,close: closeSelect }'/>" +
-            "<a href='#' class='text-danger btndelete' style='vertical-align: middle;padding-left:7px;'  data-bind='click: removeAltGroupUser'>Delete</a></div></div>"
-
+            "<div class='col-sm-4'><input type='checkbox' name='CompanyNameAlternate' style='margin-right:10px' /><input type='text' class='A1 chosen form-control' style='width:300px;' data-bind='value:AltUserValue,attr: { id:AlternateID() },ko_autocomplete: { source: getCompanyUsers, select: selectAlternate ,minLength:3,close: closeSelect }'/>" +
+            "<a href='#' class='text-danger btndelete' style='vertical-align: middle;padding-left:7px;' data-bind='click: removeAltGroupUser'>Delete</a></div></div>"
     });
+
     function getGID(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
             sURLVariables = sPageURL.split('&'), sParameterName, i;
@@ -1873,8 +1885,8 @@ $(document).ready(function () {
             }
         }
     }
+
     function SetPrimaryAlternate(groupid, roleid) {
-        //alert("Got In SetPrimaryAlternate 1");
         var query = "/api/GetGroupUserlineItem/?GroupId=" + groupid;
         $.ajax({
             url: query,
@@ -2021,4 +2033,33 @@ function saveA4ACommitteeRoles() {
     });
     SendEmailAdmin = new Map();
     A4AModelEmailAdmin = new Array();
+}
+
+function saveA4ACompanyRoles() {
+    debugger;
+    for (var key of CompanyNamePrimary.keys()) {
+        A4AModelCompanyNamePrimary.push({
+            groupId: self.gId(),
+            CompanyName: key,
+            value: CompanyNamePrimary.get(key),
+            RoleId: "1",
+        })
+    }
+
+    let dataobj = JSON.stringify(A4AModelCompanyNamePrimary)
+    $.ajax({
+        url: '/api/SaveCouncilCommitteeCompanyDtl',
+        type: "post",
+        data: dataobj,
+        contentType: 'application/json',
+        dataType: "Json",
+        success: function (result) {
+            alert("Records updated successfully!");
+        },
+        error: function (exception) {
+            alert("Error updating the records:" + exception.responseText);
+        }
+    });
+    CompanyNamePrimary = new Map();
+    A4AModelCompanyNamePrimary = new Array();
 }

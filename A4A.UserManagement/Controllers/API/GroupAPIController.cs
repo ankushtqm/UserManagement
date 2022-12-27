@@ -18,6 +18,7 @@ using System.Linq;
 using ATA.CodeLibrary;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using System.Web.Security;
 
 namespace A4A.UM.Controllers
 {
@@ -1961,6 +1962,55 @@ namespace A4A.UM.Controllers
                                         GroupId = Int32.Parse(reader["GroupId"].ToString()),
                                         UserId = Int32.Parse(reader["UserId"].ToString()),
                                         Value = Convert.ToBoolean(reader["Value"].ToString())
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in saving group user roles.", ex.InnerException);
+            }
+            return "Succesfully Updated!";
+        }
+
+        [Route("api/SaveCouncilCommitteeCompanyDtl")]
+        [HttpPost]
+        public string SaveCouncilCommitteeCompanyDtl(List<GroupCompanyUserRoles> groupCompanyUserRole)
+        {
+            try
+            {
+                for (int i = 0; i < groupCompanyUserRole.Count; i++)
+                {
+                    int GroupId = groupCompanyUserRole[i].GroupId;
+                    string CompanyName = groupCompanyUserRole[i].CompanyName;
+                    bool CheckStatus = groupCompanyUserRole[i].Value;
+                    int RoleId = groupCompanyUserRole[i].RoleId;
+                    DataTable dt = groupCompanyUserRole.ToDataTable<GroupCompanyUserRoles>();
+                    using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
+                    {
+                        StringBuilder sql = new StringBuilder();
+                        using (SqlCommand cmd = new SqlCommand("p_Save_UserGroup_Council_Committee_Company_User_Dtl", con))
+                        {
+                            con.Open();
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@GroupId", GroupId);
+                            cmd.Parameters.AddWithValue("@CompanyName", CompanyName);
+                            cmd.Parameters.AddWithValue("@Value", CheckStatus);
+                            cmd.Parameters.AddWithValue("@RoleId", RoleId);
+                            var reader = cmd.ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    groupCompanyUserRole.Add(new GroupCompanyUserRoles()
+                                    {
+                                        GroupId = Int32.Parse(reader["GroupId"].ToString()),
+                                        CompanyName = Convert.ToString(reader["CompanyName"].ToString()),
+                                        Value = Convert.ToBoolean(reader["Value"].ToString()),
+                                        RoleId = Convert.ToInt32(reader["RoleId"].ToString())
                                     });
                                 }
                             }

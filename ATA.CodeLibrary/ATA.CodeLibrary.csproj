@@ -86,6 +86,7 @@
     <Compile Include="CommitteeRole.cs" />
     <Compile Include="DataTableConversion.cs" />
     <Compile Include="GroupCommitteeUserRoles.cs" />
+    <Compile Include="GroupCompanyUserRoles.cs" />
     <Compile Include="GroupUserRoles.cs" />
     <Compile Include="TransactionType.cs" />
     <Compile Include="Transactions.cs" />

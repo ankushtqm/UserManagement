@@ -135,6 +135,9 @@
             <div data-bind="with: UMSubscribeModel">
                 <span id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></span>
                 <span class="text-danger margin-topbot10 niceLabel  bold" data-bind='text: $data.errorMessage()'></span>
+                <div id="DivSaveCompanyRoles" class="savecompanyroles">
+                    <button class="btn btn-primary" type='submit' onclick="saveA4ACompanyRoles()">Save Council/Committee Staff Roles</button>
+                </div>
                 <br /><br />
                 <span class="bold" style="vertical-align:middle;">Chair:</span>
                 <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectChair ,minLength: 3 }" />
@@ -217,7 +220,6 @@
     <script type="text/javascript">
         $(document).ready(function () {
             function disabledField(gtype) {
-                debugger;
                 $("input, submit, textarea, select, #a4astaffchosen").prop("disabled", true);
                 $('#DivSaveCommitteeRoles').find("button").hide();
                 $("a4astaffchosen").prop("disabled", true);
@@ -231,7 +233,6 @@
             }
 
             $("#btnEdit").click(() => {
-                debugger;
                 $("input, submit, button, textarea, select").prop("disabled", false);
                 $("#btnEdit").hide();
                 $("a4astaffchosen").prop("disabled", false);
