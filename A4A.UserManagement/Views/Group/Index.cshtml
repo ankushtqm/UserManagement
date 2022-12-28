@@ -57,7 +57,6 @@
     <div style="margin-left:40px">
         <!--TAB 0 -->
         <div>
-
             <div>
                 <h4 class="niceLabel-bold text-warning" style="color: #666;" id="chooseGroupType">Choose Group Type</h4>
                 <hr />
@@ -72,6 +71,7 @@
                 <input type="hidden" id="hdnChairComp" />
                 <input type="hidden" id="hdnViceChairComp" />
                 <input type="hidden" id="hdnMission" />
+                <input type="hidden" id="hdnSaveRoleValues" />
             </div>
         </div>
         <!-- TAB 1 -->
@@ -136,13 +136,16 @@
                 <span id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></span>
                 <span class="text-danger margin-topbot10 niceLabel  bold" data-bind='text: $data.errorMessage()'></span>
                 <div id="DivSaveCompanyRoles" class="savecompanyroles">
-                    <button class="btn btn-primary" type='submit' onclick="saveA4ACompanyRoles()">Save Council/Committee Staff Roles</button>
+                    <button class="btn btn-primary" type='submit' onclick="saveA4ARoles()">Save Council/Committee Staff Roles</button>
                 </div>
                 <br /><br />
                 <span class="bold" style="vertical-align:middle;">Chair:</span>
+                <input type='checkbox' name='chkStaff' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkStaff}, checked:CheckStatusStaff' />
                 <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectChair ,minLength: 3 }" />
                 <a href='#' class='text-danger btndelete' style='padding-left:1px;' data-bind='click: $data.removeChairGroupUser'>Delete</a>
+
                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="bold" style="vertical-align:middle;">Vice Chair:</span>
+                <input type='checkbox' name='chkStaffGroupUser' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkGroupUser}, checked:CheckStatusGroupUser' />
                 <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupViceChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectViceChair ,minLength: 3 }" />
                 <a href='#' class='text-danger btndelete' style='padding-left:1px;' data-bind='click: $data.removeViceChairGroupUser'>Delete</a>
                 <br /><br />
@@ -192,7 +195,6 @@
                 @Html.Partial("_MemberSubscribe")
             </div>
         </div>
-
         <!-- TAB 6 -->
         <div id="z-tab6">
             <br />
@@ -210,7 +212,6 @@
                 <span class="Useredit"></span>
                 <hr />
                 @Html.Partial("_GroupTransaction")
-
             </div>
         </div>
     </div>
@@ -222,6 +223,7 @@
             function disabledField(gtype) {
                 $("input, submit, textarea, select, #a4astaffchosen").prop("disabled", true);
                 $('#DivSaveCommitteeRoles').find("button").hide();
+                $('#DivSaveInformationalRoles').find("button").hide();
                 $("a4astaffchosen").prop("disabled", true);
                 $('#A4AStaffContainer').find("button").hide();
                 $('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('a').hide();
@@ -241,6 +243,7 @@
                 $('#A4AStaffContainer').find("button").show();
                 $('#z-tab2').find('a').show(); $('#z-tab2').find('input').prop('disabled', false);
                 $('#DivSaveCommitteeRoles').find("button").show();
+                $('#DivSaveInformationalRoles').find("button").show();
             })
             /* jQuery activation and setting options for second tabs, enabling multiline*/
             var isAdmin = false;

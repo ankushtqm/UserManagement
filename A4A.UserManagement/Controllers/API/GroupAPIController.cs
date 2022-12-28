@@ -896,6 +896,7 @@ namespace A4A.UM.Controllers
                 {
                     ATAGroup grp = new ATAGroup(ug.GroupId);
                     IsGGA = (grp.GroupTypeId == 7 || grp.GroupTypeId == 8 || grp.GroupTypeId == 9 || grp.GroupTypeId == 10) ? true : IsGGA;
+                    
                     //bool isGGAGroup = IsGGA; //todo: Remove the isGGA from api method parameter list
                     bool isDoublePrimary = (grp.GroupTypeId == 9 || grp.GroupTypeId == 10) ? true : false;
 
@@ -955,7 +956,6 @@ namespace A4A.UM.Controllers
                                                     HttpError err = new HttpError(message);
                                                     return Request.CreateResponse(HttpStatusCode.NotFound, err);
                                                 }
-
                                             }
                                             else
                                             {
@@ -1930,58 +1930,13 @@ namespace A4A.UM.Controllers
             }
         }
 
-        [Route("api/savecommitteeroles")]
-        [HttpPost]
-        public string SaveCouncilCommitteeDtl(List<GroupCommitteeUserRoles> groupCommitteeUserRole)
-        {
-            try
-            {
-                for (int i = 0; i < groupCommitteeUserRole.Count; i++)
-                {
-                    int GroupId = groupCommitteeUserRole[i].GroupId;
-                    int UserId = groupCommitteeUserRole[i].UserId;
-                    bool CheckStatus = groupCommitteeUserRole[i].Value;
-                    DataTable dt = groupCommitteeUserRole.ToDataTable<GroupCommitteeUserRoles>();
-                    using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
-                    {
-                        StringBuilder sql = new StringBuilder();
-                        using (SqlCommand cmd = new SqlCommand("p_Save_UserGroup_Council_Committee_Dtl", con))
-                        {
-                            con.Open();
-                            cmd.CommandType = CommandType.StoredProcedure;
-                            cmd.Parameters.AddWithValue("@GroupId", GroupId);
-                            cmd.Parameters.AddWithValue("@UserId", UserId);
-                            cmd.Parameters.AddWithValue("@Value", CheckStatus);
-                            var reader = cmd.ExecuteReader();
-                            if (reader.HasRows)
-                            {
-                                while (reader.Read())
-                                {
-                                    groupCommitteeUserRole.Add(new GroupCommitteeUserRoles()
-                                    {
-                                        GroupId = Int32.Parse(reader["GroupId"].ToString()),
-                                        UserId = Int32.Parse(reader["UserId"].ToString()),
-                                        Value = Convert.ToBoolean(reader["Value"].ToString())
-                                    });
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error in saving group user roles.", ex.InnerException);
-            }
-            return "Succesfully Updated!";
-        }
-
         [Route("api/SaveCouncilCommitteeCompanyDtl")]
         [HttpPost]
         public string SaveCouncilCommitteeCompanyDtl(List<GroupCompanyUserRoles> groupCompanyUserRole)
         {
             try
             {
+                UserGroupJsonModel userGroup = new UserGroupJsonModel();
                 for (int i = 0; i < groupCompanyUserRole.Count; i++)
                 {
                     int GroupId = groupCompanyUserRole[i].GroupId;
@@ -2015,7 +1970,133 @@ namespace A4A.UM.Controllers
                                 }
                             }
                         }
+
+                        userGroup = new UserGroupJsonModel()
+                        {
+                            GroupId = GroupId,
+                            UserId = 0,
+                            ManageGroup = false,
+                            EmailAdmin = CheckStatus,
+                            BounceReports = false,
+                            StaffSubscribe = false
+                        };
+                        UpdateLyrisStaffRoles(userGroup, new CommitteeRole[] { CommitteeRole.ManageGroup, CommitteeRole.EmailAdmin, CommitteeRole.BounceReports, CommitteeRole.StaffSubscribe });
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in saving group user roles.", ex.InnerException);
+            }
+            return "Succesfully Updated!";
+        }
+
+        [Route("api/SaveCouncilCommitteeStaffDtl")]
+        [HttpPost]
+        public string SaveCouncilCommitteeStaffDtl(List<GroupStaffUserRoles> groupStaffUserRole)
+        {
+            try
+            {
+                UserGroupJsonModel userGroup = new UserGroupJsonModel();
+                for (int i = 0; i < groupStaffUserRole.Count; i++)
+                {
+                    int GroupId = groupStaffUserRole[i].GroupId;
+                    bool CheckStatus = groupStaffUserRole[i].Value;
+                    int RoleId = groupStaffUserRole[i].RoleId;
+                    DataTable dt = groupStaffUserRole.ToDataTable<GroupStaffUserRoles>();
+                    using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
+                    {
+                        StringBuilder sql = new StringBuilder();
+                        using (SqlCommand cmd = new SqlCommand("p_Save_UserGroup_Council_Committee_Group_User_Dtl", con))
+                        {
+                            con.Open();
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@GroupId", GroupId);
+                            cmd.Parameters.AddWithValue("@Value", CheckStatus);
+                            cmd.Parameters.AddWithValue("@RoleId", RoleId);
+                            var reader = cmd.ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    groupStaffUserRole.Add(new GroupStaffUserRoles()
+                                    {
+                                        GroupId = Int32.Parse(reader["GroupId"].ToString()),
+                                        Value = Convert.ToBoolean(reader["Value"].ToString()),
+                                        RoleId = Convert.ToInt32(reader["RoleId"].ToString())
+                                    });
+                                }
+                            }
+                        }
+
+                        userGroup = new UserGroupJsonModel()
+                        {
+                            GroupId = GroupId,
+                            UserId = 0,
+                            ManageGroup = false,
+                            EmailAdmin = CheckStatus,
+                            BounceReports = false,
+                            StaffSubscribe = false
+                        };
+                        UpdateLyrisStaffRoles(userGroup, new CommitteeRole[] { CommitteeRole.ManageGroup, CommitteeRole.EmailAdmin, CommitteeRole.BounceReports, CommitteeRole.StaffSubscribe });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in saving group user roles.", ex.InnerException);
+            }
+            return "Succesfully Updated!";
+        }
+
+        [Route("api/savecommitteeroles")]
+        [HttpPost]
+        public string SaveCouncilCommitteeDtl(List<GroupCommitteeUserRoles> groupCommitteeUserRole)
+        {
+            try
+            {
+                UserGroupJsonModel userGroup = new UserGroupJsonModel();
+                for (int i = 0; i < groupCommitteeUserRole.Count; i++)
+                {
+                    int GroupId = groupCommitteeUserRole[i].GroupId;
+                    int UserId = groupCommitteeUserRole[i].UserId;
+                    bool CheckStatus = groupCommitteeUserRole[i].Value;
+                    DataTable dt = groupCommitteeUserRole.ToDataTable<GroupCommitteeUserRoles>();
+                    using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
+                    {
+                        StringBuilder sql = new StringBuilder();
+                        using (SqlCommand cmd = new SqlCommand("p_Save_UserGroup_Council_Committee_Dtl", con))
+                        {
+                            con.Open();
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@GroupId", GroupId);
+                            cmd.Parameters.AddWithValue("@UserId", UserId);
+                            cmd.Parameters.AddWithValue("@Value", CheckStatus);
+                            var reader = cmd.ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    groupCommitteeUserRole.Add(new GroupCommitteeUserRoles()
+                                    {
+                                        GroupId = Int32.Parse(reader["GroupId"].ToString()),
+                                        UserId = Int32.Parse(reader["UserId"].ToString()),
+                                        Value = Convert.ToBoolean(reader["Value"].ToString())
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    userGroup = new UserGroupJsonModel()
+                    {
+                        GroupId = GroupId,
+                        UserId = UserId,
+                        ManageGroup = false,
+                        EmailAdmin = CheckStatus,
+                        BounceReports = false,
+                        StaffSubscribe = false
+                    };
+                    UpdateLyrisStaffRoles(userGroup, new CommitteeRole[] { CommitteeRole.ManageGroup, CommitteeRole.EmailAdmin, CommitteeRole.BounceReports, CommitteeRole.StaffSubscribe });
                 }
             }
             catch (Exception ex)

@@ -1,31 +1,34 @@
 ﻿<div class="GroupSubscriber" id="GroupSubscriberContainer">
-    @*<div class="overlay">
-        <div id="loading-img"></div>
-    </div>*@
     <span class="text-success niceLabel margin-topbot10  bold" data-bind="text: InfoMessage"></span>
-    <span class="text-danger niceLabel margin-topbot10  bold" data-bind="text: errorMessage" id="ErrMessageMemSub"></span>   @*data-bind="text: errorMessage"*@
+    <span class="text-danger niceLabel margin-topbot10  bold" data-bind="text: errorMessage" id="ErrMessageMemSub"></span>
 
-    <p>You have selected <span data-bind='text: $data.selectedValues().length'>&nbsp;</span> Subscribers</p>  
-    <br/> 
+    <p>You have selected <span data-bind='text: $data.selectedValues().length'>&nbsp;</span> Subscribers</p>
+    <br />
     <label for="acSubInfoUser">Contact: </label>
     <p>
-        <input type="text" class="acSubInfoUser chosen form-control" style="width:300px;" placeholder="Search Contacts"  id="acSubInfoUser" data-bind="ko_autocomplete: {source: getLanguages, select: selectLanguage ,minLength: 3 }" />
+        <input type="text" class="acSubInfoUser chosen form-control" style="width:300px;" placeholder="Search Contacts" id="acSubInfoUser" data-bind="ko_autocomplete: {source: getLanguages, select: selectLanguage ,minLength: 3 }" />
         <a href='#' class='text-danger btndelete' data-bind="click: clearSubscribertxt">Delete</a>
-    </p> 
-   <table class="table" data-bind='visible: $data.selectedValues().length > 0'>
-     <thead>
-        <tr>
-           <th class="control-label">Name</th>
-           <th class="control-label">CompanyName</th>
-           <th class="control-label">Delete</th>
-        </tr>
-     </thead>
-     <tbody data-bind="foreach: $data.selectedValues().sort(function(l,r) { return l.Name == r.Name ? 0 : (l.Name < r.Name ? -1 : 1)}) ">
-         <tr>
-             <td><span data-bind="text: Name"></span></td> 
-             <td><span data-bind='text: CompanyName'></span></td>
-             <td><a href='#' data-bind='click: $parent.removeUMContacts'>Delete</a></td>
-         </tr>
-     </tbody>
-   </table> 
- </div>
+    </p>
+    <table class="table" data-bind='visible: $data.selectedValues().length > 0'>
+        <thead>
+            <tr>
+                <th class="control-label">Email Administrator</th>
+                <th class="control-label">Name</th>
+                <th class="control-label">CompanyName</th>
+                <th class="control-label">Delete</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: $data.selectedValues().sort(function(l,r) { return l.Name == r.Name ? 0 : (l.Name < r.Name ? -1 : 1)}) ">
+            <tr>
+                <td><input type='checkbox' name='chkInformationalContact' data-bind="value:UserId, checked:CheckStatus" onchange="chkInformationalRoles(this)" /></td>
+                <td><span data-bind="text: Name"></span></td>
+                <td><span data-bind='text: CompanyName'></span></td>
+                <td><a href='#' data-bind='click: $parent.removeUMContacts'>Delete</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="DivSaveInformationalRoles" class="saveinformationalroles">
+        <button class="btn btn-primary" type='submit' onclick="saveA4AInformationalRoles()">Save Informational Contact Staff Roles</button>
+    </div>
+</div>

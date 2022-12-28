@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace ATA.CodeLibrary
 {
-    public class GroupCommitteeUserRoles
+    public class GroupStaffUserRoles
     {
         public int GroupId { get; set; }
-        public int UserId { get; set; }
-        public bool Value { get; set; }   
+        public bool Value { get; set; }
+        public int RoleId { get; set; }
     }
 }
