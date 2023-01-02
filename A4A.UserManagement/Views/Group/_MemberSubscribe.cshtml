@@ -20,7 +20,7 @@
         </thead>
         <tbody data-bind="foreach: $data.selectedValues().sort(function(l,r) { return l.Name == r.Name ? 0 : (l.Name < r.Name ? -1 : 1)}) ">
             <tr>
-                <td class="element-width"><input type='checkbox' name='chkInformationalContact' data-bind="value:UserId, checked:CheckStatus" onchange="chkInformationalRoles(this)" /></td>
+                <td class="element-width"><input type='checkbox' name='EmailAdmin' data-bind="value:UserId, checked:CheckStatus" onchange="chkInformationalRoles(this)" /></td>
                 <td class="element-width"><span data-bind="text: Name"></span></td>
                 <td class="element-width"><span data-bind='text: CompanyName'></span></td>
                 <td class="element-width"><a href='#' data-bind='click: $parent.removeUMContacts'>Delete</a></td>

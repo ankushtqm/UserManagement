@@ -142,12 +142,12 @@
                 </div>
                 <br /><br />
                 <span class="bold" style="vertical-align:middle;">Chair:</span>
-                <input type='checkbox' name='chkStaff' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkStaff}, checked:CheckStatusStaff' />
+                <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkStaff}, checked:CheckStatusStaff' />
                 <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectChair ,minLength: 3 }" />
                 <a href='#' class='text-danger btndelete' style='padding-left:1px;' data-bind='click: $data.removeChairGroupUser'>Delete</a>
 
                 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="bold" style="vertical-align:middle;">Vice Chair:</span>
-                <input type='checkbox' name='chkStaffGroupUser' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkGroupUser}, checked:CheckStatusGroupUser' />
+                <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkGroupUser}, checked:CheckStatusGroupUser' />
                 <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupViceChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectViceChair ,minLength: 3 }" />
                 <a href='#' class='text-danger btndelete' style='padding-left:1px;' data-bind='click: $data.removeViceChairGroupUser'>Delete</a>
                 <br /><br />

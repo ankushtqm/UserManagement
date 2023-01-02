@@ -21,6 +21,9 @@ var A4AModelChkGroupUser = new Array();
 var chkInformationalUser = new Map();
 var A4AModelInformationalUser = new Array();
 
+var CheckStatusStaff = ko.observable(false);
+var CheckStatusGroupUser = ko.observable(false);
+
 function clearalltimeouts() {
     var highestTimeoutId = setTimeout(";");
     for (var i = 0; i < highestTimeoutId; i++) {
@@ -59,6 +62,7 @@ function Group(HiddenGroupId, GroupName, AppliesToSiteId, GroupTypeId, LyrisList
     self.InfoMessage = ko.observable();
     self.gId = ko.observable();
     self.edit = ko.observable(false);
+   
 
     ///^[a-z0-9]+$/i
     var patterns = {
@@ -1916,10 +1920,10 @@ $(document).ready(function () {
     ko.components.register('primaryalternate', {
         viewModel: councilCommitteeViewModel,
         template: "<div class='row' style='margin-bottom:8px;'> <div class='col-sm-2'> <span class='niceLabel' data-bind='text: Company'></span></div>" +
-            "<div class='col-sm-1' style='text-align:center'><input type='checkbox' name='CompanyNamePrimary' style='margin-right:10px' data-bind='attr: { id:ChkPrimaryID()}, event:{ change: selectCompanyNamePrimary}, checked:CheckStatusPrimary' /></div>" +
+            "<div class='col-sm-1' style='text-align:center'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkPrimaryID()}, event:{ change: selectCompanyNamePrimary}, checked:CheckStatusPrimary' /></div>" +
             "<div class='col-sm-3'><input type='text' class='P1 chosen form-control' style='width:300px;' data-bind='value:PrimUserValue,attr: { id:PrimaryID()},ko_autocomplete: { source: getCompanyUsers, select: selectPrimary ,minLength: 3,close: closeSelect }' />" +
             "<a href='#' class='text-danger btndelete' style='vertical-align: middle;padding-left:7px;' data-bind='click: $data.removePrimGroupUser'>Delete</a></div>" +
-            "<div class='col-sm-1' style='text-align:center'><input type='checkbox' name='CompanyNameAlternate' style='margin-right:10px' data-bind='attr: { id:ChkAlternateID()}, event:{ change: selectCompanyNameAlternate}, checked:CheckStatusAlternate' /></div>" +
+            "<div class='col-sm-1' style='text-align:center'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkAlternateID()}, event:{ change: selectCompanyNameAlternate}, checked:CheckStatusAlternate' /></div>" +
             "<div class='col-sm-3'><input type='text' class='A1 chosen form-control' style='width:300px;' data-bind='value:AltUserValue,attr: { id:AlternateID() },ko_autocomplete: { source: getCompanyUsers, select: selectAlternate ,minLength:3,close: closeSelect }'/>" +
             "<a href='#' class='text-danger btndelete' style='vertical-align: middle;padding-left:7px;' data-bind='click: removeAltGroupUser'>Delete</a></div></div>"
     });
@@ -1960,8 +1964,8 @@ $(document).ready(function () {
                             else
                                 if (result[i].RoleId === 3) {
                                     $('#GroupChair').val(Name + ' (' + t + ')');
-                                    $('#hdnChairComp').val(result[i].CompanyName);
-                                    self.CheckStatusStaff = ko.observable(result[i].CheckStatus);
+                                    $('#hdnChairComp').val(result[i].CompanyName); 
+                                    CheckStatusStaff(result[i].CheckStatus);
                                     $("#hdnChkStaffUserId").val(result[i].UserId);
                                 }
                                 else
@@ -1970,14 +1974,12 @@ $(document).ready(function () {
                                         $('#GroupViceChair').val(Name + ' (' + t + ')');
                                         $('#hdnViceChairComp').val(result[i].CompanyName);
                                         $("#hdnChkGroupUserId").val(result[i].UserId);
+                                        CheckStatusGroupUser(result[i].CheckStatus);
                                     }
                     }
                     catch (err) {
                         console.log("error in setting primary/Alternate" + err);
                     }
-
-                    self.CheckStatusGroupUser = ko.observable(result[i].CheckStatus);
-                    
                 }
             },
             error: function (exception) {
@@ -2058,7 +2060,6 @@ function handleClick(myRadio) {
     else {
         $("input[name='EmailAdmin']").prop("disabled", false);
     }
-
     $('#hdnchkRadioId').val(myRadio.value);
 }
 
