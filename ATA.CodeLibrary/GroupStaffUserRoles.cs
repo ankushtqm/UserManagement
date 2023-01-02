@@ -9,6 +9,7 @@ namespace ATA.CodeLibrary
     public class GroupStaffUserRoles
     {
         public int GroupId { get; set; }
+        public int UserId { get; set; }
         public bool Value { get; set; }
         public int RoleId { get; set; }
     }

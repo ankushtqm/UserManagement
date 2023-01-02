@@ -1943,7 +1943,26 @@ namespace A4A.UM.Controllers
                     string CompanyName = groupCompanyUserRole[i].CompanyName;
                     bool CheckStatus = groupCompanyUserRole[i].Value;
                     int RoleId = groupCompanyUserRole[i].RoleId;
-                    DataTable dt = groupCompanyUserRole.ToDataTable<GroupCompanyUserRoles>();
+
+                    DataTable dt = new DataTable();
+                    int UsereId = 0;
+                    using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
+                    {
+                        StringBuilder sql = new StringBuilder();
+                        using (SqlCommand cmd = new SqlCommand("p_Get_UserGroup_Council_Committee_Company_User_Dtl", con))
+                        {
+                            con.Open();
+                            SqlParameter[] spm = new SqlParameter[4];
+                            spm[0] = new SqlParameter("@GroupId", GroupId);
+                            spm[1] = new SqlParameter("@CompanyName", CompanyName);
+                            spm[2] = new SqlParameter("@Value", CheckStatus);
+                            spm[3] = new SqlParameter("@RoleId", RoleId);
+                            cmd.Parameters.AddRange(spm);
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            UsereId = Int32.Parse(cmd.ExecuteScalar().ToString());
+                        }
+                    }
+
                     using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
                     {
                         StringBuilder sql = new StringBuilder();
@@ -1974,7 +1993,7 @@ namespace A4A.UM.Controllers
                         userGroup = new UserGroupJsonModel()
                         {
                             GroupId = GroupId,
-                            UserId = 0,
+                            UserId = UsereId,
                             ManageGroup = false,
                             EmailAdmin = CheckStatus,
                             BounceReports = false,
@@ -2001,6 +2020,7 @@ namespace A4A.UM.Controllers
                 for (int i = 0; i < groupStaffUserRole.Count; i++)
                 {
                     int GroupId = groupStaffUserRole[i].GroupId;
+                    int UserId = groupStaffUserRole[i].UserId;
                     bool CheckStatus = groupStaffUserRole[i].Value;
                     int RoleId = groupStaffUserRole[i].RoleId;
                     DataTable dt = groupStaffUserRole.ToDataTable<GroupStaffUserRoles>();
@@ -2032,7 +2052,7 @@ namespace A4A.UM.Controllers
                         userGroup = new UserGroupJsonModel()
                         {
                             GroupId = GroupId,
-                            UserId = 0,
+                            UserId = UserId,
                             ManageGroup = false,
                             EmailAdmin = CheckStatus,
                             BounceReports = false,

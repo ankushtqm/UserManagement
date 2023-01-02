@@ -626,14 +626,14 @@ var AutoCompleteExample;
                 if (+$("#hdnSubscribeInformational").val() === 1) //ViewModel.prototype.SorI not working for somereason so changed to hidden field.
                 {
                     role = "Participant";
-                    temp = [{ "Name": UsernCompname, "UserId": ui.item.text, "Participant": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname }];
-                    temp1 = { "Name": UsernCompname, "UserId": ui.item.text, "Participant": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname };
+                    temp = [{ "Name": UsernCompname, "UserId": ui.item.text, "Participant": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname,"CheckStatus":false }];
+                    temp1 = { "Name": UsernCompname, "UserId": ui.item.text, "Participant": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false };
                 }
                 else
                     if (+$("#hdnSubscribeInformational").val() === 2) {
                         role = "Informational";
-                        temp = [{ "Name": UsernCompname, "UserId": ui.item.text, "Informational": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname }];
-                        temp1 = { "Name": UsernCompname, "UserId": ui.item.text, "Informational": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname };
+                        temp = [{ "Name": UsernCompname, "UserId": ui.item.text, "Informational": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false }];
+                        temp1 = { "Name": UsernCompname, "UserId": ui.item.text, "Informational": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false };
                     }
                     else {
                         ViewModel.prototype.errorMessage("Subscription group type is not selected, Contact IT for help!");
@@ -721,6 +721,7 @@ var AutoCompleteExample;
                 }
                 var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Chair": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": company }];
                 var dataObject = ko.utils.stringifyJson(temp);
+                $("#hdnChkStaffUserId").val(ui.item.text);
 
                 $.ajax({
                     url: '/api/UserGroup',
@@ -797,6 +798,9 @@ var AutoCompleteExample;
                     setTimeout(function () { $('.spnMessage').html(""); }, 6000);
                     return;
                 }
+
+                $("#hdnChkGroupUserId").val(ui.item.text);
+
                 var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "ViceChair": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": company }];
                 var dataObject = ko.utils.stringifyJson(temp);
                 $.ajax({
@@ -1958,12 +1962,14 @@ $(document).ready(function () {
                                     $('#GroupChair').val(Name + ' (' + t + ')');
                                     $('#hdnChairComp').val(result[i].CompanyName);
                                     self.CheckStatusStaff = ko.observable(result[i].CheckStatus);
+                                    $("#hdnChkStaffUserId").val(result[i].UserId);
                                 }
                                 else
                                     if (result[i].RoleId === 4) {
                                         6
                                         $('#GroupViceChair').val(Name + ' (' + t + ')');
-                                        $('#hdnViceChairComp').val(result[i].CompanyName); 
+                                        $('#hdnViceChairComp').val(result[i].CompanyName);
+                                        $("#hdnChkGroupUserId").val(result[i].UserId);
                                     }
                     }
                     catch (err) {
@@ -1971,6 +1977,7 @@ $(document).ready(function () {
                     }
 
                     self.CheckStatusGroupUser = ko.observable(result[i].CheckStatus);
+                    
                 }
             },
             error: function (exception) {
@@ -2133,6 +2140,7 @@ function saveA4AStaffRoles(msg) {
     for (var key of ChkStaff.keys()) {
         A4AModelChkStaff.push({
             groupId: self.gId(),
+            UserId: $('#hdnChkStaffUserId').val(),
             value: ChkStaff.get(key),
             RoleId: "3",
         })
@@ -2162,6 +2170,7 @@ function saveA4AGroupUserRoles(msg) {
     for (var key of ChkGroupUser.keys()) {
         A4AModelChkGroupUser.push({
             groupId: self.gId(),
+            UserId: $('#hdnChkGroupUserId').val(),
             value: ChkGroupUser.get(key),
             RoleId: "4",
         })
