@@ -549,7 +549,7 @@
                                                 if (full.ManageGroup === 1) {
                                                     return '<input type="checkbox" class="chklist12" name="Subscribe" value=' + full.GroupId + ' onchange = "Subscribe(this)" checked>';
                                                 }
-                                                return '<input type="checkbox" class="chklist12" checked disabled>'
+                                                return '<div class="chklist"><label class="chklistcontainer"><input type="checkbox" checked disabled style="display:none"><span class="checkmark"></span></label></div>'
                                             }
                                             else {
                                                 if (full.ManageGroup === 1) {
