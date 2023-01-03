@@ -296,6 +296,22 @@ function Group(HiddenGroupId, GroupName, AppliesToSiteId, GroupTypeId, LyrisList
                 councilCommitteeViewModel.gId = data.GroupId;
                 groupRegisterViewModel.addA4AStaffViewModel.hasBounceReports(data.BounceReports);
                 enableForm();
+
+                debugger;
+                $('#hdnSaveGroupValue').val("1");
+                var EmailSendId = $('input[name="LyrisSends"]:checked').val();
+                if (EmailSendId != "1") {
+                    $("input[name='EmailAdmin']").prop("disabled", true);
+                    $('#DivSaveInformationalRoles').find("button").hide();
+                    $('#DivSaveCompanyRoles').find("button").hide();
+                    $('#DivSaveCommitteeRoles').find("button").hide();
+                }
+                else {
+                    $("input[name='EmailAdmin']").prop("disabled", false);
+                    $('#DivSaveInformationalRoles').find("button").show();
+                    $('#DivSaveCompanyRoles').find("button").show();
+                    $('#DivSaveCommitteeRoles').find("button").show();
+                }
             });
         }
     };
@@ -314,6 +330,7 @@ function Group(HiddenGroupId, GroupName, AppliesToSiteId, GroupTypeId, LyrisList
             if (ATAgroup.Liaison2UserId > 0) {
                 self.ShowL2(true);
             }
+            debugger;
             self.Mission(ATAgroup.Mission);
             self.LyrisSendId("" + ATAgroup.LyrisSendId);
             self.DepartmentId(ATAgroup.DepartmentId);
@@ -1578,6 +1595,7 @@ var councilCommitteeGGAViewModel = function () {
         self.userSelectedId(ui.item.text);
     }
     this.selectPrimAltUser4Company = function (event, ui) {
+        debugger;
         if (!isNaN($('#hdnGroupId').val())) {
             self.gId($('#hdnGroupId').val());
             gId = $('#hdnGroupId').val();
@@ -1631,10 +1649,16 @@ var councilCommitteeGGAViewModel = function () {
                                         success: function (data) {
                                             self.people.push(new CommitteePrimAlt(usrname, self.userSelectedId(), roleName, CompanyName, true, false, false, false));
                                             self.infoMessage("Successfully added a Primary user to " + CompanyName);
+                                            if ($('#hdnchkRadioId').val() != "1") {
+                                                $("input[name='EmailAdmin']").prop("disabled", true);
+                                                $('#DivSaveCommitteeRoles').find("button").hide();
+                                            }
+                                            else {
+                                                $("input[name='EmailAdmin']").prop("disabled", false);
+                                                $('#DivSaveCommitteeRoles').find("button").show();
+                                            }
+                                            $('#DivRemoveCommitteePrimAlt').find("a").show();
                                             setTimeout(function () { self.infoMessage(""); }, 6000);
-                                            $("#ggaUser").val("");
-                                            self.role("");
-                                            self.company(null);
                                             return false;
                                         },
                                         error: function (xhr, status, error) {
@@ -1662,10 +1686,16 @@ var councilCommitteeGGAViewModel = function () {
                             success: function (data) {
                                 self.people.push(new CommitteePrimAlt(usrname, self.userSelectedId(), roleName, CompanyName, false, false, true, false));
                                 self.infoMessage("Successfully added an Informational user to " + CompanyName);
+                                if ($('#hdnchkRadioId').val() != "1") {
+                                    $("input[name='EmailAdmin']").prop("disabled", true);
+                                    $('#DivSaveCommitteeRoles').find("button").hide();
+                                }
+                                else {
+                                    $("input[name='EmailAdmin']").prop("disabled", false);
+                                    $('#DivSaveCommitteeRoles').find("button").show();
+                                }
+                                $('#DivRemoveCommitteePrimAlt').find("a").show();
                                 setTimeout(function () { self.infoMessage(""); }, 6000);
-                                $("#ggaUser").val("");
-                                self.role("");
-                                self.company(null);
                                 return false;
                             },
                             error: function (xhr, status, error) {
@@ -1684,10 +1714,16 @@ var councilCommitteeGGAViewModel = function () {
                             success: function (data) {
                                 self.people.push(new CommitteePrimAlt(usrname, self.userSelectedId(), roleName, CompanyName, false, true, false, false));
                                 self.infoMessage("Successfully added an Alternate user to " + CompanyName);
+                                if ($('#hdnchkRadioId').val() != "1") {
+                                    $("input[name='EmailAdmin']").prop("disabled", true);
+                                    $('#DivSaveCommitteeRoles').find("button").hide();
+                                }
+                                else {
+                                    $("input[name='EmailAdmin']").prop("disabled", false);
+                                    $('#DivSaveCommitteeRoles').find("button").show();
+                                }
+                                $('#DivRemoveCommitteePrimAlt').find("a").show();
                                 setTimeout(function () { self.infoMessage(""); }, 6000);
-                                $("#ggaUser").val("");
-                                self.role("");
-                                self.company(null);
                                 return false;
                             },
                             error: function (xhr, status, error) {
@@ -2036,7 +2072,7 @@ function enableForm() {
 }
 
 function handleClick(myRadio) {
-    if (self.gId() > 0 && self.gId() != null) {
+    if ($('#hdnSaveGroupValue').val() == "1") {
         if (myRadio.value != "1") {
             $("input[name='EmailAdmin']").prop("disabled", true);
             $('#DivSaveInformationalRoles').find("button").hide();
@@ -2050,6 +2086,23 @@ function handleClick(myRadio) {
             $('#DivSaveCommitteeRoles').find("button").show();
         }
         $('#hdnchkRadioId').val(myRadio.value);
+    }
+    else {
+        if (self.gId() > 0 && self.gId() != null) {
+            if (myRadio.value != "1") {
+                $("input[name='EmailAdmin']").prop("disabled", true);
+                $('#DivSaveInformationalRoles').find("button").hide();
+                $('#DivSaveCompanyRoles').find("button").hide();
+                $('#DivSaveCommitteeRoles').find("button").hide();
+            }
+            else {
+                $("input[name='EmailAdmin']").prop("disabled", false);
+                $('#DivSaveInformationalRoles').find("button").show();
+                $('#DivSaveCompanyRoles').find("button").show();
+                $('#DivSaveCommitteeRoles').find("button").show();
+            }
+            $('#hdnchkRadioId').val(myRadio.value);
+        }
     }
 }
 

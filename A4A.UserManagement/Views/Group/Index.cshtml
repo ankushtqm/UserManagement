@@ -74,6 +74,7 @@
                 <input type="hidden" id="hdnSaveRoleValues" />
                 <input type="hidden" id="hdnChkStaffUserId" />
                 <input type="hidden" id="hdnChkGroupUserId" />
+                <input type="hidden" id="hdnSaveGroupValue" />
             </div>
         </div>
         <!-- TAB 1 -->
@@ -234,6 +235,7 @@
                 if (gtype == '7' || gtype == '8' || gtype == '9' || gtype == '10') {
                     $('#z-tab4').hide();
                 }
+                $('#DivRemoveCommitteePrimAlt').find("a").hide();
             }
 
             $("#btnEdit").click(() => {
@@ -260,6 +262,7 @@
                         $('#DivSaveCommitteeRoles').find("button").show();
                     }
                 }
+                $('#DivRemoveCommitteePrimAlt').find("a").show();
             })
             /* jQuery activation and setting options for second tabs, enabling multiline*/
             var isAdmin = false;
