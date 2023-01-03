@@ -62,7 +62,6 @@ function Group(HiddenGroupId, GroupName, AppliesToSiteId, GroupTypeId, LyrisList
     self.InfoMessage = ko.observable();
     self.gId = ko.observable();
     self.edit = ko.observable(false);
-   
 
     ///^[a-z0-9]+$/i
     var patterns = {
@@ -318,7 +317,7 @@ function Group(HiddenGroupId, GroupName, AppliesToSiteId, GroupTypeId, LyrisList
             self.Mission(ATAgroup.Mission);
             self.LyrisSendId("" + ATAgroup.LyrisSendId);
             self.DepartmentId(ATAgroup.DepartmentId);
-
+            $('#hdnchkRadioId').val(ATAgroup.LyrisSendId);
             if (ATAgroup.BounceReports)
                 self.rdoBounceReports("On");
             else
@@ -409,13 +408,14 @@ var A4AStaffModel = function (A4AStaff) {
                         Alerts: false,
                         hasBounceReports: self.hasBounceReports()
                     });
-                    $('#z-tab2').find('a').show(); $('#z-tab2').find('input').prop('disabled', false)
-
-                    if ($('#hdnchkRadioId').val() != "1") {
-                        $("input[name='EmailAdmin']").prop("disabled", true);
-                    }
-                    else {
-                        $("input[name='EmailAdmin']").prop("disabled", false);
+                    $('#z-tab2').find('a').show(); $('#z-tab2').find('input').prop('disabled', false);
+                    if (self.gId() > 0 && self.gId() != null) {
+                        if ($('#hdnchkRadioId').val() != "1") {
+                            $("input[name='EmailAdmin']").prop("disabled", true);
+                        }
+                        else {
+                            $("input[name='EmailAdmin']").prop("disabled", false);
+                        }
                     }
                 } else {
                     self.ErrorMessage("User" + newValue[key].name + " already exists!");
@@ -626,11 +626,10 @@ var AutoCompleteExample;
                 var startindex = UsernCompname.indexOf('(');
                 var cname = UsernCompname.substring(startindex + 1).replace(')', ''); //Get the Company out of the Company Name string.
                 var usrname = UsernCompname.replace(UsernCompname.substring(startindex), ''); //Get the companyname out of the username
-
                 if (+$("#hdnSubscribeInformational").val() === 1) //ViewModel.prototype.SorI not working for somereason so changed to hidden field.
                 {
                     role = "Participant";
-                    temp = [{ "Name": UsernCompname, "UserId": ui.item.text, "Participant": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname,"CheckStatus":false }];
+                    temp = [{ "Name": UsernCompname, "UserId": ui.item.text, "Participant": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false }];
                     temp1 = { "Name": UsernCompname, "UserId": ui.item.text, "Participant": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false };
                 }
                 else
@@ -655,7 +654,7 @@ var AutoCompleteExample;
                     success: function (data) {
                         ViewModel.prototype.selectedValues.push(temp1);
                         ViewModel.prototype.InfoMessage("User " + usrname + " has been successfully added!");
-                        setTimeout(function () { ViewModel.prototype.InfoMessage(""); }, 10000);
+                        setTimeout(function () { ViewModel.prototype.InfoMessage(""); $('#z-tab4').find('a').show(); if ($('#hdnchkRadioId').val() != "1") { $("input[name='EmailAdmin']").prop("disabled", true); $('#DivSaveInformationalRoles').find("button").hide(); } else { $("input[name='EmailAdmin']").prop("disabled", false); $('#DivSaveInformationalRoles').find("button").show(); } }, 1000);
                     },
                     error: function (exception) {
                         try {
@@ -1617,7 +1616,6 @@ var councilCommitteeGGAViewModel = function () {
                         return self.userSelectedId() == item.UserId();
                     });
                 if (!match) {
-                    //Now check if its a primary and some primary already exists for the company
                     if (roleName === "Primary") {
                         var PrimaryExists = false;
                         var k = $.getJSON('/api/checkifcompanyhasrole?GroupId=' + self.gId() + "&CompanyName=" + CompanyName + "&RoleId=" + 1, function (data) {
@@ -1631,15 +1629,12 @@ var councilCommitteeGGAViewModel = function () {
                                         data: dataObject,
                                         contentType: 'application/json',
                                         success: function (data) {
-                                            //Values to push to Json when Role Type is Primary
                                             self.people.push(new CommitteePrimAlt(usrname, self.userSelectedId(), roleName, CompanyName, true, false, false, false));
                                             self.infoMessage("Successfully added a Primary user to " + CompanyName);
                                             setTimeout(function () { self.infoMessage(""); }, 6000);
-                                            //Reset values
                                             $("#ggaUser").val("");
                                             self.role("");
                                             self.company(null);
-                                            enableForm();
                                             return false;
                                         },
                                         error: function (xhr, status, error) {
@@ -1652,32 +1647,25 @@ var councilCommitteeGGAViewModel = function () {
                                 else {
                                     self.errorMessage("A primary has already been set for this " + CompanyName + ".Please delete the current primary and then add this user!");
                                     setTimeout(function () { self.errorMessage(""); }, 6000);
-                                    //Reset values
                                     $("#ggaUser").val("");
                                     self.role("");
                                     self.company(null);
                                 }
                             });
-                    }//End of IsPrimaryRole
+                    }
                     else if (roleName === "Informational") {
-                        //Just add informational to the group
                         $.ajax({
                             url: '/api/UserGroupGGA',
                             type: 'post',
                             data: dataObject,
                             contentType: 'application/json',
                             success: function (data) {
-                                //Values to push to Json when Role Type is Alternate
                                 self.people.push(new CommitteePrimAlt(usrname, self.userSelectedId(), roleName, CompanyName, false, false, true, false));
                                 self.infoMessage("Successfully added an Informational user to " + CompanyName);
                                 setTimeout(function () { self.infoMessage(""); }, 6000);
-                                //Reset values
                                 $("#ggaUser").val("");
                                 self.role("");
                                 self.company(null);
-                                //self.people([]);
-                                //self.load(gId);
-                                enableForm();
                                 return false;
                             },
                             error: function (xhr, status, error) {
@@ -1688,24 +1676,18 @@ var councilCommitteeGGAViewModel = function () {
                         });
                     }
                     else if (roleName === "Alternate") {
-                        //Just add Alternates to the group
                         $.ajax({
                             url: '/api/UserGroupGGA',
                             type: 'post',
                             data: dataObject,
                             contentType: 'application/json',
                             success: function (data) {
-                                //Values to push to Json when Role Type is Alternate
                                 self.people.push(new CommitteePrimAlt(usrname, self.userSelectedId(), roleName, CompanyName, false, true, false, false));
                                 self.infoMessage("Successfully added an Alternate user to " + CompanyName);
                                 setTimeout(function () { self.infoMessage(""); }, 6000);
-                                //Reset values
                                 $("#ggaUser").val("");
                                 self.role("");
                                 self.company(null);
-                                //self.people([]);
-                                //self.load(gId);
-                                enableForm();
                                 return false;
                             },
                             error: function (xhr, status, error) {
@@ -1964,7 +1946,7 @@ $(document).ready(function () {
                             else
                                 if (result[i].RoleId === 3) {
                                     $('#GroupChair').val(Name + ' (' + t + ')');
-                                    $('#hdnChairComp').val(result[i].CompanyName); 
+                                    $('#hdnChairComp').val(result[i].CompanyName);
                                     CheckStatusStaff(result[i].CheckStatus);
                                     $("#hdnChkStaffUserId").val(result[i].UserId);
                                 }
@@ -2054,13 +2036,21 @@ function enableForm() {
 }
 
 function handleClick(myRadio) {
-    if (myRadio.value != "1") {
-        $("input[name='EmailAdmin']").prop("disabled", true);
+    if (self.gId() > 0 && self.gId() != null) {
+        if (myRadio.value != "1") {
+            $("input[name='EmailAdmin']").prop("disabled", true);
+            $('#DivSaveInformationalRoles').find("button").hide();
+            $('#DivSaveCompanyRoles').find("button").hide();
+            $('#DivSaveCommitteeRoles').find("button").hide();
+        }
+        else {
+            $("input[name='EmailAdmin']").prop("disabled", false);
+            $('#DivSaveInformationalRoles').find("button").show();
+            $('#DivSaveCompanyRoles').find("button").show();
+            $('#DivSaveCommitteeRoles').find("button").show();
+        }
+        $('#hdnchkRadioId').val(myRadio.value);
     }
-    else {
-        $("input[name='EmailAdmin']").prop("disabled", false);
-    }
-    $('#hdnchkRadioId').val(myRadio.value);
 }
 
 function saveA4ARoles() {

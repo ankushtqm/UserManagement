@@ -245,7 +245,21 @@
                 $('#A4AStaffContainer').find("button").show();
                 $('#z-tab2').find('a').show(); $('#z-tab2').find('input').prop('disabled', false);
                 $('#DivSaveCommitteeRoles').find("button").show();
-                $('#DivSaveInformationalRoles').find("button").show();
+
+                if ($('#hdnGroupId').val() > 0 && $('#hdnGroupId').val() != null) {
+                    if ($('#hdnchkRadioId').val() != "1") {
+                        $("input[name='EmailAdmin']").prop("disabled", true);
+                        $('#DivSaveInformationalRoles').find("button").hide();
+                        $('#DivSaveCompanyRoles').find("button").hide();
+                        $('#DivSaveCommitteeRoles').find("button").hide();
+                    }
+                    else {
+                        $("input[name='EmailAdmin']").prop("disabled", false);
+                        $('#DivSaveInformationalRoles').find("button").show();
+                        $('#DivSaveCompanyRoles').find("button").show();
+                        $('#DivSaveCommitteeRoles').find("button").show();
+                    }
+                }
             })
             /* jQuery activation and setting options for second tabs, enabling multiline*/
             var isAdmin = false;
