@@ -1,27 +1,31 @@
-﻿
-<style>
-    .element-width{
-        width:200px;
+﻿<style>
+    .element-width {
+        width: 200px;
     }
 </style>
-<div class='A4AStaffContainer' id="A4AStaffContainer">
-    <div class="overlay">
-        <div id="loading-img"></div>
-    </div>
+
+<div class="overlay">
+    <div id="loading-img"></div>
+</div>
+
+<div id="DivMsgA4AStaffContainer">
     <span class="text-success niceLabel margin-topbot10  bold" data-bind="text: InfoMessage"></span>
     <h3 class="text-danger niceLabel margin-topbot10  bold" data-bind="text: ErrorMessage"></h3>
-    @*<br />*@
-    <div class="fleft">
-        <button class="z-btn  btn btn-primary" data-bind='click: save, enable: A4AStaff().length > 0' type='submit'>Save A4A Staff Roles</button>
-    </div>
-    <br /><br />
-    <p>You have selected <span data-bind='text: A4AStaff().length'>&nbsp;</span> A4A Staff(s) roles</p>
+</div>
 
+<div id="DivSaveA4AStaffContainer" class="savebtn">
+    <button class="z-btn btn btn-primary" data-bind='click: save, enable: A4AStaff().length > 0' type='submit'>Save A4A Staff Roles</button>
+</div>
+
+<div>
+    <p>You have selected <span data-bind='text: A4AStaff().length'>&nbsp;</span> A4A Staff(s) roles</p>
+</div>
+
+<div class='A4AStaffContainer' id="A4AStaffContainer">
     <div>
-        <select class="chosen form-control" id="a4astaffchosen" style="width:300px;" data-bind="options: A4AStaffList,
-       selectedOptions: selected,optionsText:'name',
-       value:A4AStaffSelected, optionsCaption: 'Choose..',chosen: {}"></select>
+        <select class="chosen form-control" id="a4astaffchosen" style="width:300px;" data-bind="options: A4AStaffList,selectedOptions: selected,optionsText:'name',value:A4AStaffSelected, optionsCaption: 'Choose..',chosen: {}"></select>
     </div>
+
     <table class="table" data-bind='visible: A4AStaff().length > 0'>
         <thead>
             <tr>
@@ -45,10 +49,5 @@
             </tr>
         </tbody>
     </table>
-    <br /><br />
-    <div class="fleft">
-        @*<button class="z-btn  btn btn-primary" data-bind='click: save, enable: A4AStaff().length > 0' type='submit'>Save A4A Staff Roles</button>*@
-    </div>
+    <br />
 </div>
-
-

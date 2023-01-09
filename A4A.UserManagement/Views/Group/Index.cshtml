@@ -11,6 +11,19 @@
     .btndelete {
         display: none;
     }
+
+    .groupname {
+        position: relative;
+        font-family: Helvetica,sans-serif;
+        font-size: 14px;
+        -webkit-transition: all 0.15s ease-out 0s;
+        transition: all 0.15s ease-out 0s;
+        font-weight: bold;
+    }
+
+    .savebtn {
+        margin-bottom: 7px;
+    }
 </style>
 
 @section heading{<h4 class="niceLabel-bold" id="Headtitle">Create/Edit Group</h4>}
@@ -55,8 +68,8 @@
     </ul>
     <!-- Content container -->
     <div style="margin-left:40px">
-        <!--TAB 0 -->
-        <div>
+        <!-- TAB 0 -->
+        <div id="DivGroupType">
             <div>
                 <h4 class="niceLabel-bold text-warning" style="color: #666;" id="chooseGroupType">Choose Group Type</h4>
                 <hr />
@@ -79,7 +92,7 @@
         </div>
         <!-- TAB 1 -->
         <div id="z-tab1">
-            <div id="UMNote" style="color:red;display:none;font-weight:600;">Note:  Distribution groups are used for email only and intended for lists that contain member or non-member subscribers. These groups cannot be used to permission a website. If you need an A4A  list, council/committee or a website group  created, please submit an IT Help ticket and we will handle.  </div>
+            <div id="UMNote" style="color:red;display:none;font-weight:600;">Note: Distribution groups are used for email only and intended for lists that contain member or non-member subscribers. These groups cannot be used to permission a website. If you need an A4A  list, council/committee or a website group  created, please submit an IT Help ticket and we will handle.  </div>
             <br />
             <div data-bind="with: addGroupViewModel">
                 <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Group Properties</span>
@@ -104,54 +117,78 @@
                                 <th>Province</th>
                                 <th>ZipCode</th>
                                 <th>Country</th>
-                                @*<th>Last Updated</th>*@
                                 <th>Roles</th>
                             </tr>
                         </thead>
                     </table>
-                    <input type="button" id="btnEdit" class="btn btn-primary" value="Edit" />
-                    <input type="button" id="btnAddGroupTop" class="btn btn-primary" value="Save" data-bind="click: addGroup" />
-                    <button id="exporttoexcel" class="btn btn-primary" style="margin-right:22rem">Export Subscribers</button>
                 </div>
                 <hr />
+                <input type="button" id="btnEdit" class="btn btn-primary" value="Edit" />
+                <input type="button" id="btnAddGroupTop" class="btn btn-primary" value="Save Group Properties" data-bind="click: addGroup" />
+                <button id="exporttoexcel" class="btn btn-primary" style="margin-right:22rem">Export Subscribers</button>
+                <br />
                 @Html.Partial("_CreateGroup")
             </div>
         </div>
         <div id="infmsg" style="text-align:center">
             <h4 style="background-color:bisque;border-radius:5px"><i>If the sections below are inactive, please complete the required information above and hit “Save” to activate.</i></h4>
         </div>
-        <!--  TAB 2 -->
+        <!-- TAB 2 -->
         <div id="z-tab2">
-            <br />
             <div data-bind="with: addA4AStaffViewModel">
                 <br />
                 <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">A4A Staff</span>
-
                 <hr />
                 @Html.Partial("_A4AStaff")
             </div>
         </div>
-        <!--  TAB 3 -->
+        <!-- TAB 3 -->
         <div id="z-tab3">
             <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Council/Committee Contacts</span>
             <hr />
             <div data-bind="with: UMSubscribeModel">
-                <span id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></span>
-                <span class="text-danger margin-topbot10 niceLabel  bold" data-bind='text: $data.errorMessage()'></span>
-                <div id="DivSaveCompanyRoles" class="savecompanyroles">
-                    <button class="btn btn-primary" type='submit' onclick="saveA4ARoles()">Save Council/Committee Staff Roles</button>
+                <div id="DivCompanyMsg">
+                    <span id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></span>
+                    <span class="text-danger margin-topbot10 niceLabel bold" data-bind='text: $data.errorMessage()'></span>
                 </div>
-                <br /><br />
-                <span class="bold" style="vertical-align:middle;">Chair:</span>
-                <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkStaff}, checked:CheckStatusStaff' />
-                <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectChair ,minLength: 3 }" />
-                <a href='#' class='text-danger btndelete' style='padding-left:1px;' data-bind='click: $data.removeChairGroupUser'>Delete</a>
+                <div id="DivSaveCompanyRoles" class="savecompanyroles savebtn">
+                    <button class="btn btn-primary" type='submit' onclick="saveA4ARoles()">Save Council/Committee Contacts</button>
+                </div>
+                <div class="row">
+                    <div class="control-label col-sm-1">
+                        <label class="control-label niceLabel"> Email Administrator</label>
+                    </div>
 
-                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="bold" style="vertical-align:middle;">Vice Chair:</span>
-                <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkGroupUser}, checked:CheckStatusGroupUser' />
-                <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupViceChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectViceChair ,minLength: 3 }" />
-                <a href='#' class='text-danger btndelete' style='padding-left:1px;' data-bind='click: $data.removeViceChairGroupUser'>Delete</a>
-                <br /><br />
+                    <div class="control-label col-sm-3">
+                        <label class="niceLabel"> Chair</label>
+                    </div>
+
+                    <div class="control-label col-sm-1">
+                        <label class="niceLabel"> Email Administrator</label>
+                    </div>
+
+                    <div class="control-label col-sm-3">
+                        <label class="niceLabel"> Vice Chair</label>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class='col-sm-1' style='text-align:center'>
+                        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkStaff}, checked:CheckStatusStaff' />
+                    </div>
+                    <div class='col-sm-3'>
+                        <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectChair ,minLength: 3 }" />
+                        <a href='#' class='text-danger btndelete' style='padding-left:1px;' data-bind='click: $data.removeChairGroupUser'>Delete</a>
+                    </div>
+                    <div class='col-sm-1' style='text-align:center'>
+                        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkGroupUser}, checked:CheckStatusGroupUser' />
+                    </div>
+                    <div class='col-sm-3'>
+                        <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupViceChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectViceChair ,minLength: 3 }" />
+                        <a href='#' class='text-danger btndelete' style='padding-left:1px;' data-bind='click: $data.removeViceChairGroupUser'>Delete</a>
+                    </div>
+                </div>
+                <br />
             </div>
             @Html.Partial("_CouncilCommittee")
         </div>
@@ -161,20 +198,48 @@
             <span id="ccua" class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Council/Committee Unlimited Alternates</span>
             <hr />
             <div data-bind="with: UMSubscribeModel">
-                <div id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></div>
-                <span class="text-danger margin-topbot10 niceLabel  bold" data-bind='text: $data.errorMessage()'></span>
-                <div id="DivSaveCommitteeRoles" class="savecommitteeroles">
-                    <button class="btn btn-primary" type='submit' onclick="saveA4ACommitteeRoles()">Save Council/Committee Staff Roles</button>
+                <div id="DivCommitteeMsg">
+                    <div id="spnCommitteeMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></div>
+                    <span class="text-danger margin-topbot10 niceLabel  bold" data-bind='text: $data.errorMessage()'></span>
                 </div>
-                <br />
-                <br />
-                <span class="bold" style="vertical-align:middle;">Chair:</span>
-                <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChairGGA" data-bind="ko_autocomplete: { source: getLanguages, select: selectChair ,minLength: 3 }" />
-                <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeChairGroupUser'>Delete</a>
-                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="bold" style="vertical-align:middle;">Vice Chair:</span>
-                <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupViceChairGGA" data-bind="ko_autocomplete: { source: getLanguages, select: selectViceChair ,minLength: 3 }" />
-                <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeViceChairGroupUser'>Delete</a>
-                <br /><br />
+                <div id="DivSaveCommitteeRoles" class="savecommitteeroles savebtn">
+                    <button class="btn btn-primary" type='submit' onclick="saveA4ACommitteeRoles()">Save Council/Committee Unlimited Alternates</button>
+                </div>
+
+                <div class="row">
+                    <div class="control-label col-sm-1">
+                        <label class="control-label niceLabel"> Email Administrator</label>
+                    </div>
+
+                    <div class="control-label col-sm-3">
+                        <label class="niceLabel"> Chair</label>
+                    </div>
+
+                    <div class="control-label col-sm-1">
+                        <label class="niceLabel"> Email Administrator</label>
+                    </div>
+
+                    <div class="control-label col-sm-3">
+                        <label class="niceLabel"> Vice Chair</label>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class='col-sm-1' style='text-align:center'>
+                        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkStaff}, checked:CheckStatusStaff' />
+                    </div>
+                    <div class='col-sm-3'>
+                        <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChairGGA" data-bind="ko_autocomplete: { source: getLanguages, select: selectCommitteeChair ,minLength: 3 }" />
+                        <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeChairGroupUser'>Delete</a>
+                    </div>
+                    <div class='col-sm-1' style='text-align:center'>
+                        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkGroupUser}, checked:CheckStatusGroupUser' />
+                    </div>
+                    <div class='col-sm-3'>
+                        <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupViceChairGGA" data-bind="ko_autocomplete: { source: getLanguages, select: selectCommitteeViceChair ,minLength: 3 }" />
+                        <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeViceChairGroupUser'>Delete</a>
+                    </div>
+                </div>
             </div>
             <div data-bind="with: addCouncilCommitteeGGA">
                 @Html.Partial("_CouncilCommitteeGGA")
@@ -186,15 +251,21 @@
             <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Informational Contact</span>
             <hr />
             <div data-bind="with: UMSubscribeModel">
+                <div id="DivSaveInformationalRoles" class="saveinformationalroles savebtn">
+                    <button class="btn btn-primary" type='submit' onclick="saveA4AInformationalRoles()">Save Contacts</button>
+                </div>
                 @Html.Partial("_MemberSubscribe")
             </div>
         </div>
         <!-- TAB 5 -->
         <div id="z-tab5">
             <br />
-            <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Subscribe Users</span>
+            <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Contacts</span>
             <hr />
             <div data-bind="with: UMSubscribeModel">
+                <div id="DivSaveContactsRoles" class="savecontactsroles savebtn">
+                    <button class="btn btn-primary" type='submit' onclick="saveA4AContactsRoles()">Save Contacts</button>
+                </div>
                 @Html.Partial("_MemberSubscribe")
             </div>
         </div>
@@ -204,6 +275,9 @@
             <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Task Force, Work Groups, Industry Groups & Networks </span>
             <hr />
             <div data-bind="with: addTaskForceWorkGroup">
+                <div id="DivSaveTaskGroupRoles" class="savetaskgrouproles savebtn">
+                    <button class="btn btn-primary" type='submit' onclick="saveA4ATaskGroupRoles()">Save Task Force</button>
+                </div>
                 @Html.Partial("_TaskforceWorkGroup")
             </div>
         </div>
@@ -211,7 +285,6 @@
             <br />
             <br />
             <div data-bind="with: addGroupViewModel">
-                @*<span class="UserTitle niceLabel-bold text-warning">Send Email Confirmation</span>*@
                 <span class="Useredit"></span>
                 <hr />
                 @Html.Partial("_GroupTransaction")
@@ -225,17 +298,34 @@
         $(document).ready(function () {
             function disabledField(gtype) {
                 $("input, submit, textarea, select, #a4astaffchosen").prop("disabled", true);
-                $('#DivSaveCommitteeRoles').find("button").hide();
-                $('#DivSaveInformationalRoles').find("button").hide();
                 $("a4astaffchosen").prop("disabled", true);
-                $('#A4AStaffContainer').find("button").hide();
                 $('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('a').hide();
                 $("#inpMission, #btnEdit").prop("disabled", false);
                 $("#btnAddGroupTop").hide();
                 if (gtype == '7' || gtype == '8' || gtype == '9' || gtype == '10') {
                     $('#z-tab4').hide();
                 }
+
+                $('#DivMsgA4AStaffContainer').hide();
+                $('#DivSaveA4AStaffContainer').hide();
+                $('#DivCompanyMsg').show();
+                $('#DivSaveCompanyRoles').hide();
+                $('#DivSaveCommitteeRoles').hide();
+                $('#DivCommitteeMsg').hide();
                 $('#DivRemoveCommitteePrimAlt').find("a").hide();
+                $('#DivSaveInformationalRoles').hide();
+                $('#DivSaveContactsRoles').hide();
+                $('#DivInformationalContactMsg').hide();
+                $('#DivSaveTaskGroupRoles').hide();
+                $('#DivTaskGroup').hide();
+
+                debugger;
+                if ($('#hdnGroupId').val() > 0 && $('#hdnGroupId').val() != null) {
+                    $("#DivGroupType").hide();
+                }
+                else {
+                    $("#DivGroupType").show();
+                }
             }
 
             $("#btnEdit").click(() => {
@@ -244,26 +334,32 @@
                 $("a4astaffchosen").prop("disabled", false);
                 $('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('a').show();
                 $("#btnAddGroupTop").show();
-                $('#A4AStaffContainer').find("button").show();
                 $('#z-tab2').find('a').show(); $('#z-tab2').find('input').prop('disabled', false);
-                $('#DivSaveCommitteeRoles').find("button").show();
+                $('#DivSaveCommitteeRoles').show();
+                $('#DivMsgA4AStaffContainer').show();
+                $('#DivSaveA4AStaffContainer').show();
 
                 if ($('#hdnGroupId').val() > 0 && $('#hdnGroupId').val() != null) {
                     if ($('#hdnchkRadioId').val() != "1") {
                         $("input[name='EmailAdmin']").prop("disabled", true);
-                        $('#DivSaveInformationalRoles').find("button").hide();
-                        $('#DivSaveCompanyRoles').find("button").hide();
-                        $('#DivSaveCommitteeRoles').find("button").hide();
+                        $('#DivSaveInformationalRoles').hide();
+                        $('#DivSaveContactsRoles').hide();
+                        $('#DivSaveCompanyRoles').hide();
+                        $('#DivSaveCommitteeRoles').hide();
+                        $('#DivSaveTaskGroupRoles').hide();
                     }
                     else {
                         $("input[name='EmailAdmin']").prop("disabled", false);
-                        $('#DivSaveInformationalRoles').find("button").show();
-                        $('#DivSaveCompanyRoles').find("button").show();
-                        $('#DivSaveCommitteeRoles').find("button").show();
+                        $('#DivSaveInformationalRoles').show();
+                        $('#DivSaveContactsRoles').show();
+                        $('#DivSaveCompanyRoles').show();
+                        $('#DivSaveCommitteeRoles').show();
+                        $('#DivSaveTaskGroupRoles').show();
                     }
                 }
                 $('#DivRemoveCommitteePrimAlt').find("a").show();
             })
+
             /* jQuery activation and setting options for second tabs, enabling multiline*/
             var isAdmin = false;
             var checkIfEdit = function () {
@@ -411,6 +507,9 @@
                 ShowAptTabs(this.value);
                 $('#chooseGroupType').hide();
                 $("#btnAddGroupTop").css("margin-right", "400px");
+
+                debugger;
+                $('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('button, a').hide();
             });
 
             function ShowAptTabs(grouptypeid) {

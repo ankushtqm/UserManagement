@@ -1,9 +1,13 @@
-﻿<div class="GroupSubscriber" id="GroupSubscriberContainer">
+﻿<div id="DivInformationalContactMsg">
     <span class="text-success niceLabel margin-topbot10  bold" data-bind="text: InfoMessage"></span>
     <span class="text-danger niceLabel margin-topbot10  bold" data-bind="text: errorMessage" id="ErrMessageMemSub"></span>
+</div>
 
+<div>
     <p>You have selected <span data-bind='text: $data.selectedValues().length'>&nbsp;</span> Subscribers</p>
-    <br />
+</div>
+
+<div class="GroupSubscriber" id="GroupSubscriberContainer">
     <label for="acSubInfoUser">Contact: </label>
     <p>
         <input type="text" class="acSubInfoUser chosen form-control" style="width:300px;" placeholder="Search Contacts" id="acSubInfoUser" data-bind="ko_autocomplete: {source: getLanguages, select: selectLanguage ,minLength: 3 }" />
@@ -27,10 +31,6 @@
             </tr>
         </tbody>
     </table>
-
-    <div id="DivSaveInformationalRoles" class="saveinformationalroles" data-bind='visible: $data.selectedValues().length > 0'>
-        <button class="btn btn-primary" type='submit' onclick="saveA4AInformationalRoles()">Save Informational Contact Staff Roles</button>
-    </div>
 </div>
 
 <style>

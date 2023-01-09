@@ -6,63 +6,56 @@
 
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-debug.js"></script>
 
+<script type='text/javascript'>
+    //<![CDATA[
+    $(window).load(function () {
+        ko.bindingHandlers.ko_autocomplete = {
+            init: function (element, params) {
+                $(element).autocomplete(params());
+            },
+            update: function (element, params) {
+                $(element).autocomplete("option", "source", params().source);
+            }
+        };
 
+        $(function () {
+            var availableTags = [
+                { label: "ActionScript", value: 1 },
+                { label: "AppleScript", value: 2 },
+                { label: "Asp", value: 3 },
+                { label: "BASIC", value: 4 },
+                { label: "C", value: 5 },
+                { label: "C++", value: 6 },
+                { label: "Clojure", value: 7 },
+                { label: "COBOL", value: 8 },
+                { label: "ColdFusion", value: 9 },
+                { label: "Erlang", value: 10 },
+                { label: "Fortran", value: 11 },
+                { label: "Groovy", value: 12 },
+                { label: "Haskell", value: 13 },
+                { label: "Java", value: 14 },
+                { label: "JavaScript", value: 15 },
+                { label: "Lisp", value: 16 },
+                { label: "Perl", value: 17 },
+                { label: "PHP", value: 18 },
+                { label: "Python", value: 19 },
+                { label: "Ruby", value: 20 },
+                { label: "Scala", value: 21 },
+                { label: "Scheme", value: 22 }
+            ];
 
+            // knockout view model
+            var ViewModel = function () {
+                var self = this;
+                self.langName = ko.observable();
+                self.selectedLangs = ko.observableArray();
 
-
-<script type='text/javascript'>//<![CDATA[
-$(window).load(function(){
-ko.bindingHandlers.ko_autocomplete = {
-    init: function (element, params) {
-        $(element).autocomplete(params());
-    },
-    update: function (element, params) {
-        $(element).autocomplete("option", "source", params().source);
-    }
-};
-
-$(function() {
-
-    var availableTags = [
-            {label:"ActionScript",value:1},
-            {label:"AppleScript",value:2},
-            {label:"Asp",value:3},
-            {label:"BASIC",value:4},
-            {label:"C",value:5},
-            {label:"C++",value:6},
-            {label:"Clojure",value:7},
-            {label:"COBOL",value:8},
-            {label:"ColdFusion",value:9},
-            {label:"Erlang",value:10},
-            {label:"Fortran",value:11},
-            {label:"Groovy",value:12},
-            {label:"Haskell",value:13},
-            {label:"Java",value:14},
-            {label:"JavaScript",value:15},
-            {label:"Lisp",value:16},
-            {label:"Perl",value:17},
-            {label:"PHP",value:18},
-            {label:"Python",value:19},
-            {label:"Ruby",value:20},
-            {label:"Scala",value:21},
-            {label:"Scheme",value:22}
-        ];
-
-        // knockout view model
-        var ViewModel = function(){
-
-            var self = this;
-
-            self.langName = ko.observable();
-            self.selectedLangs = ko.observableArray();
-
-            // return some programming languages
-            self.getLangs = function (request, response) {
-                //return availableTags; 
-                
+                // return some programming languages
+                self.getLangs = function (request, response) {
+                    //return availableTags;
                     $.ajax({
                         url: '/api/GetAllContacts',
                         type: 'GET',
@@ -76,51 +69,47 @@ $(function() {
                                 return {
                                     label: key,
                                     value: value
-                                } 
-                            })); 
+                                }
+                            }));
                         },
                         error: function (XMLHttpRequest, textStatus, errorThrown) {
                             alert('error - ' + textStatus);
                             console.log('error', textStatus, errorThrown);
                         }
                     });
-                
-            }
+                }
 
-            // user clicked on a auto complete item
-            self.addLang = function(event, ui){
+                // user clicked on a auto complete item
+                self.addLang = function (event, ui) {
 
-                $(event.target).val("");
+                    $(event.target).val("");
 
-                var lang = ui.item.label;
-                var id = ui.item.value;
+                    var lang = ui.item.label;
+                    var id = ui.item.value;
 
-                self.selectedLangs.push("id: " + id + ", Language: " + lang);
+                    self.selectedLangs.push("id: " + id + ", Language: " + lang);
 
-                return false;
-            }
+                    return false;
+                }
 
-            return {
-                getLangs : self.getLangs,
-                addLang : self.addLang,
-                langName : self.langName,
-                selectedLangs: self.selectedLangs
-            }
-        };
+                return {
+                    getLangs: self.getLangs,
+                    addLang: self.addLang,
+                    langName: self.langName,
+                    selectedLangs: self.selectedLangs
+                }
+            };
 
-        //bind knockout model
-        ko.applyBindings(new ViewModel());
-
-});
-});//]]>
-
+            //bind knockout model
+            ko.applyBindings(new ViewModel());
+        });
+    });//]]>
 </script>
 <label for="name-search">Search language: </label>
-<input type="text" id="name-search" data-bind="value: langName,
-ko_autocomplete: { source: getLangs(), select: addLang }" />
+<input type="text" id="name-search" data-bind="value: langName, ko_autocomplete: { source: getLangs(), select: addLang }" />
 <div style="margin-top:1em">
     The observable array contains the following elements:
     <ul data-bind="foreach: selectedLangs">
         <li data-bind="text: $data" />
     </ul>
-</div>   
+</div>

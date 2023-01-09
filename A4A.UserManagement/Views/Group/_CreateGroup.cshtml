@@ -1,23 +1,20 @@
 ﻿<div>
     <div class="text-danger niceLabel margin-topbot10 bold" data-bind="visible: ShowErr, text: 'Please fix all errors before submitting!'"></div>
     <div id="CrtGrpMessage" class="niceLabel margin-topbot10 bold" data-bind="text: InfoMessage"></div>
-    @*<input type="button" id="btnAddGroupTop" class="btn btn-primary" value="Save Group Details" data-bind="click: addGroup" />*@
-    @*<br /><br />*@
 </div>
 <form id="A4AGroupProperties" role="form" class="form-horizontal">
     <div class="overlay">
         <div id="loading-img"></div>
     </div>
     <div class="form-group">
-        <label for="inpGroupTypes" class="niceLabel col-sm-3">Group Type:</label>
-        <span id="spnGroupType" class="niceLabel"></span>
-        @*<input id="inpGroupType" type="text" class="NoEdit form-control" disabled   />*@
-    </div>
-    <div class="form-group">
-        <span for="inpGroupName" class="niceLabel col-sm-3 bold">Group Name:<span class="error">*</span></span>
+        <span for="inpGroupName" class="niceLabel col-sm-3 bold groupname">Group Name:<span class="error">*</span></span>
         <input id="inpGroupName" class="NoEdit form-control" type="text" data-bind="visible: !edit(),value: GroupName,css:{'error':ShowErr}, valueUpdate: 'afterkeydown'" />
         <span class="validation-error  bubble" data-bind="validationMessage:  $data.GroupName "></span>
-        <span id="spnGroupName" class="niceLabel" data-bind="visible:edit,text: GroupName"></span>
+        <span id="spnGroupName" class="niceLabel groupname" data-bind="visible:edit,text: GroupName"></span>
+    </div>
+    <div class="form-group">
+        <label for="inpGroupTypes" class="niceLabel col-sm-3">Group Type:</label>
+        <span id="spnGroupType" class="niceLabel"></span>
     </div>
     <div class="form-group">
         <span for="inpLyrisListName" class="niceLabel col-sm-3 bold">Group Email Address:<span class="error">*</span></span>
@@ -34,7 +31,6 @@
     <div class="form-group" style="display: none;">
         <label for="inpGroupSiteUrl" class="niceLabel col-sm-3">Group Site Url:</label>
         <input id="inpGroupSiteUrl" type="text" class="distribution form-control" data-bind="value:GroupSiteUrl" />
-        @*<br /><span class="font-small  text-muted"><i>Full URL to group landing page</i></span>*@
     </div>
     <div class="form-group" style="display: none;">
         <span class="col-sm-3"></span>
@@ -93,7 +89,6 @@
         <input type="radio" id="1" name="LyrisSends" value="1" style="margin:0px" data-bind="checked: LyrisSendId" onclick="handleClick(this);">&nbsp;<span>Admin Only</span>
         <input type="radio" id="3" name="LyrisSends" value="3" style="margin:0px" data-bind="checked: LyrisSendId" onclick="handleClick(this);">&nbsp;<span>Anyone</span>
         <input type="radio" id="2" name="LyrisSends" value="2" style="margin:0px" data-bind="checked: LyrisSendId" onclick="handleClick(this);">&nbsp;<span>List Members</span>
-        @*<select id="inpLyrisSends" class="form-control" data-bind="options:LyrisSends,optionsText: 'name', optionsValue: 'value', value: LyrisSendId,optionsCaption: 'Choose..',css:{'error':ShowErr} "></select>*@
         <span class="validation-error  bubble" data-bind="validationMessage:  $data.LyrisSendId "></span>
     </div>
     <div class="form-group">

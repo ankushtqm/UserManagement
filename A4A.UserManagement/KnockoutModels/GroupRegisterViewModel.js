@@ -24,6 +24,9 @@ var A4AModelInformationalUser = new Array();
 var CheckStatusStaff = ko.observable(false);
 var CheckStatusGroupUser = ko.observable(false);
 
+var chkTaskGroupUser = new Map();
+var A4AModelTaskGroupUser = new Array();
+
 function clearalltimeouts() {
     var highestTimeoutId = setTimeout(";");
     for (var i = 0; i < highestTimeoutId; i++) {
@@ -286,9 +289,6 @@ function Group(HiddenGroupId, GroupName, AppliesToSiteId, GroupTypeId, LyrisList
                 $('#hdnGroupId').val(data.GroupId);
                 $('#hdnGroupName').val(self.GroupName());
                 $("#Headtitle").html("Create New Group");
-                if ($(".GroupTitle").html().indexOf("Group:") < 1) {
-                    $(".GroupTitle").append("<br/> <a  href='/group/show/?gid=" + data.GroupId + "' class='spnGroupName niceLabel-black   margin-topbot10'>Group: " + $('#hdnGroupName').val() + "</a");
-                }
                 $(".NoEdit").prop("disabled", true).css("background-color", "lightgrey");
                 groupRegisterViewModel.addA4AStaffViewModel.gId(data.GroupId);
                 groupRegisterViewModel.UMSubscribeModel.gId(data.GroupId);
@@ -296,21 +296,23 @@ function Group(HiddenGroupId, GroupName, AppliesToSiteId, GroupTypeId, LyrisList
                 councilCommitteeViewModel.gId = data.GroupId;
                 groupRegisterViewModel.addA4AStaffViewModel.hasBounceReports(data.BounceReports);
                 enableForm();
-
-                debugger;
                 $('#hdnSaveGroupValue').val("1");
                 var EmailSendId = $('input[name="LyrisSends"]:checked').val();
                 if (EmailSendId != "1") {
                     $("input[name='EmailAdmin']").prop("disabled", true);
-                    $('#DivSaveInformationalRoles').find("button").hide();
-                    $('#DivSaveCompanyRoles').find("button").hide();
-                    $('#DivSaveCommitteeRoles').find("button").hide();
+                    $('#DivSaveInformationalRoles').hide();
+                    $('#DivSaveContactsRoles').hide();
+                    $('#DivSaveCompanyRoles').hide();
+                    $('#DivSaveCommitteeRoles').hide();
+                    $('#DivSaveTaskGroupRoles').hide();
                 }
                 else {
                     $("input[name='EmailAdmin']").prop("disabled", false);
-                    $('#DivSaveInformationalRoles').find("button").show();
-                    $('#DivSaveCompanyRoles').find("button").show();
-                    $('#DivSaveCommitteeRoles').find("button").show();
+                    $('#DivSaveInformationalRoles').show();
+                    $('#DivSaveContactsRoles').show();
+                    $('#DivSaveCompanyRoles').show();
+                    $('#DivSaveCommitteeRoles').show();
+                    $('#DivSaveTaskGroupRoles').show();
                 }
             });
         }
@@ -330,7 +332,6 @@ function Group(HiddenGroupId, GroupName, AppliesToSiteId, GroupTypeId, LyrisList
             if (ATAgroup.Liaison2UserId > 0) {
                 self.ShowL2(true);
             }
-            debugger;
             self.Mission(ATAgroup.Mission);
             self.LyrisSendId("" + ATAgroup.LyrisSendId);
             self.DepartmentId(ATAgroup.DepartmentId);
@@ -378,7 +379,9 @@ var A4AStaffModel = function (A4AStaff) {
             processData: false,
             contentType: "application/json; charset=utf-8",
             success: function (result) {
+                debugger;
                 for (key in result) {
+                    debugger;
                     if (!(result === null || result === "undefined")) {
                         var res = result[key].split(":");
 
@@ -408,6 +411,7 @@ var A4AStaffModel = function (A4AStaff) {
     self.selected.subscribe(function (newValue) {
         if (!isNaN(self.gId())) {
             for (var key in newValue) {
+                debugger;
                 //Check if the user already exists
                 var match = ko.utils.arrayFirst(self.A4AStaff(),
                     function (item) {
@@ -425,6 +429,8 @@ var A4AStaffModel = function (A4AStaff) {
                         Alerts: false,
                         hasBounceReports: self.hasBounceReports()
                     });
+
+                    debugger;
                     $('#z-tab2').find('a').show(); $('#z-tab2').find('input').prop('disabled', false);
                     if (self.gId() > 0 && self.gId() != null) {
                         if ($('#hdnchkRadioId').val() != "1") {
@@ -671,7 +677,7 @@ var AutoCompleteExample;
                     success: function (data) {
                         ViewModel.prototype.selectedValues.push(temp1);
                         ViewModel.prototype.InfoMessage("User " + usrname + " has been successfully added!");
-                        setTimeout(function () { ViewModel.prototype.InfoMessage(""); $('#z-tab4').find('a').show(); if ($('#hdnchkRadioId').val() != "1") { $("input[name='EmailAdmin']").prop("disabled", true); $('#DivSaveInformationalRoles').find("button").hide(); } else { $("input[name='EmailAdmin']").prop("disabled", false); $('#DivSaveInformationalRoles').find("button").show(); } }, 1000);
+                        setTimeout(function () { ViewModel.prototype.InfoMessage(""); $('#z-tab4').find('a').show(); if ($('#hdnchkRadioId').val() != "1") { $("input[name='EmailAdmin']").prop("disabled", true); $('#DivSaveInformationalRoles').hide(); } else { $("input[name='EmailAdmin']").prop("disabled", false); $('#DivSaveInformationalRoles').show(); } }, 1000);
                     },
                     error: function (exception) {
                         try {
@@ -704,6 +710,9 @@ var AutoCompleteExample;
                 else {
                     gId = ViewModel.prototype.gId();
                 }
+
+                debugger;
+                $('#DivCompanyMsg').show();
                 var company = '';
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
@@ -786,6 +795,9 @@ var AutoCompleteExample;
                     gId = ViewModel.prototype.gId();
                 ViewModel.prototype.errorMessage = ko.observable();
                 var company = '';
+
+                debugger;
+                $('#DivCompanyMsg').show();
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
                     $('#hdnViceChairComp').val(company);
@@ -855,6 +867,167 @@ var AutoCompleteExample;
         /////////////////////////////////////////////////////////////////////////////
         /***   Participant/Informational - Add all users to Group - not being used ***/
         ////////////////////////////////////////////////////////////////////////////
+        ViewModel.prototype.selectCommitteeChair = function (event, ui) {
+            try {
+                $(".overlay").show();
+                var gId = 0;
+                ViewModel.prototype.errorMessage = ko.observable(); //Check on this
+                if (isNaN(ViewModel.prototype.gId())) { gId = $('#hdnGroupId').val(); }
+                else {
+                    gId = ViewModel.prototype.gId();
+                }
+
+                debugger;
+                $('#DivCommitteeMsg').show();
+                var company = '';
+                if (ui.item.label) {
+                    company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
+                    $('#hdnChairComp').val(company);
+                    var txtprim = $("#Prim" + company.replace(/\s/g, ''));
+                    try {
+                        if ((txtprim !== null) && txtprim.val().length > 0 && $('#hdnGroupTypeId').val() != 9 && $('#hdnGroupTypeId').val() != 10 && $('#hdnGroupTypeId').val() != 1 && $('#hdnGroupTypeId').val() != 2) {
+                            $('.spnMessage').text("You already have a primary representative for " + company + ".  Select another company chair or delete the contact below.").css("color", "red");
+                            setTimeout(function () { $('.spnMessage').text(""); }, 6000);
+                            $("#GroupChairGGA").val(""); //Clear the GGA Textbox
+                            $("#GroupChair").val(""); //Clear the chair for Coun comm Textbox
+                            $('#hdnChairComp').val(""); //Clear the company hidden field too
+                            $(".overlay").hide();
+                            return false;
+                        }
+                        else if ($("#Prim" + $('#hdnChairComp').val().replace(/\s/g, '')).val().length > 0 && $("#Alt" + $('#hdnChairComp').val().replace(/\s/g, '')).val().length > 0) {
+                            $('.spnMessage').html("You already have a primary representative and alternate representative for " + company + ".  Select another company chair or delete the contact below.").css("color", "red");
+                            setTimeout(function () { $('.spnMessage').html(""); }, 6000);
+                            $("#GroupChair").val(""); //Clear the textbox 
+                            $('#hdnChairComp').val(""); //Clear the company hidden field too
+                            $(".overlay").hide();
+                            return false;
+
+                            //$("#Prim" + company.replace(/\s/g, '')).attr("disabled", "disabled");
+                        }
+                    }
+                    catch (Err) {
+                        $(".overlay").hide();
+                    }
+                }
+                if (!(company.length > 0)) {
+                    $('.spnMessage').text("No company name found for Chair. So the selection could not be completed");
+                    $(".overlay").hide();
+                    return false;
+                }
+                var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Chair": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": company }];
+                var dataObject = ko.utils.stringifyJson(temp);
+                $("#hdnChkStaffUserId").val(ui.item.text);
+
+                $.ajax({
+                    url: '/api/UserGroup',
+                    type: 'post',
+                    async: false,
+                    data: dataObject,
+                    contentType: 'application/json',
+                    success: function (data) {
+                        $('.spnMessage').html(ui.item.label + "has been successfully saved as Chair!!").css("color", "green");
+                        setTimeout(function () { $('.spnMessage').html(""); }, 6000);
+                        ViewModel.prototype.DisablePrimBox();
+                    },
+                    error: function (exception) {
+                        $('.spnMessage').html("Error in saving Group Chair" + exception.responseText).css("color", "red");
+                        ui["item"]["value"] = ""; //Yay figured out how to clear autocomplete ui 
+                        if ($('#hdnViceChairComp').val().indexOf($('#hdnChairComp').val()) < 0) //**Enable only if there is no vice chair from the company**
+                        {
+                            $("#Prim" + company.replace(/\s/g, '')).prop("disabled", false);
+                            $("#Alt" + company.replace(/\s/g, '')).prop("disabled", false);//enable the primary for that company as chair not saved
+                        }
+                        $('#hdnChairComp').val(""); //Clear the company hidden field too
+                    }
+                }).done(function (data) {
+                    $(".overlay").hide();
+                });
+            }
+            catch (Err) {
+                $(".overlay").hide();
+            }
+            $(".overlay").hide();
+        };
+
+        ViewModel.prototype.selectCommitteeViceChair = function (event, ui) {
+            try {
+                $(".overlay").show();
+                //Get Gid now
+                var gId = 0;
+                if (isNaN(ViewModel.prototype.gId())) { gId = $('#hdnGroupId').val(); }
+                else
+                    gId = ViewModel.prototype.gId();
+                ViewModel.prototype.errorMessage = ko.observable();
+                var company = '';
+                debugger;
+                $('#DivCommitteeMsg').show();
+                if (ui.item.label) {
+                    company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
+                    $('#hdnViceChairComp').val(company);
+                    try {
+                        var txtprim = $("#Prim" + company.replace(/\s/g, ''));
+                        if ((txtprim !== null) && txtprim.val().length > 0 && $('#hdnGroupTypeId').val() != 9 && $('#hdnGroupTypeId').val() != 10 && $('#hdnGroupTypeId').val() != 1 && $('#hdnGroupTypeId').val() != 2) {
+                            $('.spnMessage').html("You already have a primary representative for " + company + ".  Select another company vice chair or delete the contact below.").css("color", "red");
+                            setTimeout(function () { $('.spnMessage').html(""); }, 6000);
+                            $("#GroupViceChairGGA").val(""); //Clear the textbox 
+                            $('#hdnViceChairComp').val(""); //Clear the company hidden field too
+                            $(".overlay").hide();
+                            return false;
+                        }
+                        else if ($("#Prim" + $('#hdnViceChairComp').val().replace(/\s/g, '')).val().length > 0 && $("#Alt" + $('#hdnViceChairComp').val().replace(/\s/g, '')).val().length > 0) {
+                            $('.spnMessage').html("You already have a primary representative and alternate representative for " + company + ".  Select another company vice chair or delete the contact below.").css("color", "red");
+                            setTimeout(function () { $('.spnMessage').html(""); }, 6000);
+                            $("#GroupViceChair").val(""); //Clear the textbox 
+                            $('#hdnViceChairComp').val(""); //Clear the company hidden field too
+                            $(".overlay").hide();
+                            return false;
+
+                            //$("#Prim" + company.replace(/\s/g, '')).attr("disabled", "disabled");
+                        }
+                    }
+                    catch (Err) {
+                    }
+                }
+                if (!(company.length > 0)) {
+                    $('.spnMessage').html("No company name found for Vice Chair. So the selection could not be completed");
+                    setTimeout(function () { $('.spnMessage').html(""); }, 6000);
+                    return;
+                }
+
+                $("#hdnChkGroupUserId").val(ui.item.text);
+
+                var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "ViceChair": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": company }];
+                var dataObject = ko.utils.stringifyJson(temp);
+                $.ajax({
+                    url: '/api/UserGroup',
+                    type: 'post',
+                    async: false,
+                    data: dataObject,
+                    contentType: 'application/json',
+                    success: function (data) {
+                        $('.spnMessage').html(ui.item.label + "has been successfully saved as Vice Chair!!").css("color", "green");
+                        setTimeout(function () { $('.spnMessage').html(""); }, 6000);
+                        ViewModel.prototype.DisablePrimBox();
+                        $('#hdnPrimary').val();
+                    },
+                    error: function (exception) {
+                        $('.spnMessage').html("Error in saving Group Vice Chair" + exception.responseText).css("color", "red");
+                        ui["item"]["value"] = '';
+                        if ($('#hdnChairComp').val().indexOf($('#hdnViceChairComp').val()) < 0) //**Enable only if there is no chair from the company**
+                        {
+                            $("#Prim" + company.replace(/\s/g, '')).prop("disabled", false);
+                            $("#Alt" + company.replace(/\s/g, '')).prop("disabled", false); //enable the primary for that company as vice chair not saved
+                        }
+                        $('#hdnViceChairComp').val(""); //Clear the company hidden field too
+                    }
+                }).done(function (data) {
+                    $(".overlay").hide();
+                });
+            }
+            catch (Err) { $(".overlay").hide(); }
+            $(".overlay").hide();
+        };
+
         ViewModel.prototype.addGroup = function () {
             try {
                 $(".overlay").show();
@@ -1161,7 +1334,7 @@ var TaskForceWorkGroup;
                         var cfname = ui.item.label;
                         var startindex = cfname.indexOf('(');
                         var cname = cfname.substring(startindex + 1).replace(')', ''); //Get the Company out of the Company Name.
-                        var usrname = cfname.replace(cfname.substring(startindex), ''); //Get the 
+                        var usrname = cfname.replace(cfname.substring(startindex), ''); //Get the
 
                         temp['Name'] = usrname;
                         temp['UserId'] = ui.item.text;
@@ -1371,6 +1544,10 @@ function councilCommitteeViewModel(params) {
             var primErrItem = $('#' + compPrimError);
             if (typeof primErrItem !== "undefined")
                 primErrItem.remove();
+
+
+            debugger;
+            $('#DivCompanyMsg').show();
 
             //Get GroupId
             if (!(gId > 0)) //Added on 042018 because alternate was not getting gId value //added here for uniformity
@@ -1595,7 +1772,6 @@ var councilCommitteeGGAViewModel = function () {
         self.userSelectedId(ui.item.text);
     }
     this.selectPrimAltUser4Company = function (event, ui) {
-        debugger;
         if (!isNaN($('#hdnGroupId').val())) {
             self.gId($('#hdnGroupId').val());
             gId = $('#hdnGroupId').val();
@@ -1651,11 +1827,11 @@ var councilCommitteeGGAViewModel = function () {
                                             self.infoMessage("Successfully added a Primary user to " + CompanyName);
                                             if ($('#hdnchkRadioId').val() != "1") {
                                                 $("input[name='EmailAdmin']").prop("disabled", true);
-                                                $('#DivSaveCommitteeRoles').find("button").hide();
+                                                $('#DivSaveCommitteeRoles').hide();
                                             }
                                             else {
                                                 $("input[name='EmailAdmin']").prop("disabled", false);
-                                                $('#DivSaveCommitteeRoles').find("button").show();
+                                                $('#DivSaveCommitteeRoles').show();
                                             }
                                             $('#DivRemoveCommitteePrimAlt').find("a").show();
                                             setTimeout(function () { self.infoMessage(""); }, 6000);
@@ -1688,11 +1864,11 @@ var councilCommitteeGGAViewModel = function () {
                                 self.infoMessage("Successfully added an Informational user to " + CompanyName);
                                 if ($('#hdnchkRadioId').val() != "1") {
                                     $("input[name='EmailAdmin']").prop("disabled", true);
-                                    $('#DivSaveCommitteeRoles').find("button").hide();
+                                    $('#DivSaveCommitteeRoles').hide();
                                 }
                                 else {
                                     $("input[name='EmailAdmin']").prop("disabled", false);
-                                    $('#DivSaveCommitteeRoles').find("button").show();
+                                    $('#DivSaveCommitteeRoles').show();
                                 }
                                 $('#DivRemoveCommitteePrimAlt').find("a").show();
                                 setTimeout(function () { self.infoMessage(""); }, 6000);
@@ -1716,11 +1892,11 @@ var councilCommitteeGGAViewModel = function () {
                                 self.infoMessage("Successfully added an Alternate user to " + CompanyName);
                                 if ($('#hdnchkRadioId').val() != "1") {
                                     $("input[name='EmailAdmin']").prop("disabled", true);
-                                    $('#DivSaveCommitteeRoles').find("button").hide();
+                                    $('#DivSaveCommitteeRoles').hide();
                                 }
                                 else {
                                     $("input[name='EmailAdmin']").prop("disabled", false);
-                                    $('#DivSaveCommitteeRoles').find("button").show();
+                                    $('#DivSaveCommitteeRoles').show();
                                 }
                                 $('#DivRemoveCommitteePrimAlt').find("a").show();
                                 setTimeout(function () { self.infoMessage(""); }, 6000);
@@ -2063,10 +2239,12 @@ function getManagedGroupCount(groupid) {
 
 function disableForm() {
     $('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('input, button, submit, textarea, select').prop('disabled', true);
+    $('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('button, a').hide();
 }
 
 function enableForm() {
     $('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('input, button, submit, textarea, select').prop('disabled', false);
+    $('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('button, a').show();
     $('.btndelete').css('display', 'inline-block !important');
     $('#z-tab3').find('input').prop('disabled', false);
 }
@@ -2075,15 +2253,19 @@ function handleClick(myRadio) {
     if ($('#hdnSaveGroupValue').val() == "1") {
         if (myRadio.value != "1") {
             $("input[name='EmailAdmin']").prop("disabled", true);
-            $('#DivSaveInformationalRoles').find("button").hide();
-            $('#DivSaveCompanyRoles').find("button").hide();
-            $('#DivSaveCommitteeRoles').find("button").hide();
+            $('#DivSaveInformationalRoles').hide();
+            $('#DivSaveContactsRoles').hide();
+            $('#DivSaveCompanyRoles').hide();
+            $('#DivSaveCommitteeRoles').hide();
+            $('#DivSaveTaskGroupRoles').hide();
         }
         else {
             $("input[name='EmailAdmin']").prop("disabled", false);
-            $('#DivSaveInformationalRoles').find("button").show();
-            $('#DivSaveCompanyRoles').find("button").show();
-            $('#DivSaveCommitteeRoles').find("button").show();
+            $('#DivSaveInformationalRoles').show();
+            $('#DivSaveContactsRoles').show();
+            $('#DivSaveCompanyRoles').show();
+            $('#DivSaveCommitteeRoles').show();
+            $('#DivSaveTaskGroupRoles').show();
         }
         $('#hdnchkRadioId').val(myRadio.value);
     }
@@ -2091,15 +2273,19 @@ function handleClick(myRadio) {
         if (self.gId() > 0 && self.gId() != null) {
             if (myRadio.value != "1") {
                 $("input[name='EmailAdmin']").prop("disabled", true);
-                $('#DivSaveInformationalRoles').find("button").hide();
-                $('#DivSaveCompanyRoles').find("button").hide();
-                $('#DivSaveCommitteeRoles').find("button").hide();
+                $('#DivSaveInformationalRoles').hide();
+                $('#DivSaveContactsRoles').hide();
+                $('#DivSaveCompanyRoles').hide();
+                $('#DivSaveCommitteeRoles').hide();
+                $('#DivSaveTaskGroupRoles').hide();
             }
             else {
                 $("input[name='EmailAdmin']").prop("disabled", false);
-                $('#DivSaveInformationalRoles').find("button").show();
-                $('#DivSaveCompanyRoles').find("button").show();
-                $('#DivSaveCommitteeRoles').find("button").show();
+                $('#DivSaveInformationalRoles').show();
+                $('#DivSaveContactsRoles').show();
+                $('#DivSaveCompanyRoles').show();
+                $('#DivSaveCommitteeRoles').show();
+                $('#DivSaveTaskGroupRoles').show();
             }
             $('#hdnchkRadioId').val(myRadio.value);
         }
@@ -2107,16 +2293,18 @@ function handleClick(myRadio) {
 }
 
 function saveA4ARoles() {
+    debugger;
     var msg = "";
     saveA4ACompanyNamePrimaryRoles(msg);
     saveA4ACompanyNameAlternateRoles(msg);
     saveA4AStaffRoles(msg);
     saveA4AGroupUserRoles(msg);
+    $('#DivCompanyMsg').show();
     if ($('#hdnSaveRoleValues').val() == "1") {
-        alert("Records updated successfully!");
+        $('.spnCompanyMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
     }
     else if ($('#hdnSaveRoleValues').val() == "0") {
-        alert("Error updating the records:" + msg);
+        $('.spnCompanyMessage').text("Error updating the records:");
     }
 }
 
@@ -2181,6 +2369,7 @@ function saveA4ACompanyNameAlternateRoles(msg) {
 }
 
 function saveA4AStaffRoles(msg) {
+    debugger;
     for (var key of ChkStaff.keys()) {
         A4AModelChkStaff.push({
             groupId: self.gId(),
@@ -2198,6 +2387,7 @@ function saveA4AStaffRoles(msg) {
         contentType: 'application/json',
         dataType: "Json",
         success: function (result) {
+            debugger;
             $('#hdnSaveRoleValues').val("1");
         },
         error: function (exception) {
@@ -2253,6 +2443,7 @@ function saveA4ACommitteeRoles() {
         })
     }
 
+    $('#DivCommitteeMsg').show();
     let dataobj = JSON.stringify(A4AModelEmailAdmin)
     $.ajax({
         url: '/api/savecommitteeroles',
@@ -2261,10 +2452,10 @@ function saveA4ACommitteeRoles() {
         contentType: 'application/json',
         dataType: "Json",
         success: function (result) {
-            alert("Records updated successfully!");
+            $('.spnCommitteeMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
         },
         error: function (exception) {
-            alert("Error updating the records:" + exception.responseText);
+            $('.spnCommitteeMessage').text("Error updating the records:" + exception.responseText);
         }
     });
     SendEmailAdmin = new Map();
@@ -2284,6 +2475,7 @@ function saveA4AInformationalRoles() {
         })
     }
 
+    $('#DivInformationalContactMsg').show();
     let dataobj = JSON.stringify(A4AModelInformationalUser)
     $.ajax({
         url: '/api/savecommitteeroles',
@@ -2292,12 +2484,44 @@ function saveA4AInformationalRoles() {
         contentType: 'application/json',
         dataType: "Json",
         success: function (result) {
-            alert("Records updated successfully!");
+            $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
         },
         error: function (exception) {
-            alert("Error updating the records:" + exception.responseText);
+            $('.spnMessage').text("Error updating the records:" + exception.responseText);
         }
     });
     chkInformationalUser = new Map();
     A4AModelInformationalUser = new Array();
+}
+
+function chkTaskGroupRoles(e) {
+    chkTaskGroupUser.set(e.value, e.checked)
+}
+
+function saveA4ATaskGroupRoles() {
+    for (var key of chkTaskGroupUser.keys()) {
+        A4AModelTaskGroupUser.push({
+            groupId: self.gId(),
+            UserId: key,
+            value: chkTaskGroupUser.get(key)
+        })
+    }
+
+    $('#DivTaskGroup').show();
+    let dataobj = JSON.stringify(A4AModelTaskGroupUser)
+    $.ajax({
+        url: '/api/savecommitteeroles',
+        type: "post",
+        data: dataobj,
+        contentType: 'application/json',
+        dataType: "Json",
+        success: function (result) {
+            $('.spnMessage').html("Task Force changes saved successfully").css("color", "green");
+        },
+        error: function (exception) {
+            $('.spnMessage').text("Error updating the records:" + exception.responseText);
+        }
+    });
+    chkTaskGroupUser = new Map();
+    A4AModelTaskGroupUser = new Array();
 }
