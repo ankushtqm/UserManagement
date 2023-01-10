@@ -199,7 +199,7 @@
             <hr />
             <div data-bind="with: UMSubscribeModel">
                 <div id="DivCommitteeMsg">
-                    <div id="spnCommitteeMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></div>
+                    <div id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></div>
                     <span class="text-danger margin-topbot10 niceLabel  bold" data-bind='text: $data.errorMessage()'></span>
                 </div>
                 <div id="DivSaveCommitteeRoles" class="savecommitteeroles savebtn">
@@ -230,14 +230,14 @@
                     </div>
                     <div class='col-sm-3'>
                         <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChairGGA" data-bind="ko_autocomplete: { source: getLanguages, select: selectCommitteeChair ,minLength: 3 }" />
-                        <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeChairGroupUser'>Delete</a>
+                        <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeCommitteeChairGroupUser'>Delete</a>
                     </div>
                     <div class='col-sm-1' style='text-align:center'>
                         <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkGroupUser}, checked:CheckStatusGroupUser' />
                     </div>
                     <div class='col-sm-3'>
                         <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupViceChairGGA" data-bind="ko_autocomplete: { source: getLanguages, select: selectCommitteeViceChair ,minLength: 3 }" />
-                        <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeViceChairGroupUser'>Delete</a>
+                        <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeCommitteeViceChairGroupUser'>Delete</a>
                     </div>
                 </div>
             </div>
@@ -264,7 +264,7 @@
             <hr />
             <div data-bind="with: UMSubscribeModel">
                 <div id="DivSaveContactsRoles" class="savecontactsroles savebtn">
-                    <button class="btn btn-primary" type='submit' onclick="saveA4AContactsRoles()">Save Contacts</button>
+                    <button class="btn btn-primary" type='submit' onclick="saveA4AInformationalRoles()">Save Contacts</button>
                 </div>
                 @Html.Partial("_MemberSubscribe")
             </div>
@@ -285,7 +285,6 @@
             <br />
             <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Transaction History</span>
             <div data-bind="with: addGroupViewModel">
-                @*<span class="Useredit"></span>*@
                 <hr />
                 @Html.Partial("_GroupTransaction")
             </div>
@@ -308,7 +307,7 @@
 
                 $('#DivMsgA4AStaffContainer').hide();
                 $('#DivSaveA4AStaffContainer').hide();
-                $('#DivCompanyMsg').show();
+                $('#DivCompanyMsg').hide();
                 $('#DivSaveCompanyRoles').hide();
                 $('#DivSaveCommitteeRoles').hide();
                 $('#DivCommitteeMsg').hide();
@@ -316,8 +315,9 @@
                 $('#DivSaveInformationalRoles').hide();
                 $('#DivSaveContactsRoles').hide();
                 $('#DivInformationalContactMsg').hide();
+                $('#DivSaveInformationalContactMsg').hide();
                 $('#DivSaveTaskGroupRoles').hide();
-                $('#DivTaskGroup').hide();
+                $('#DivTaskGroupMsg').hide();
 
                 if ($('#hdnGroupId').val() > 0 && $('#hdnGroupId').val() != null) {
                     $("#DivGroupType").hide();

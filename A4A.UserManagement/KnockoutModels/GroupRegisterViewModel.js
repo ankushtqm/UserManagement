@@ -708,7 +708,11 @@ var AutoCompleteExample;
                     gId = ViewModel.prototype.gId();
                 }
 
+                $('#DivMsgA4AStaffContainer').hide();
                 $('#DivCompanyMsg').show();
+                $('#DivCommitteeMsg').hide();
+                $('#DivInformationalContactMsg').hide();
+                $('#DivSaveInformationalContactMsg').hide();
                 var company = '';
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
@@ -790,7 +794,11 @@ var AutoCompleteExample;
                     gId = ViewModel.prototype.gId();
                 ViewModel.prototype.errorMessage = ko.observable();
                 var company = '';
+                $('#DivMsgA4AStaffContainer').hide();
                 $('#DivCompanyMsg').show();
+                $('#DivCommitteeMsg').hide();
+                $('#DivInformationalContactMsg').hide();
+                $('#DivSaveInformationalContactMsg').hide();
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
                     $('#hdnViceChairComp').val(company);
@@ -869,7 +877,11 @@ var AutoCompleteExample;
                     gId = ViewModel.prototype.gId();
                 }
 
+                $('#DivMsgA4AStaffContainer').hide();
+                $('#DivCompanyMsg').hide();
                 $('#DivCommitteeMsg').show();
+                $('#DivInformationalContactMsg').hide();
+                $('#DivSaveInformationalContactMsg').hide();
                 var company = '';
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
@@ -948,7 +960,11 @@ var AutoCompleteExample;
                     gId = ViewModel.prototype.gId();
                 ViewModel.prototype.errorMessage = ko.observable();
                 var company = '';
+                $('#DivMsgA4AStaffContainer').hide();
+                $('#DivCompanyMsg').hide();
                 $('#DivCommitteeMsg').show();
+                $('#DivInformationalContactMsg').hide();
+                $('#DivSaveInformationalContactMsg').hide();
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
                     $('#hdnViceChairComp').val(company);
@@ -1046,7 +1062,11 @@ var AutoCompleteExample;
         ViewModel.prototype.removeUMContacts = function (contact) {
             try {
                 $(".overlay").show();
-
+                $('#DivMsgA4AStaffContainer').hide();
+                $('#DivCompanyMsg').hide();
+                $('#DivCommitteeMsg').hide();
+                $('#DivInformationalContactMsg').hide();
+                $('#DivSaveInformationalContactMsg').show();
                 var gtypeid = $('#hdnGroupTypeId').val();
                 var dataObject = ko.utils.stringifyJson(contact);
                 dataObject = "[" + dataObject + "]"; //Otherwise the dataobject at the API is null
@@ -1111,8 +1131,11 @@ var AutoCompleteExample;
                 $('#hdnChairComp').val('');
                 $('#GroupChair').val('');
                 $('#GroupChairGGA').val('');
-                //alert($('#GroupChair').val() + "GGA: " + $('#GroupChairGGA').val()); 
-
+                $('#DivMsgA4AStaffContainer').hide();
+                $('#DivCompanyMsg').show();
+                $('#DivCommitteeMsg').hide();
+                $('#DivInformationalContactMsg').hide();
+                $('#DivSaveInformationalContactMsg').hide();
                 if (isNaN(ViewModel.prototype.gId())) { gId = $('#hdnGroupId').val(); }
                 else
                     gId = ViewModel.prototype.gId();
@@ -1131,6 +1154,65 @@ var AutoCompleteExample;
                 $(".overlay").show();
                 /* Note: Reset the hidden value */
                 $('#hdnViceChairComp').val('');
+                $('#DivMsgA4AStaffContainer').hide();
+                $('#DivCompanyMsg').show();
+                $('#DivCommitteeMsg').hide();
+                $('#DivInformationalContactMsg').hide();
+                $('#DivSaveInformationalContactMsg').hide();
+                if (isNaN(ViewModel.prototype.gId())) {
+                    gId = $('#hdnGroupId').val();
+                }
+                else
+                    gId = ViewModel.prototype.gId();
+
+                $('#GroupViceChair').val('');
+                $('#GroupViceChairGGA').val('');
+                var URL = "/api/RemoveGrpUsrbyRole/?GroupId=" + gId + "&RoleId=" + 4;
+                /* Note: Delete the user from database and clear the field  */
+                var result = ViewModel.prototype.RemoveGroupUser(URL, '', 'Vice Chair');
+                $(event.target).prev().val('');
+            }
+            catch (Err) {
+                $(".overlay").hide();
+            }
+            $(".overlay").hide();
+        }
+
+        ViewModel.prototype.removeCommitteeChairGroupUser = function (item, event) {
+            try {
+                $(".overlay").show();
+                /* Note: Reset the hidden value */
+                $('#hdnChairComp').val('');
+                $('#GroupChair').val('');
+                $('#GroupChairGGA').val('');
+                $('#DivMsgA4AStaffContainer').hide();
+                $('#DivCompanyMsg').hide();
+                $('#DivCommitteeMsg').show();
+                $('#DivInformationalContactMsg').hide();
+                $('#DivSaveInformationalContactMsg').hide();
+                if (isNaN(ViewModel.prototype.gId())) { gId = $('#hdnGroupId').val(); }
+                else
+                    gId = ViewModel.prototype.gId();
+                var URL = "/api/RemoveGrpUsrbyRole/?GroupId=" + gId + "&RoleId=" + 3
+                //Delete the user from database and clear the field 
+                var result = ViewModel.prototype.RemoveGroupUser(URL, '', 'Chair');
+
+                $(event.target).prev().val('');
+            }
+            catch (Err) { $(".overlay").hide(); }
+            $(".overlay").hide();
+        }
+
+        ViewModel.prototype.removeCommitteeViceChairGroupUser = function (item, event) {
+            try {
+                $(".overlay").show();
+                /* Note: Reset the hidden value */
+                $('#hdnViceChairComp').val('');
+                $('#DivMsgA4AStaffContainer').hide();
+                $('#DivCompanyMsg').hide();
+                $('#DivCommitteeMsg').show();
+                $('#DivInformationalContactMsg').hide();
+                $('#DivSaveInformationalContactMsg').hide();
                 if (isNaN(ViewModel.prototype.gId())) {
                     gId = $('#hdnGroupId').val();
                 }
@@ -1371,9 +1453,15 @@ var TaskForceWorkGroup;
         /////////////////////////////////////////////////////////////////////
         /***   taskforce- Delete User from UserGroup in the DB     ***/
         ////////////////////////////////////////////////////////////////////
-        ViewModel.prototype.removeUMContacts = function (contact) {
+        ViewModel.prototype.removeUMTaskForceContacts = function (contact) {
             try {
                 $(".overlay").show();
+                $('#DivMsgA4AStaffContainer').hide();
+                $('#DivCompanyMsg').hide();
+                $('#DivCommitteeMsg').hide();
+                $('#DivInformationalContactMsg').hide();
+                $('#DivSaveInformationalContactMsg').hide();
+                $('#DivTaskGroupMsg').show();
                 var dataObject = ko.utils.stringifyJson(contact);
                 ViewModel.prototype.errorMessage();
                 dataObject = "[" + dataObject + "]"; //Otherwise the dataobject at the API is null
@@ -1539,7 +1627,11 @@ function councilCommitteeViewModel(params) {
             var primErrItem = $('#' + compPrimError);
             if (typeof primErrItem !== "undefined")
                 primErrItem.remove();
+            $('#DivMsgA4AStaffContainer').hide();
             $('#DivCompanyMsg').show();
+            $('#DivCommitteeMsg').hide();
+            $('#DivInformationalContactMsg').hide();
+            $('#DivSaveInformationalContactMsg').hide();
             //Get GroupId
             if (!(gId > 0)) //Added on 042018 because alternate was not getting gId value //added here for uniformity
                 gId = $('#hdnGroupId').val() || parseInt(getGID('gid'));
@@ -1596,6 +1688,11 @@ function councilCommitteeViewModel(params) {
             }
             $(event.target).prev().val('');
         }
+        $('#DivMsgA4AStaffContainer').hide();
+        $('#DivCompanyMsg').show();
+        $('#DivCommitteeMsg').hide();
+        $('#DivInformationalContactMsg').hide();
+        $('#DivSaveInformationalContactMsg').hide();
         $(".overlay").hide();
 
     }
@@ -1612,6 +1709,11 @@ function councilCommitteeViewModel(params) {
             if (typeof compAltError !== "undefined" && typeof altErrItem !== "undefined")
                 altErrItem.remove();
         }
+        $('#DivMsgA4AStaffContainer').hide();
+        $('#DivCompanyMsg').show();
+        $('#DivCommitteeMsg').hide();
+        $('#DivInformationalContactMsg').hide();
+        $('#DivSaveInformationalContactMsg').hide();
         $(".overlay").hide();
     }
     function RemoveGroupUser(URL, Company, Role) {
@@ -1665,6 +1767,12 @@ function councilCommitteeViewModel(params) {
             //Get GroupId 
             if (!(gId > 0))
                 gId = $('#hdnGroupId').val() || parseInt(getGID('gid'));
+
+            $('#DivMsgA4AStaffContainer').hide();
+            $('#DivCompanyMsg').show();
+            $('#DivCommitteeMsg').hide();
+            $('#DivInformationalContactMsg').hide();
+            $('#DivSaveInformationalContactMsg').hide();
 
             var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Alternate": true, GroupId: gId, CompanyName: params.Company }];
             var dataObject = ko.utils.stringifyJson(temp);
@@ -2288,7 +2396,11 @@ function saveA4ARoles() {
     saveA4ACompanyNameAlternateRoles();
     saveA4AStaffRoles();
     saveA4AGroupUserRoles();
+    $('#DivMsgA4AStaffContainer').hide();
     $('#DivCompanyMsg').show();
+    $('#DivCommitteeMsg').hide();
+    $('#DivInformationalContactMsg').hide();
+    $('#DivSaveInformationalContactMsg').hide();
     if ($('#hdnSaveRoleValues').val() == "1") {
         $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
     }
@@ -2298,6 +2410,7 @@ function saveA4ARoles() {
     else {
         $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
     }
+    setTimeout(function () { $('.spnMessage').text(""); }, 10000);
 }
 
 function saveA4ACompanyNamePrimaryRoles() {
@@ -2433,7 +2546,11 @@ function saveA4ACommitteeRoles() {
         })
     }
 
+    $('#DivMsgA4AStaffContainer').hide();
+    $('#DivCompanyMsg').hide();
     $('#DivCommitteeMsg').show();
+    $('#DivInformationalContactMsg').hide();
+    $('#DivSaveInformationalContactMsg').hide();
     let dataobj = JSON.stringify(A4AModelEmailAdmin)
     $.ajax({
         url: '/api/savecommitteeroles',
@@ -2442,14 +2559,15 @@ function saveA4ACommitteeRoles() {
         contentType: 'application/json',
         dataType: "Json",
         success: function (result) {
-            $('.spnCommitteeMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
+            $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
         },
         error: function (exception) {
-            $('.spnCommitteeMessage').text("Error updating the records:" + exception.responseText);
+            $('.spnMessage').text("Error updating the records:" + exception.responseText);
         }
     });
     SendEmailAdmin = new Map();
     A4AModelEmailAdmin = new Array();
+    setTimeout(function () { $('.spnMessage').text(""); }, 10000);
 }
 
 function chkInformationalRoles(e) {
@@ -2465,7 +2583,11 @@ function saveA4AInformationalRoles() {
         })
     }
 
-    $('#DivInformationalContactMsg').show();
+    $('#DivMsgA4AStaffContainer').hide();
+    $('#DivCompanyMsg').hide();
+    $('#DivCommitteeMsg').hide();
+    $('#DivInformationalContactMsg').hide();
+    $('#DivSaveInformationalContactMsg').show();
     let dataobj = JSON.stringify(A4AModelInformationalUser)
     $.ajax({
         url: '/api/savecommitteeroles',
@@ -2482,6 +2604,7 @@ function saveA4AInformationalRoles() {
     });
     chkInformationalUser = new Map();
     A4AModelInformationalUser = new Array();
+    setTimeout(function () { $('.spnMessage').text(""); }, 10000);
 }
 
 function chkTaskGroupRoles(e) {
@@ -2497,7 +2620,13 @@ function saveA4ATaskGroupRoles() {
         })
     }
 
-    $('#DivTaskGroup').show();
+    $('#DivMsgA4AStaffContainer').hide();
+    $('#DivCompanyMsg').hide();
+    $('#DivCommitteeMsg').hide();
+    $('#DivInformationalContactMsg').hide();
+    $('#DivSaveInformationalContactMsg').hide();
+    $('#DivTaskGroupMsg').show();
+
     let dataobj = JSON.stringify(A4AModelTaskGroupUser)
     $.ajax({
         url: '/api/savecommitteeroles',
@@ -2514,4 +2643,5 @@ function saveA4ATaskGroupRoles() {
     });
     chkTaskGroupUser = new Map();
     A4AModelTaskGroupUser = new Array();
+    setTimeout(function () { $('.spnMessage').text(""); }, 10000);
 }

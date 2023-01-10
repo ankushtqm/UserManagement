@@ -1,13 +1,12 @@
 ﻿<div class="TaskForceSubscriber" id="TaskForceSubscriber">
-    <div id="DivTaskGroup">
+    <div id="DivTaskGroupMsg">
         <span id="tskErrorMsg" class="margin-topbot10 niceLabel bold" data-bind='text:errorMessage'></span><br />
         <span class="text-success niceLabel margin-topbot10 bold" data-bind="text: InfoMessage"></span>
     </div>
     <p>You have selected <span data-bind='text: $data.selectedTskForUser().length'>&nbsp;</span> Subscribers</p>
     <label for="tskGrpUser">Contact: </label>
     <p>
-        <select id="inpGroupRole" class="form-control"
-                data-bind="options: Roles, optionsText: 'name', optionsValue: 'id', value:role,optionsCaption: 'Choose Role'"></select>
+        <select id="inpGroupRole" class="form-control" data-bind="options: Roles, optionsText: 'name', optionsValue: 'id', value:role,optionsCaption: 'Choose Role'"></select>
         <input type="text" class="chosen form-control" style="width:300px;" placeholder="Search Contacts" id="tskGrpUser" data-bind="ko_autocomplete: { source: GetAllUsers, select: selectTskFrGroupUser ,minLength: 3 }" />
         <a href='#' class='text-danger' data-bind="click: clearTaskGroupUser">Delete</a>
     </p>
@@ -27,7 +26,7 @@
                 <td><span data-bind='text: Name'></span> </td>
                 <td><span data-bind='text: CompanyName'></span></td>
                 <td><span data-bind='text: role'></span></td>
-                <td><a href='#' data-bind='click: $parent.removeUMContacts'>Delete</a></td>
+                <td><a href='#' data-bind='click: $parent.removeUMTaskForceContacts'>Delete</a></td>
             </tr>
         </tbody>
     </table>
