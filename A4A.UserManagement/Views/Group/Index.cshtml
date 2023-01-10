@@ -22,7 +22,7 @@
     }
 
     .savebtn {
-        margin-bottom: 7px;
+        margin-bottom: 10px;
     }
 </style>
 
@@ -226,14 +226,14 @@
 
                 <div class='row'>
                     <div class='col-sm-1' style='text-align:center'>
-                        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkStaff}, checked:CheckStatusStaff' />
+                        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkCommitteeStaff}, checked:CheckStatusStaff' />
                     </div>
                     <div class='col-sm-3'>
                         <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChairGGA" data-bind="ko_autocomplete: { source: getLanguages, select: selectCommitteeChair ,minLength: 3 }" />
                         <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeCommitteeChairGroupUser'>Delete</a>
                     </div>
                     <div class='col-sm-1' style='text-align:center'>
-                        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkGroupUser}, checked:CheckStatusGroupUser' />
+                        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkCommitteeGroupUser}, checked:CheckStatusGroupUser' />
                     </div>
                     <div class='col-sm-3'>
                         <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupViceChairGGA" data-bind="ko_autocomplete: { source: getLanguages, select: selectCommitteeViceChair ,minLength: 3 }" />

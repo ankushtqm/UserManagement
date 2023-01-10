@@ -18,6 +18,12 @@ var A4AModelChkStaff = new Array();
 var ChkGroupUser = new Map();
 var A4AModelChkGroupUser = new Array();
 
+var ChkStaffCommittee = new Map();
+var A4AModelChkStaffCommittee = new Array();
+
+var ChkGroupUserCommittee = new Map();
+var A4AModelChkGroupUserCommittee = new Array();
+
 var chkInformationalUser = new Map();
 var A4AModelInformationalUser = new Array();
 
@@ -1079,8 +1085,8 @@ var AutoCompleteExample;
                 $('#DivMsgA4AStaffContainer').hide();
                 $('#DivCompanyMsg').hide();
                 $('#DivCommitteeMsg').hide();
-                $('#DivInformationalContactMsg').hide();
-                $('#DivSaveInformationalContactMsg').show();
+                $('#DivInformationalContactMsg').show();
+                $('#DivSaveInformationalContactMsg').hide();
                 $('#DivContactMsg').hide();
                 $('#DivSaveContactMsg').hide();
                 $('#DivTaskGroupMsg').hide();
@@ -1119,8 +1125,8 @@ var AutoCompleteExample;
                 $('#DivCommitteeMsg').hide();
                 $('#DivInformationalContactMsg').hide();
                 $('#DivSaveInformationalContactMsg').hide();
-                $('#DivContactMsg').hide();
-                $('#DivSaveContactMsg').show();
+                $('#DivContactMsg').show();
+                $('#DivSaveContactMsg').hide();
                 $('#DivTaskGroupMsg').hide();
                 var gtypeid = $('#hdnGroupTypeId').val();
                 var dataObject = ko.utils.stringifyJson(contact);
@@ -1339,6 +1345,7 @@ var AutoCompleteExample;
         }
 
         ViewModel.prototype.selectchkStaff = function (item, event) {
+            debugger;
             if (isNaN(ViewModel.prototype.gId())) {
                 gId = $('#hdnGroupId').val();
             }
@@ -1356,6 +1363,27 @@ var AutoCompleteExample;
                 gId = ViewModel.prototype.gId();
             }
             ChkGroupUser.set(gId, event.target.checked)
+        }
+
+        ViewModel.prototype.selectchkCommitteeStaff = function (item, event) {
+            debugger;
+            if (isNaN(ViewModel.prototype.gId())) {
+                gId = $('#hdnGroupId').val();
+            }
+            else {
+                gId = ViewModel.prototype.gId();
+            }
+            ChkStaffCommittee.set(gId, event.target.checked)
+        }
+
+        ViewModel.prototype.selectchkCommitteeGroupUser = function (item, event) {
+            if (isNaN(ViewModel.prototype.gId())) {
+                gId = $('#hdnGroupId').val();
+            }
+            else {
+                gId = ViewModel.prototype.gId();
+            }
+            ChkGroupUserCommittee.set(gId, event.target.checked)
         }
         return ViewModel;
     })();
@@ -2310,6 +2338,7 @@ $(document).ready(function () {
             success: function (data) {
                 var result = JSON.parse(data);
                 for (i = 0; i < result.length; i++) {
+                    debugger;
                     try {
                         var Name = result[i].UserName;
                         var t = result[i].CompanyName.replace(/\s/g, '');
@@ -2576,6 +2605,7 @@ function saveA4AStaffRoles() {
 }
 
 function saveA4AGroupUserRoles() {
+    debugger;
     for (var key of ChkGroupUser.keys()) {
         A4AModelChkGroupUser.push({
             groupId: self.gId(),
@@ -2610,14 +2640,10 @@ function EmailAdmin(e) {
 }
 
 function saveA4ACommitteeRoles() {
-    for (var key of SendEmailAdmin.keys()) {
-        A4AModelEmailAdmin.push({
-            groupId: self.gId(),
-            UserId: key,
-            value: SendEmailAdmin.get(key)
-        })
-    }
-
+    debugger;
+    saveA4ACommitteeCompanyRoles();
+    saveA4ACommitteeStaffRoles();
+    saveA4ACommitteeGroupUserRoles();
     $('#DivMsgA4AStaffContainer').hide();
     $('#DivCompanyMsg').hide();
     $('#DivCommitteeMsg').show();
@@ -2626,6 +2652,29 @@ function saveA4ACommitteeRoles() {
     $('#DivContactMsg').hide();
     $('#DivSaveContactMsg').hide();
     $('#DivTaskGroupMsg').hide();
+    if ($('#hdnSaveRoleValues').val() == "1") {
+        $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
+    }
+    else if ($('#hdnSaveRoleValues').val() == "0") {
+        $('.spnMessage').text("Error updating the records:");
+    }
+    else {
+        $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
+    }
+    setTimeout(function () { $('.spnMessage').text(""); }, 10000);
+}
+
+
+function saveA4ACommitteeCompanyRoles() {
+    for (var key of SendEmailAdmin.keys()) {
+        A4AModelEmailAdmin.push({
+            groupId: self.gId(),
+            UserId: key,
+            value: SendEmailAdmin.get(key)
+        })
+    }
+
+    
     let dataobj = JSON.stringify(A4AModelEmailAdmin)
     $.ajax({
         url: '/api/savecommitteeroles',
@@ -2634,15 +2683,76 @@ function saveA4ACommitteeRoles() {
         contentType: 'application/json',
         dataType: "Json",
         success: function (result) {
-            $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
+            $('#hdnSaveRoleValues').val("1");
         },
         error: function (exception) {
-            $('.spnMessage').text("Error updating the records:" + exception.responseText);
+            $('#hdnSaveRoleValues').val("0");
         }
     });
     SendEmailAdmin = new Map();
     A4AModelEmailAdmin = new Array();
     setTimeout(function () { $('.spnMessage').text(""); }, 10000);
+}
+
+function saveA4ACommitteeStaffRoles() {
+    for (var key of ChkStaffCommittee.keys()) {
+        A4AModelChkStaffCommittee.push({
+            groupId: self.gId(),
+            UserId: $('#hdnChkStaffUserId').val(),
+            value: ChkStaffCommittee.get(key),
+            RoleId: "3",
+        })
+    }
+
+    let dataobj = JSON.stringify(A4AModelChkStaffCommittee)
+    $.ajax({
+        url: '/api/SaveCouncilCommitteeStaffDtl',
+        type: "post",
+        data: dataobj,
+        contentType: 'application/json',
+        dataType: "Json",
+        success: function (result) {
+            $('#hdnSaveRoleValues').val("1");
+        },
+        error: function (exception) {
+            $('#hdnSaveRoleValues').val("0");
+            msg = exception.responseText;
+        }
+    });
+
+    ChkStaffCommittee = new Map();
+    A4AModelChkStaffCommittee = new Array();
+}
+
+function saveA4ACommitteeGroupUserRoles() {
+    debugger;
+    for (var key of ChkGroupUserCommittee.keys()) {
+        A4AModelChkGroupUserCommittee.push({
+            groupId: self.gId(),
+            UserId: $('#hdnChkGroupUserId').val(),
+            value: ChkGroupUserCommittee.get(key),
+            RoleId: "4",
+        })
+    }
+
+    let dataobj = JSON.stringify(A4AModelChkGroupUserCommittee)
+    $.ajax({
+        url: '/api/SaveCouncilCommitteeStaffDtl',
+        type: "post",
+        data: dataobj,
+        contentType: 'application/json',
+        dataType: "Json",
+        success: function (result) {
+            $('#hdnSaveRoleValues').val("1");
+        },
+        error: function (exception) {
+            $('#hdnSaveRoleValues').val("0");
+            msg = exception.responseText;
+        }
+    });
+
+    ChkGroupUserCommittee = new Map();
+    A4AModelChkGroupUserCommittee = new Array();
 }
 
 function chkInformationalRoles(e) {
