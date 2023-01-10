@@ -1345,7 +1345,6 @@ var AutoCompleteExample;
         }
 
         ViewModel.prototype.selectchkStaff = function (item, event) {
-            debugger;
             if (isNaN(ViewModel.prototype.gId())) {
                 gId = $('#hdnGroupId').val();
             }
@@ -1366,7 +1365,6 @@ var AutoCompleteExample;
         }
 
         ViewModel.prototype.selectchkCommitteeStaff = function (item, event) {
-            debugger;
             if (isNaN(ViewModel.prototype.gId())) {
                 gId = $('#hdnGroupId').val();
             }
@@ -2338,7 +2336,6 @@ $(document).ready(function () {
             success: function (data) {
                 var result = JSON.parse(data);
                 for (i = 0; i < result.length; i++) {
-                    debugger;
                     try {
                         var Name = result[i].UserName;
                         var t = result[i].CompanyName.replace(/\s/g, '');
@@ -2605,7 +2602,6 @@ function saveA4AStaffRoles() {
 }
 
 function saveA4AGroupUserRoles() {
-    debugger;
     for (var key of ChkGroupUser.keys()) {
         A4AModelChkGroupUser.push({
             groupId: self.gId(),
@@ -2640,7 +2636,6 @@ function EmailAdmin(e) {
 }
 
 function saveA4ACommitteeRoles() {
-    debugger;
     saveA4ACommitteeCompanyRoles();
     saveA4ACommitteeStaffRoles();
     saveA4ACommitteeGroupUserRoles();
@@ -2725,7 +2720,6 @@ function saveA4ACommitteeStaffRoles() {
 }
 
 function saveA4ACommitteeGroupUserRoles() {
-    debugger;
     for (var key of ChkGroupUserCommittee.keys()) {
         A4AModelChkGroupUserCommittee.push({
             groupId: self.gId(),
