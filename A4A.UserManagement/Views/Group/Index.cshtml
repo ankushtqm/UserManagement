@@ -147,7 +147,7 @@
             <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Council/Committee Contacts</span>
             <hr />
             <div data-bind="with: UMSubscribeModel">
-                <div id="DivCompanyMsg">
+                <div id="DivCompanyMsg" class="savebtn">
                     <span id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></span>
                     <span class="text-danger margin-topbot10 niceLabel bold" data-bind='text: $data.errorMessage()'></span>
                 </div>
@@ -272,7 +272,7 @@
         <!-- TAB 6 -->
         <div id="z-tab6">
             <br />
-            <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Task Force, Work Groups, Industry Groups & Networks </span>
+            <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Task Force, Work Groups, Industry Groups & Networks</span>
             <hr />
             <div data-bind="with: addTaskForceWorkGroup">
                 <div id="DivSaveTaskGroupRoles" class="savetaskgrouproles savebtn">
@@ -283,9 +283,9 @@
         </div>
         <div>
             <br />
-            <br />
+            <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Transaction History</span>
             <div data-bind="with: addGroupViewModel">
-                <span class="Useredit"></span>
+                @*<span class="Useredit"></span>*@
                 <hr />
                 @Html.Partial("_GroupTransaction")
             </div>
@@ -319,7 +319,6 @@
                 $('#DivSaveTaskGroupRoles').hide();
                 $('#DivTaskGroup').hide();
 
-                debugger;
                 if ($('#hdnGroupId').val() > 0 && $('#hdnGroupId').val() != null) {
                     $("#DivGroupType").hide();
                 }
@@ -507,8 +506,6 @@
                 ShowAptTabs(this.value);
                 $('#chooseGroupType').hide();
                 $("#btnAddGroupTop").css("margin-right", "400px");
-
-                debugger;
                 $('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('button, a').hide();
             });
 

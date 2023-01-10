@@ -379,9 +379,7 @@ var A4AStaffModel = function (A4AStaff) {
             processData: false,
             contentType: "application/json; charset=utf-8",
             success: function (result) {
-                debugger;
                 for (key in result) {
-                    debugger;
                     if (!(result === null || result === "undefined")) {
                         var res = result[key].split(":");
 
@@ -411,7 +409,6 @@ var A4AStaffModel = function (A4AStaff) {
     self.selected.subscribe(function (newValue) {
         if (!isNaN(self.gId())) {
             for (var key in newValue) {
-                debugger;
                 //Check if the user already exists
                 var match = ko.utils.arrayFirst(self.A4AStaff(),
                     function (item) {
@@ -430,7 +427,6 @@ var A4AStaffModel = function (A4AStaff) {
                         hasBounceReports: self.hasBounceReports()
                     });
 
-                    debugger;
                     $('#z-tab2').find('a').show(); $('#z-tab2').find('input').prop('disabled', false);
                     if (self.gId() > 0 && self.gId() != null) {
                         if ($('#hdnchkRadioId').val() != "1") {
@@ -456,7 +452,7 @@ var A4AStaffModel = function (A4AStaff) {
         $('.overlay').show();
         var gtypeid = $('#hdnGroupTypeId').val();
 
-        ////IMPORTANT NOTE- Changing to this so we remove all roles for the staff even if users deselect some checkboxes
+        //IMPORTANT NOTE- Changing to this so we remove all roles for the staff even if users deselect some checkboxes
         var url = '/api/deletea4ausergroups?GroupId=' + staff["GroupId"] + '&UserId=' + staff["UserId"] + '&IsA4AStaff=true';
         var dataObject = ko.utils.stringifyJson(staff);
         dataObject = "[" + dataObject + "]"; //Otherwise the dataobject at the API is null 
@@ -565,6 +561,7 @@ var A4AStaffModel = function (A4AStaff) {
         });
     }
 };
+
 /////////////////////////////////////////////////////////////////////
 /*******TAB 5&6 and Part of Council Committee - A
 Complete Subscribe/Informational tab KO binding Object********/
@@ -711,7 +708,6 @@ var AutoCompleteExample;
                     gId = ViewModel.prototype.gId();
                 }
 
-                debugger;
                 $('#DivCompanyMsg').show();
                 var company = '';
                 if (ui.item.label) {
@@ -735,8 +731,6 @@ var AutoCompleteExample;
                             $('#hdnChairComp').val(""); //Clear the company hidden field too
                             $(".overlay").hide();
                             return false;
-
-                            //$("#Prim" + company.replace(/\s/g, '')).attr("disabled", "disabled");
                         }
                     }
                     catch (Err) {
@@ -782,6 +776,7 @@ var AutoCompleteExample;
             }
             $(".overlay").hide();
         };
+
         /////////////////////////////////////////////////////////////////////////////////
         ////////////Vice CHAIR SAVING
         ////////////////////////////////////////////////////////////////////
@@ -795,8 +790,6 @@ var AutoCompleteExample;
                     gId = ViewModel.prototype.gId();
                 ViewModel.prototype.errorMessage = ko.observable();
                 var company = '';
-
-                debugger;
                 $('#DivCompanyMsg').show();
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
@@ -818,8 +811,6 @@ var AutoCompleteExample;
                             $('#hdnViceChairComp').val(""); //Clear the company hidden field too
                             $(".overlay").hide();
                             return false;
-
-                            //$("#Prim" + company.replace(/\s/g, '')).attr("disabled", "disabled");
                         }
                     }
                     catch (Err) {
@@ -864,6 +855,7 @@ var AutoCompleteExample;
             catch (Err) { $(".overlay").hide(); }
             $(".overlay").hide();
         };
+
         /////////////////////////////////////////////////////////////////////////////
         /***   Participant/Informational - Add all users to Group - not being used ***/
         ////////////////////////////////////////////////////////////////////////////
@@ -877,7 +869,6 @@ var AutoCompleteExample;
                     gId = ViewModel.prototype.gId();
                 }
 
-                debugger;
                 $('#DivCommitteeMsg').show();
                 var company = '';
                 if (ui.item.label) {
@@ -901,8 +892,6 @@ var AutoCompleteExample;
                             $('#hdnChairComp').val(""); //Clear the company hidden field too
                             $(".overlay").hide();
                             return false;
-
-                            //$("#Prim" + company.replace(/\s/g, '')).attr("disabled", "disabled");
                         }
                     }
                     catch (Err) {
@@ -959,7 +948,6 @@ var AutoCompleteExample;
                     gId = ViewModel.prototype.gId();
                 ViewModel.prototype.errorMessage = ko.observable();
                 var company = '';
-                debugger;
                 $('#DivCommitteeMsg').show();
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
@@ -981,8 +969,6 @@ var AutoCompleteExample;
                             $('#hdnViceChairComp').val(""); //Clear the company hidden field too
                             $(".overlay").hide();
                             return false;
-
-                            //$("#Prim" + company.replace(/\s/g, '')).attr("disabled", "disabled");
                         }
                     }
                     catch (Err) {
@@ -995,7 +981,6 @@ var AutoCompleteExample;
                 }
 
                 $("#hdnChkGroupUserId").val(ui.item.text);
-
                 var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "ViceChair": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": company }];
                 var dataObject = ko.utils.stringifyJson(temp);
                 $.ajax({
@@ -1054,6 +1039,7 @@ var AutoCompleteExample;
             catch (Err) { $(".overlay").hide(); }
             $(".overlay").hide();
         };
+
         //////////////////////////////////////////////////////////////////////////////
         /***   Participant/Informational - Delete User from UserGroup in the DB     ***/
         //////////////////////////////////////////////////////////////////////////////
@@ -1087,6 +1073,7 @@ var AutoCompleteExample;
             catch (Err) { $(".overlay").hide(); }
             setTimeout(function () { $(".overlay").hide(); }, 4000);
         };
+
         /////////////////////////////////////////////////////////////////////
         /***   Participant/Informational - LOAD Users from UserGroup in the DB     ***/
         ////////////////////////////////////////////////////////////////////
@@ -1113,6 +1100,7 @@ var AutoCompleteExample;
                 error: function (exception) { ViewModel.prototype.errorMessage(exception.responseText); }
             });
         }
+
         /////////////////////////////////////////////////////
         /**Council Committee - Remove Chair /ViceChair**/
         //////////////////////////////////////////////////////
@@ -1137,6 +1125,7 @@ var AutoCompleteExample;
             catch (Err) { $(".overlay").hide(); }
             $(".overlay").hide();
         }
+
         ViewModel.prototype.removeViceChairGroupUser = function (item, event) {
             try {
                 $(".overlay").show();
@@ -1160,6 +1149,7 @@ var AutoCompleteExample;
             }
             $(".overlay").hide();
         }
+
         ViewModel.prototype.DisablePrimBox = function () {
             try {
                 /* Note: Enabling Prim text boxes because the Chair/ViceChair user has been removed **/
@@ -1185,6 +1175,7 @@ var AutoCompleteExample;
                 // TODO: Thinkhow to handle this  $('.spnMessage').append("Error disabling the Primary!!");
             }
         };
+
         ViewModel.prototype.RemoveGroupUser = function (URL) {
             $.ajax({
                 url: URL,
@@ -1231,6 +1222,7 @@ var AutoCompleteExample;
     AutoCompleteExample.ViewModel = ViewModel;
 
 })(AutoCompleteExample || (AutoCompleteExample = {}));
+
 /////////////////////////////////////////////////////////////////////
 /*******TAB 7- Taskforce & WorkGroups**************/
 /////////////////////////////////////////////////////////////////////
@@ -1313,6 +1305,7 @@ var TaskForceWorkGroup;
             });
         };
         ViewModel.prototype.selectedTskForUser = ko.observableArray();
+
         /////////////////////////////////////////////////////////////////////
         /***  TaskForce -  Select User to Add     ***/
         ////////////////////////////////////////////////////////////////////
@@ -1373,8 +1366,8 @@ var TaskForceWorkGroup;
 
             catch (Err) { $(".overlay").hide(); }
             $(".overlay").hide();
-
         };
+
         /////////////////////////////////////////////////////////////////////
         /***   taskforce- Delete User from UserGroup in the DB     ***/
         ////////////////////////////////////////////////////////////////////
@@ -1411,6 +1404,7 @@ var TaskForceWorkGroup;
             }
             $(".overlay").hide();
         };
+
         /////////////////////////////////////////////////////////////////////
         /***   taskforce- LOAD Users from UserGroup in the DB     ***/
         ////////////////////////////////////////////////////////////////////
@@ -1468,6 +1462,7 @@ ko.observableArray.fn.distinct = function (prop) {
 
     return target;
 };
+
 /////////////////////////////////////////////////////////////////////
 /*******Tab 4 - Council/Committee View Model - FINAL********/
 /////////////////////////////////////////////////////////////////////
@@ -1544,11 +1539,7 @@ function councilCommitteeViewModel(params) {
             var primErrItem = $('#' + compPrimError);
             if (typeof primErrItem !== "undefined")
                 primErrItem.remove();
-
-
-            debugger;
             $('#DivCompanyMsg').show();
-
             //Get GroupId
             if (!(gId > 0)) //Added on 042018 because alternate was not getting gId value //added here for uniformity
                 gId = $('#hdnGroupId').val() || parseInt(getGID('gid'));
@@ -2293,22 +2284,23 @@ function handleClick(myRadio) {
 }
 
 function saveA4ARoles() {
-    debugger;
-    var msg = "";
-    saveA4ACompanyNamePrimaryRoles(msg);
-    saveA4ACompanyNameAlternateRoles(msg);
-    saveA4AStaffRoles(msg);
-    saveA4AGroupUserRoles(msg);
+    saveA4ACompanyNamePrimaryRoles();
+    saveA4ACompanyNameAlternateRoles();
+    saveA4AStaffRoles();
+    saveA4AGroupUserRoles();
     $('#DivCompanyMsg').show();
     if ($('#hdnSaveRoleValues').val() == "1") {
-        $('.spnCompanyMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
+        $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
     }
     else if ($('#hdnSaveRoleValues').val() == "0") {
-        $('.spnCompanyMessage').text("Error updating the records:");
+        $('.spnMessage').text("Error updating the records:");
+    }
+    else {
+        $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
     }
 }
 
-function saveA4ACompanyNamePrimaryRoles(msg) {
+function saveA4ACompanyNamePrimaryRoles() {
     for (var key of CompanyNamePrimary.keys()) {
         A4AModelCompanyNamePrimary.push({
             groupId: self.gId(),
@@ -2338,7 +2330,7 @@ function saveA4ACompanyNamePrimaryRoles(msg) {
     A4AModelCompanyNamePrimary = new Array();
 }
 
-function saveA4ACompanyNameAlternateRoles(msg) {
+function saveA4ACompanyNameAlternateRoles() {
     for (var key of CompanyNameAlternate.keys()) {
         A4AModelCompanyNameAlternate.push({
             groupId: self.gId(),
@@ -2368,8 +2360,7 @@ function saveA4ACompanyNameAlternateRoles(msg) {
     A4AModelCompanyNameAlternate = new Array();
 }
 
-function saveA4AStaffRoles(msg) {
-    debugger;
+function saveA4AStaffRoles() {
     for (var key of ChkStaff.keys()) {
         A4AModelChkStaff.push({
             groupId: self.gId(),
@@ -2387,7 +2378,6 @@ function saveA4AStaffRoles(msg) {
         contentType: 'application/json',
         dataType: "Json",
         success: function (result) {
-            debugger;
             $('#hdnSaveRoleValues').val("1");
         },
         error: function (exception) {
@@ -2400,7 +2390,7 @@ function saveA4AStaffRoles(msg) {
     A4AModelChkStaff = new Array();
 }
 
-function saveA4AGroupUserRoles(msg) {
+function saveA4AGroupUserRoles() {
     for (var key of ChkGroupUser.keys()) {
         A4AModelChkGroupUser.push({
             groupId: self.gId(),
