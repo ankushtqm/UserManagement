@@ -21,6 +21,9 @@ var A4AModelChkGroupUser = new Array();
 var chkInformationalUser = new Map();
 var A4AModelInformationalUser = new Array();
 
+var chkContactUser = new Map();
+var A4AModelContactUser = new Array();
+
 var CheckStatusStaff = ko.observable(false);
 var CheckStatusGroupUser = ko.observable(false);
 
@@ -713,6 +716,9 @@ var AutoCompleteExample;
                 $('#DivCommitteeMsg').hide();
                 $('#DivInformationalContactMsg').hide();
                 $('#DivSaveInformationalContactMsg').hide();
+                $('#DivContactMsg').hide();
+                $('#DivSaveContactMsg').hide();
+                $('#DivTaskGroupMsg').hide();
                 var company = '';
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
@@ -799,6 +805,9 @@ var AutoCompleteExample;
                 $('#DivCommitteeMsg').hide();
                 $('#DivInformationalContactMsg').hide();
                 $('#DivSaveInformationalContactMsg').hide();
+                $('#DivContactMsg').hide();
+                $('#DivSaveContactMsg').hide();
+                $('#DivTaskGroupMsg').hide();
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
                     $('#hdnViceChairComp').val(company);
@@ -876,12 +885,14 @@ var AutoCompleteExample;
                 else {
                     gId = ViewModel.prototype.gId();
                 }
-
                 $('#DivMsgA4AStaffContainer').hide();
                 $('#DivCompanyMsg').hide();
                 $('#DivCommitteeMsg').show();
                 $('#DivInformationalContactMsg').hide();
                 $('#DivSaveInformationalContactMsg').hide();
+                $('#DivContactMsg').hide();
+                $('#DivSaveContactMsg').hide();
+                $('#DivTaskGroupMsg').hide();
                 var company = '';
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
@@ -965,6 +976,9 @@ var AutoCompleteExample;
                 $('#DivCommitteeMsg').show();
                 $('#DivInformationalContactMsg').hide();
                 $('#DivSaveInformationalContactMsg').hide();
+                $('#DivContactMsg').hide();
+                $('#DivSaveContactMsg').hide();
+                $('#DivTaskGroupMsg').hide();
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
                     $('#hdnViceChairComp').val(company);
@@ -1059,7 +1073,7 @@ var AutoCompleteExample;
         //////////////////////////////////////////////////////////////////////////////
         /***   Participant/Informational - Delete User from UserGroup in the DB     ***/
         //////////////////////////////////////////////////////////////////////////////
-        ViewModel.prototype.removeUMContacts = function (contact) {
+        ViewModel.prototype.removeUMInfoContacts = function (contact) {
             try {
                 $(".overlay").show();
                 $('#DivMsgA4AStaffContainer').hide();
@@ -1067,6 +1081,47 @@ var AutoCompleteExample;
                 $('#DivCommitteeMsg').hide();
                 $('#DivInformationalContactMsg').hide();
                 $('#DivSaveInformationalContactMsg').show();
+                $('#DivContactMsg').hide();
+                $('#DivSaveContactMsg').hide();
+                $('#DivTaskGroupMsg').hide();
+                var gtypeid = $('#hdnGroupTypeId').val();
+                var dataObject = ko.utils.stringifyJson(contact);
+                dataObject = "[" + dataObject + "]"; //Otherwise the dataobject at the API is null
+
+                $.ajax({
+                    url: '/api/RemoveGroupUser?IsA4AStaff=0&GroupTypeId=' + gtypeid,
+                    type: 'post',
+                    async: false,
+                    data: dataObject,
+                    contentType: 'application/json',
+                    success: function (data) {
+                        ViewModel.prototype.InfoMessage("User removed from the group successfully!");
+                        setTimeout(function () { ViewModel.prototype.InfoMessage(""); }, 3000);
+                        ViewModel.prototype.selectedValues.remove(contact);
+                    },
+                    error: function (xhr, status, error) {
+                        ViewModel.prototype.errorMessage("Error in removing user" + error);
+                        $(".overlay").hide();
+                        return false;
+                    }
+                });
+
+            }
+            catch (Err) { $(".overlay").hide(); }
+            setTimeout(function () { $(".overlay").hide(); }, 4000);
+        };
+
+        ViewModel.prototype.removeUMContacts = function (contact) {
+            try {
+                $(".overlay").show();
+                $('#DivMsgA4AStaffContainer').hide();
+                $('#DivCompanyMsg').hide();
+                $('#DivCommitteeMsg').hide();
+                $('#DivInformationalContactMsg').hide();
+                $('#DivSaveInformationalContactMsg').hide();
+                $('#DivContactMsg').hide();
+                $('#DivSaveContactMsg').show();
+                $('#DivTaskGroupMsg').hide();
                 var gtypeid = $('#hdnGroupTypeId').val();
                 var dataObject = ko.utils.stringifyJson(contact);
                 dataObject = "[" + dataObject + "]"; //Otherwise the dataobject at the API is null
@@ -1213,6 +1268,9 @@ var AutoCompleteExample;
                 $('#DivCommitteeMsg').show();
                 $('#DivInformationalContactMsg').hide();
                 $('#DivSaveInformationalContactMsg').hide();
+                $('#DivContactMsg').hide();
+                $('#DivSaveContactMsg').hide();
+                $('#DivTaskGroupMsg').hide();
                 if (isNaN(ViewModel.prototype.gId())) {
                     gId = $('#hdnGroupId').val();
                 }
@@ -1461,6 +1519,8 @@ var TaskForceWorkGroup;
                 $('#DivCommitteeMsg').hide();
                 $('#DivInformationalContactMsg').hide();
                 $('#DivSaveInformationalContactMsg').hide();
+                $('#DivContactMsg').hide();
+                $('#DivSaveContactMsg').hide();
                 $('#DivTaskGroupMsg').show();
                 var dataObject = ko.utils.stringifyJson(contact);
                 ViewModel.prototype.errorMessage();
@@ -1632,6 +1692,9 @@ function councilCommitteeViewModel(params) {
             $('#DivCommitteeMsg').hide();
             $('#DivInformationalContactMsg').hide();
             $('#DivSaveInformationalContactMsg').hide();
+            $('#DivContactMsg').hide();
+            $('#DivSaveContactMsg').hide();
+            $('#DivTaskGroupMsg').hide();
             //Get GroupId
             if (!(gId > 0)) //Added on 042018 because alternate was not getting gId value //added here for uniformity
                 gId = $('#hdnGroupId').val() || parseInt(getGID('gid'));
@@ -1693,8 +1756,9 @@ function councilCommitteeViewModel(params) {
         $('#DivCommitteeMsg').hide();
         $('#DivInformationalContactMsg').hide();
         $('#DivSaveInformationalContactMsg').hide();
-        $(".overlay").hide();
-
+        $('#DivContactMsg').hide();
+        $('#DivSaveContactMsg').hide();
+        $('#DivTaskGroupMsg').hide();
     }
     self.removeAltGroupUser = function (item, event) {
         $(".overlay").show();
@@ -1714,7 +1778,9 @@ function councilCommitteeViewModel(params) {
         $('#DivCommitteeMsg').hide();
         $('#DivInformationalContactMsg').hide();
         $('#DivSaveInformationalContactMsg').hide();
-        $(".overlay").hide();
+        $('#DivContactMsg').hide();
+        $('#DivSaveContactMsg').hide();
+        $('#DivTaskGroupMsg').hide();
     }
     function RemoveGroupUser(URL, Company, Role) {
         $.ajax({
@@ -1773,6 +1839,9 @@ function councilCommitteeViewModel(params) {
             $('#DivCommitteeMsg').hide();
             $('#DivInformationalContactMsg').hide();
             $('#DivSaveInformationalContactMsg').hide();
+            $('#DivContactMsg').hide();
+            $('#DivSaveContactMsg').hide();
+            $('#DivTaskGroupMsg').hide();
 
             var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Alternate": true, GroupId: gId, CompanyName: params.Company }];
             var dataObject = ko.utils.stringifyJson(temp);
@@ -2401,6 +2470,9 @@ function saveA4ARoles() {
     $('#DivCommitteeMsg').hide();
     $('#DivInformationalContactMsg').hide();
     $('#DivSaveInformationalContactMsg').hide();
+    $('#DivContactMsg').hide();
+    $('#DivSaveContactMsg').hide();
+    $('#DivTaskGroupMsg').hide();
     if ($('#hdnSaveRoleValues').val() == "1") {
         $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
     }
@@ -2551,6 +2623,9 @@ function saveA4ACommitteeRoles() {
     $('#DivCommitteeMsg').show();
     $('#DivInformationalContactMsg').hide();
     $('#DivSaveInformationalContactMsg').hide();
+    $('#DivContactMsg').hide();
+    $('#DivSaveContactMsg').hide();
+    $('#DivTaskGroupMsg').hide();
     let dataobj = JSON.stringify(A4AModelEmailAdmin)
     $.ajax({
         url: '/api/savecommitteeroles',
@@ -2588,6 +2663,9 @@ function saveA4AInformationalRoles() {
     $('#DivCommitteeMsg').hide();
     $('#DivInformationalContactMsg').hide();
     $('#DivSaveInformationalContactMsg').show();
+    $('#DivContactMsg').hide();
+    $('#DivSaveContactMsg').hide();
+    $('#DivTaskGroupMsg').hide();
     let dataobj = JSON.stringify(A4AModelInformationalUser)
     $.ajax({
         url: '/api/savecommitteeroles',
@@ -2604,6 +2682,46 @@ function saveA4AInformationalRoles() {
     });
     chkInformationalUser = new Map();
     A4AModelInformationalUser = new Array();
+    setTimeout(function () { $('.spnMessage').text(""); }, 10000);
+}
+
+function chkContactRoles(e) {
+    chkContactUser.set(e.value, e.checked)
+}
+
+function saveA4AContactsRoles() {
+    for (var key of chkContactUser.keys()) {
+        A4AModelContactUser.push({
+            groupId: self.gId(),
+            UserId: key,
+            value: chkContactUser.get(key)
+        })
+    }
+
+    $('#DivMsgA4AStaffContainer').hide();
+    $('#DivCompanyMsg').hide();
+    $('#DivCommitteeMsg').hide();
+    $('#DivInformationalContactMsg').hide();
+    $('#DivSaveInformationalContactMsg').hide();
+    $('#DivContactMsg').hide();
+    $('#DivSaveContactMsg').show();
+    $('#DivTaskGroupMsg').hide();
+    let dataobj = JSON.stringify(A4AModelContactUser)
+    $.ajax({
+        url: '/api/savecommitteeroles',
+        type: "post",
+        data: dataobj,
+        contentType: 'application/json',
+        dataType: "Json",
+        success: function (result) {
+            $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
+        },
+        error: function (exception) {
+            $('.spnMessage').text("Error updating the records:" + exception.responseText);
+        }
+    });
+    chkContactUser = new Map();
+    A4AModelContactUser = new Array();
     setTimeout(function () { $('.spnMessage').text(""); }, 10000);
 }
 
@@ -2625,8 +2743,9 @@ function saveA4ATaskGroupRoles() {
     $('#DivCommitteeMsg').hide();
     $('#DivInformationalContactMsg').hide();
     $('#DivSaveInformationalContactMsg').hide();
+    $('#DivContactMsg').hide();
+    $('#DivSaveContactMsg').hide();
     $('#DivTaskGroupMsg').show();
-
     let dataobj = JSON.stringify(A4AModelTaskGroupUser)
     $.ajax({
         url: '/api/savecommitteeroles',

@@ -251,6 +251,15 @@
             <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Informational Contact</span>
             <hr />
             <div data-bind="with: UMSubscribeModel">
+                <div id="DivInformationalContactMsg">
+                    <span class="text-success niceLabel margin-topbot10 bold" data-bind="text: InfoMessage"></span>
+                    <span class="text-danger niceLabel margin-topbot10 bold" data-bind="text: errorMessage" id="ErrMessageMemSub"></span>
+                </div>
+
+                <div id="DivSaveInformationalContactMsg" class="savebtn">
+                    <span id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></span>
+                </div>
+
                 <div id="DivSaveInformationalRoles" class="saveinformationalroles savebtn">
                     <button class="btn btn-primary" type='submit' onclick="saveA4AInformationalRoles()">Save Contacts</button>
                 </div>
@@ -263,10 +272,19 @@
             <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Contacts</span>
             <hr />
             <div data-bind="with: UMSubscribeModel">
-                <div id="DivSaveContactsRoles" class="savecontactsroles savebtn">
-                    <button class="btn btn-primary" type='submit' onclick="saveA4AInformationalRoles()">Save Contacts</button>
+                <div id="DivContactMsg">
+                    <span class="text-success niceLabel margin-topbot10 bold" data-bind="text: InfoMessage"></span>
+                    <span class="text-danger niceLabel margin-topbot10 bold" data-bind="text: errorMessage" id="ErrMessageMemSub"></span>
                 </div>
-                @Html.Partial("_MemberSubscribe")
+
+                <div id="DivSaveContactMsg" class="savebtn">
+                    <span id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></span>
+                </div>
+
+                <div id="DivSaveContactsRoles" class="savecontactsroles savebtn">
+                    <button class="btn btn-primary" type='submit' onclick="saveA4AContactsRoles()">Save Contacts</button>
+                </div>
+                @Html.Partial("_MemberSubscribeContacts")
             </div>
         </div>
         <!-- TAB 6 -->
@@ -316,6 +334,8 @@
                 $('#DivSaveContactsRoles').hide();
                 $('#DivInformationalContactMsg').hide();
                 $('#DivSaveInformationalContactMsg').hide();
+                $('#DivContactMsg').hide();
+                $('#DivSaveContactMsg').hide();
                 $('#DivSaveTaskGroupRoles').hide();
                 $('#DivTaskGroupMsg').hide();
 
