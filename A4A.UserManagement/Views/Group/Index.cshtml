@@ -24,6 +24,11 @@
     .savebtn {
         margin-bottom: 10px;
     }
+
+    .emailadmin {
+        margin-right: -15px;
+        margin-left: -0px !important;
+    }
 </style>
 
 @section heading{<h4 class="niceLabel-bold" id="Headtitle">Create/Edit Group</h4>}
@@ -192,7 +197,7 @@
             </div>
             @Html.Partial("_CouncilCommittee")
         </div>
-        <!--  TAB 7 -->
+        <!-- TAB 7 -->
         <div id="z-tab7">
             <br />
             <span id="ccua" class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Council/Committee Unlimited Alternates</span>
@@ -293,14 +298,23 @@
             <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Task Force, Work Groups, Industry Groups & Networks</span>
             <hr />
             <div data-bind="with: addTaskForceWorkGroup">
+                <div id="DivTaskGroupMsg">
+                    <span id="tskErrorMsg" class="margin-topbot10 niceLabel bold" data-bind='text:errorMessage'></span><br />
+                    <span class="text-success niceLabel margin-topbot10 bold" data-bind="text: InfoMessage"></span>
+                </div>
+
+                <div id="DivSaveTaskGroupMsg" class="savebtn">
+                    <span id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></span>
+                </div>
+
                 <div id="DivSaveTaskGroupRoles" class="savetaskgrouproles savebtn">
                     <button class="btn btn-primary" type='submit' onclick="saveA4ATaskGroupRoles()">Save Task Force</button>
                 </div>
                 @Html.Partial("_TaskforceWorkGroup")
             </div>
         </div>
-        <div>
-            <br />
+        <br />
+        <div id="transaction">
             <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Transaction History</span>
             <div data-bind="with: addGroupViewModel">
                 <hr />
@@ -338,6 +352,7 @@
                 $('#DivSaveContactMsg').hide();
                 $('#DivSaveTaskGroupRoles').hide();
                 $('#DivTaskGroupMsg').hide();
+                $('#DivSaveTaskGroupMsg').hide();
 
                 if ($('#hdnGroupId').val() > 0 && $('#hdnGroupId').val() != null) {
                     $("#DivGroupType").hide();
@@ -387,7 +402,6 @@
                 var gtype = 0;
 
                 if (gid > 0) {
-
                     //Set GroupID
                     $('#hdnGroupId').val(gid);
                     var group = $.getJSON('/api/group/?gid=' + gid, function (data) {

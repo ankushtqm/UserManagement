@@ -269,7 +269,6 @@ function Group(HiddenGroupId, GroupName, AppliesToSiteId, GroupTypeId, LyrisList
             self.ShowErr(true);
             self.step1Validation.errors.showAllMessages();
             //Checking if mission is filled - Commented checking Mission for now. Because it will cause a problem at launch. 9/25/2018
-            //console.log(CKEDITOR.instances.inpMission.getData());
             $(".overlay").hide();
             return false;
         }
@@ -458,7 +457,7 @@ var A4AStaffModel = function (A4AStaff) {
 
     });
     self.removeA4AStaff = function (staff) {
-        $('.overlay').show();
+        $('.overlay').hide();
         var gtypeid = $('#hdnGroupTypeId').val();
 
         //IMPORTANT NOTE- Changing to this so we remove all roles for the staff even if users deselect some checkboxes
@@ -493,7 +492,7 @@ var A4AStaffModel = function (A4AStaff) {
     };
 
     self.save = function (form) {
-        $('.overlay').show();
+        $('.overlay').hide();
         var dataObject = ko.utils.stringifyJson(self.A4AStaff);
         var hasRole = true; //Setting the bool for checking that roles are selcted for all 
 
@@ -725,6 +724,7 @@ var AutoCompleteExample;
                 $('#DivContactMsg').hide();
                 $('#DivSaveContactMsg').hide();
                 $('#DivTaskGroupMsg').hide();
+                $('#DivSaveTaskGroupMsg').hide();
                 var company = '';
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
@@ -814,6 +814,7 @@ var AutoCompleteExample;
                 $('#DivContactMsg').hide();
                 $('#DivSaveContactMsg').hide();
                 $('#DivTaskGroupMsg').hide();
+                $('#DivSaveTaskGroupMsg').hide();
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
                     $('#hdnViceChairComp').val(company);
@@ -899,6 +900,7 @@ var AutoCompleteExample;
                 $('#DivContactMsg').hide();
                 $('#DivSaveContactMsg').hide();
                 $('#DivTaskGroupMsg').hide();
+                $('#DivSaveTaskGroupMsg').hide();
                 var company = '';
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
@@ -985,6 +987,7 @@ var AutoCompleteExample;
                 $('#DivContactMsg').hide();
                 $('#DivSaveContactMsg').hide();
                 $('#DivTaskGroupMsg').hide();
+                $('#DivSaveTaskGroupMsg').hide();
                 if (ui.item.label) {
                     company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
                     $('#hdnViceChairComp').val(company);
@@ -1090,6 +1093,7 @@ var AutoCompleteExample;
                 $('#DivContactMsg').hide();
                 $('#DivSaveContactMsg').hide();
                 $('#DivTaskGroupMsg').hide();
+                $('#DivSaveTaskGroupMsg').hide();
                 var gtypeid = $('#hdnGroupTypeId').val();
                 var dataObject = ko.utils.stringifyJson(contact);
                 dataObject = "[" + dataObject + "]"; //Otherwise the dataobject at the API is null
@@ -1128,6 +1132,7 @@ var AutoCompleteExample;
                 $('#DivContactMsg').show();
                 $('#DivSaveContactMsg').hide();
                 $('#DivTaskGroupMsg').hide();
+                $('#DivSaveTaskGroupMsg').hide();
                 var gtypeid = $('#hdnGroupTypeId').val();
                 var dataObject = ko.utils.stringifyJson(contact);
                 dataObject = "[" + dataObject + "]"; //Otherwise the dataobject at the API is null
@@ -1277,6 +1282,7 @@ var AutoCompleteExample;
                 $('#DivContactMsg').hide();
                 $('#DivSaveContactMsg').hide();
                 $('#DivTaskGroupMsg').hide();
+                $('#DivSaveTaskGroupMsg').hide();
                 if (isNaN(ViewModel.prototype.gId())) {
                     gId = $('#hdnGroupId').val();
                 }
@@ -1501,6 +1507,7 @@ var TaskForceWorkGroup;
                         temp[roleName.replace(/\s/g, '').trim()] = true;
                         temp['CompanyName'] = cname;
                         temp['GroupId'] = ViewModel.prototype.gId();
+                        temp['CheckStatus'] = false;
 
                         var dataObject = ko.utils.stringifyJson(temp);
                         dataObject = "[" + dataObject + "]";
@@ -1510,10 +1517,20 @@ var TaskForceWorkGroup;
                             data: dataObject,
                             contentType: 'application/json',
                             success: function (data) {
+                                debugger;
                                 $("#tskErrorMsg").css("color", "Green");
                                 $("#tskErrorMsg").html(ui.item.label + "has been added to the group"); // TODO: Fix it to use ViewModel.prototype.errorMessage. For somereason ViewModel.prototype.errorMessage was not updating and showing up 1/18/18
                                 setTimeout(function () { $("#tskErrorMsg").html("") }, 6000);
                                 ViewModel.prototype.selectedTskForUser.push(temp);
+                                if ($('#hdnchkRadioId').val() != "1") {
+                                    $("input[name='EmailAdmin']").prop("disabled", true);
+                                    $('#DivSaveTaskGroupRoles').hide();
+                                }
+                                else {
+                                    $("input[name='EmailAdmin']").prop("disabled", false);
+                                    $('#DivSaveTaskGroupRoles').show();
+                                }
+                                $('#z-tab6').find('a').show();
                                 $(event.target).val(''); //Note: Clears the textbox after the user is added 
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -1548,6 +1565,7 @@ var TaskForceWorkGroup;
                 $('#DivContactMsg').hide();
                 $('#DivSaveContactMsg').hide();
                 $('#DivTaskGroupMsg').show();
+                $('#DivSaveTaskGroupMsg').hide();
                 var dataObject = ko.utils.stringifyJson(contact);
                 ViewModel.prototype.errorMessage();
                 dataObject = "[" + dataObject + "]"; //Otherwise the dataobject at the API is null
@@ -1592,6 +1610,7 @@ var TaskForceWorkGroup;
                 success: function (data) {
                     var result = JSON.parse(data);
                     for (i = 0; i < result.length; i++) {
+                        debugger;
                         var temp = {};
                         temp['Name'] = result[i].UserName;
                         temp['CompanyName'] = result[i].CompanyName; //Removed (  )  because we made company seperate field
@@ -1599,6 +1618,7 @@ var TaskForceWorkGroup;
                         temp['role'] = result[i].Role;
                         temp[result[i].Role.replace(/\s/g, '').trim()] = true;
                         temp['GroupId'] = result[i].GroupId;
+                        temp['CheckStatus'] = result[i].CheckStatus;
                         ViewModel.prototype.selectedTskForUser.push(temp);
                     }
                 },
@@ -1721,6 +1741,7 @@ function councilCommitteeViewModel(params) {
             $('#DivContactMsg').hide();
             $('#DivSaveContactMsg').hide();
             $('#DivTaskGroupMsg').hide();
+            $('#DivSaveTaskGroupMsg').hide();
             //Get GroupId
             if (!(gId > 0)) //Added on 042018 because alternate was not getting gId value //added here for uniformity
                 gId = $('#hdnGroupId').val() || parseInt(getGID('gid'));
@@ -1785,6 +1806,7 @@ function councilCommitteeViewModel(params) {
         $('#DivContactMsg').hide();
         $('#DivSaveContactMsg').hide();
         $('#DivTaskGroupMsg').hide();
+        $('#DivSaveTaskGroupMsg').hide();
     }
     self.removeAltGroupUser = function (item, event) {
         $(".overlay").show();
@@ -1807,6 +1829,7 @@ function councilCommitteeViewModel(params) {
         $('#DivContactMsg').hide();
         $('#DivSaveContactMsg').hide();
         $('#DivTaskGroupMsg').hide();
+        $('#DivSaveTaskGroupMsg').hide();
     }
     function RemoveGroupUser(URL, Company, Role) {
         $.ajax({
@@ -1868,6 +1891,7 @@ function councilCommitteeViewModel(params) {
             $('#DivContactMsg').hide();
             $('#DivSaveContactMsg').hide();
             $('#DivTaskGroupMsg').hide();
+            $('#DivSaveTaskGroupMsg').hide();
 
             var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Alternate": true, GroupId: gId, CompanyName: params.Company }];
             var dataObject = ko.utils.stringifyJson(temp);
@@ -2499,14 +2523,15 @@ function saveA4ARoles() {
     $('#DivContactMsg').hide();
     $('#DivSaveContactMsg').hide();
     $('#DivTaskGroupMsg').hide();
+    $('#DivSaveTaskGroupMsg').hide();
     if ($('#hdnSaveRoleValues').val() == "1") {
-        $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
+        $('.spnMessage').html("Council/Committee Contacts changes saved successfully").css("color", "green");
     }
     else if ($('#hdnSaveRoleValues').val() == "0") {
         $('.spnMessage').text("Error updating the records:");
     }
     else {
-        $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
+        $('.spnMessage').html("Council/Committee Contacts changes saved successfully").css("color", "green");
     }
     setTimeout(function () { $('.spnMessage').text(""); }, 10000);
 }
@@ -2647,18 +2672,18 @@ function saveA4ACommitteeRoles() {
     $('#DivContactMsg').hide();
     $('#DivSaveContactMsg').hide();
     $('#DivTaskGroupMsg').hide();
+    $('#DivSaveTaskGroupMsg').hide();
     if ($('#hdnSaveRoleValues').val() == "1") {
-        $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
+        $('.spnMessage').html("Council/Committee Unlimited Alternates changes saved successfully").css("color", "green");
     }
     else if ($('#hdnSaveRoleValues').val() == "0") {
         $('.spnMessage').text("Error updating the records:");
     }
     else {
-        $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
+        $('.spnMessage').html("Council/Committee Unlimited Alternates changes saved successfully").css("color", "green");
     }
     setTimeout(function () { $('.spnMessage').text(""); }, 10000);
 }
-
 
 function saveA4ACommitteeCompanyRoles() {
     for (var key of SendEmailAdmin.keys()) {
@@ -2669,7 +2694,6 @@ function saveA4ACommitteeCompanyRoles() {
         })
     }
 
-    
     let dataobj = JSON.stringify(A4AModelEmailAdmin)
     $.ajax({
         url: '/api/savecommitteeroles',
@@ -2770,6 +2794,7 @@ function saveA4AInformationalRoles() {
     $('#DivContactMsg').hide();
     $('#DivSaveContactMsg').hide();
     $('#DivTaskGroupMsg').hide();
+    $('#DivSaveTaskGroupMsg').hide();
     let dataobj = JSON.stringify(A4AModelInformationalUser)
     $.ajax({
         url: '/api/savecommitteeroles',
@@ -2778,7 +2803,7 @@ function saveA4AInformationalRoles() {
         contentType: 'application/json',
         dataType: "Json",
         success: function (result) {
-            $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
+            $('.spnMessage').html("Informational Contact changes saved successfully").css("color", "green");
         },
         error: function (exception) {
             $('.spnMessage').text("Error updating the records:" + exception.responseText);
@@ -2810,6 +2835,7 @@ function saveA4AContactsRoles() {
     $('#DivContactMsg').hide();
     $('#DivSaveContactMsg').show();
     $('#DivTaskGroupMsg').hide();
+    $('#DivSaveTaskGroupMsg').hide();
     let dataobj = JSON.stringify(A4AModelContactUser)
     $.ajax({
         url: '/api/savecommitteeroles',
@@ -2818,7 +2844,7 @@ function saveA4AContactsRoles() {
         contentType: 'application/json',
         dataType: "Json",
         success: function (result) {
-            $('.spnMessage').html("Council/Committee Contact changes saved successfully").css("color", "green");
+            $('.spnMessage').html("Contact changes saved successfully").css("color", "green");
         },
         error: function (exception) {
             $('.spnMessage').text("Error updating the records:" + exception.responseText);
@@ -2849,7 +2875,8 @@ function saveA4ATaskGroupRoles() {
     $('#DivSaveInformationalContactMsg').hide();
     $('#DivContactMsg').hide();
     $('#DivSaveContactMsg').hide();
-    $('#DivTaskGroupMsg').show();
+    $('#DivTaskGroupMsg').hide();
+    $('#DivSaveTaskGroupMsg').show();
     let dataobj = JSON.stringify(A4AModelTaskGroupUser)
     $.ajax({
         url: '/api/savecommitteeroles',
