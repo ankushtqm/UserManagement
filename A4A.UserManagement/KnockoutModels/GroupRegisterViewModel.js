@@ -647,6 +647,7 @@ var AutoCompleteExample;
                 else {
                     ViewModel.prototype.errorMessage("");
                 }
+
                 var role = '';
                 var temp, temp1;
                 //Get CompanyName out of the username
