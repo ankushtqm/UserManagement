@@ -33,6 +33,9 @@ var A4AModelContactUser = new Array();
 var CheckStatusStaff = ko.observable(false);
 var CheckStatusGroupUser = ko.observable(false);
 
+var CheckStatusCommitteeStaff = ko.observable(false);
+var CheckStatusCommitteeGroupUser = ko.observable(false);
+
 var chkTaskGroupUser = new Map();
 var A4AModelTaskGroupUser = new Array();
 
@@ -2379,6 +2382,7 @@ $(document).ready(function () {
                                     $('#GroupChair').val(Name + ' (' + t + ')');
                                     $('#hdnChairComp').val(result[i].CompanyName);
                                     CheckStatusStaff(result[i].CheckStatus);
+                                    CheckStatusCommitteeStaff(result[i].CheckStatus);
                                     $("#hdnChkStaffUserId").val(result[i].UserId);
                                 }
                                 else
@@ -2388,6 +2392,7 @@ $(document).ready(function () {
                                         $('#hdnViceChairComp').val(result[i].CompanyName);
                                         $("#hdnChkGroupUserId").val(result[i].UserId);
                                         CheckStatusGroupUser(result[i].CheckStatus);
+                                        CheckStatusCommitteeGroupUser(result[i].CheckStatus);
                                     }
                     }
                     catch (err) {
