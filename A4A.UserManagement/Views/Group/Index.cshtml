@@ -152,50 +152,8 @@
             <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Council/Committee Contacts</span>
             <hr />
             <div data-bind="with: UMSubscribeModel">
-                <div id="DivCompanyMsg" class="savebtn">
-                    <span id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></span>
-                    <span class="text-danger margin-topbot10 niceLabel bold" data-bind='text: $data.errorMessage()'></span>
-                </div>
-                <div id="DivSaveCompanyRoles" class="savecompanyroles savebtn">
-                    <button class="btn btn-primary" type='submit' onclick="saveA4ARoles()">Save Council/Committee Contacts</button>
-                </div>
-                <div class="row">
-                    <div class="control-label col-sm-1">
-                        <label class="control-label niceLabel"> Email Administrator</label>
-                    </div>
-
-                    <div class="control-label col-sm-3">
-                        <label class="niceLabel"> Chair</label>
-                    </div>
-
-                    <div class="control-label col-sm-1">
-                        <label class="niceLabel"> Email Administrator</label>
-                    </div>
-
-                    <div class="control-label col-sm-3">
-                        <label class="niceLabel"> Vice Chair</label>
-                    </div>
-                </div>
-
-                <div class='row'>
-                    <div class='col-sm-1' style='text-align:center'>
-                        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkStaff}, checked:CheckStatusStaff' />
-                    </div>
-                    <div class='col-sm-3'>
-                        <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectChair ,minLength: 3 }" />
-                        <a href='#' class='text-danger btndelete' style='padding-left:1px;' data-bind='click: $data.removeChairGroupUser'>Delete</a>
-                    </div>
-                    <div class='col-sm-1' style='text-align:center'>
-                        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkGroupUser}, checked:CheckStatusGroupUser' />
-                    </div>
-                    <div class='col-sm-3'>
-                        <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupViceChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectViceChair ,minLength: 3 }" />
-                        <a href='#' class='text-danger btndelete' style='padding-left:1px;' data-bind='click: $data.removeViceChairGroupUser'>Delete</a>
-                    </div>
-                </div>
-                <br />
-            </div>
-            @Html.Partial("_CouncilCommittee")
+                @Html.Partial("_CouncilCommittee")
+            </div> 
         </div>
         <!-- TAB 7 -->
         <div id="z-tab7">
@@ -234,18 +192,19 @@
                         <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkCommitteeStaff}, checked:CheckStatusCommitteeStaff' />
                     </div>
                     <div class='col-sm-3'>
-                        <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChairGGA" data-bind="ko_autocomplete: { source: getLanguages, select: selectCommitteeChair ,minLength: 3 }" />
+                        <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChairGGA" data-bind="ko_autocomplete: { source: getLanguagesCommittee, select: selectCommitteeChair ,minLength: 3 }" />
                         <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeCommitteeChairGroupUser'>Delete</a>
                     </div>
                     <div class='col-sm-1' style='text-align:center'>
                         <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkCommitteeGroupUser}, checked:CheckStatusCommitteeGroupUser' />
                     </div>
                     <div class='col-sm-3'>
-                        <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupViceChairGGA" data-bind="ko_autocomplete: { source: getLanguages, select: selectCommitteeViceChair ,minLength: 3 }" />
+                        <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupViceChairGGA" data-bind="ko_autocomplete: { source: getLanguagesCommittee, select: selectCommitteeViceChair ,minLength: 3 }" />
                         <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeCommitteeViceChairGroupUser'>Delete</a>
                     </div>
                 </div>
             </div>
+
             <div data-bind="with: addCouncilCommitteeGGA">
                 @Html.Partial("_CouncilCommitteeGGA")
             </div>

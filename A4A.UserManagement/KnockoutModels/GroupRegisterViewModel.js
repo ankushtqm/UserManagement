@@ -633,6 +633,34 @@ var AutoCompleteExample;
             });
             $(".overlay").hide();
         };
+
+        ViewModel.prototype.getLanguagesCommittee = function (request, response) {
+            $(".overlay").show();
+            var gtypeid = $('#hdnGroupTypeId').val();
+            var url = '';
+            if ($('#hdnGroupTypeId').val())
+                url = '/api/GetAllContacts/?grouptype=' + gtypeid;
+            else
+                url = '/api/GetAllContacts/';
+            $.ajax({
+                url: url,
+                type: 'GET',
+                cache: false,
+                data: request,
+                dataType: 'json',
+                success: function (json) {
+                    response($.map(json, function (key, value) {
+                        return {
+                            label: value, //exchanged by NA - changed the reuslt to sorted dictionary 3/26/2019
+                            text: key,
+                            value: ""
+                        }
+                    }));
+                }
+            });
+            $(".overlay").hide();
+        };
+
         ViewModel.prototype.selectedValues = ko.observableArray();
         /////////////////////////////////////////////////////////////////////
         /***  Subscribe/Informational -  Select User to Add     ***/
@@ -884,11 +912,10 @@ var AutoCompleteExample;
             $(".overlay").hide();
         };
 
-        /////////////////////////////////////////////////////////////////////////////
-        /***   Participant/Informational - Add all users to Group - not being used ***/
-        ////////////////////////////////////////////////////////////////////////////
+
         ViewModel.prototype.selectCommitteeChair = function (event, ui) {
             try {
+                debugger;
                 $(".overlay").show();
                 var gId = 0;
                 ViewModel.prototype.errorMessage = ko.observable(); //Check on this
@@ -911,6 +938,7 @@ var AutoCompleteExample;
                     $('#hdnChairComp').val(company);
                     var txtprim = $("#Prim" + company.replace(/\s/g, ''));
                     try {
+                        debugger;
                         if ((txtprim !== null) && txtprim.val().length > 0 && $('#hdnGroupTypeId').val() != 9 && $('#hdnGroupTypeId').val() != 10 && $('#hdnGroupTypeId').val() != 1 && $('#hdnGroupTypeId').val() != 2) {
                             $('.spnMessage').text("You already have a primary representative for " + company + ".  Select another company chair or delete the contact below.").css("color", "red");
                             setTimeout(function () { $('.spnMessage').text(""); }, 6000);
@@ -938,6 +966,7 @@ var AutoCompleteExample;
                     $(".overlay").hide();
                     return false;
                 }
+                debugger;
                 var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Chair": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": company }];
                 var dataObject = ko.utils.stringifyJson(temp);
                 $("#hdnChkStaffUserId").val(ui.item.text);
@@ -949,11 +978,14 @@ var AutoCompleteExample;
                     data: dataObject,
                     contentType: 'application/json',
                     success: function (data) {
+                        debugger;
+                        alert("1");
                         $('.spnMessage').html(ui.item.label + "has been successfully saved as Chair!!").css("color", "green");
                         setTimeout(function () { $('.spnMessage').html(""); }, 6000);
                         ViewModel.prototype.DisablePrimBox();
                     },
                     error: function (exception) {
+                        debugger;
                         $('.spnMessage').html("Error in saving Group Chair" + exception.responseText).css("color", "red");
                         ui["item"]["value"] = ""; //Yay figured out how to clear autocomplete ui 
                         if ($('#hdnViceChairComp').val().indexOf($('#hdnChairComp').val()) < 0) //**Enable only if there is no vice chair from the company**
@@ -1056,6 +1088,10 @@ var AutoCompleteExample;
             $(".overlay").hide();
         };
 
+
+        /////////////////////////////////////////////////////////////////////////////
+        /***   Participant/Informational - Add all users to Group - not being used ***/
+        ////////////////////////////////////////////////////////////////////////////
         ViewModel.prototype.addGroup = function () {
             try {
                 $(".overlay").show();

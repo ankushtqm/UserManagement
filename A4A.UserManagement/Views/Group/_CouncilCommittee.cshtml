@@ -1,4 +1,47 @@
-﻿<div>
+﻿<div id="DivCompanyMsg" class="savebtn">
+    <span id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></span>
+    <span class="text-danger margin-topbot10 niceLabel bold" data-bind='text: $data.errorMessage()'></span>
+</div>
+<div id="DivSaveCompanyRoles" class="savecompanyroles savebtn">
+    <button class="btn btn-primary" type='submit' onclick="saveA4ARoles()">Save Council/Committee Contacts</button>
+</div>
+<div class="row">
+    <div class="control-label col-sm-1">
+        <label class="control-label niceLabel"> Email Administrator</label>
+    </div>
+
+    <div class="control-label col-sm-3">
+        <label class="niceLabel"> Chair</label>
+    </div>
+
+    <div class="control-label col-sm-1">
+        <label class="niceLabel"> Email Administrator</label>
+    </div>
+
+    <div class="control-label col-sm-3">
+        <label class="niceLabel"> Vice Chair</label>
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-sm-1' style='text-align:center'>
+        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkStaff}, checked:CheckStatusStaff' />
+    </div>
+    <div class='col-sm-3'>
+        <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectChair ,minLength: 3 }" />
+        <a href='#' class='text-danger btndelete' style='padding-left:1px;' data-bind='click: $data.removeChairGroupUser'>Delete</a>
+    </div>
+    <div class='col-sm-1' style='text-align:center'>
+        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkGroupUser}, checked:CheckStatusGroupUser' />
+    </div>
+    <div class='col-sm-3'>
+        <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupViceChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectViceChair ,minLength: 3 }" />
+        <a href='#' class='text-danger btndelete' style='padding-left:1px;' data-bind='click: $data.removeViceChairGroupUser'>Delete</a>
+    </div>
+</div>
+<br />
+
+<div>
     <span class='text-danger niceLabel margin-topbot10' id='errorPrimUser'></span>
 </div>
 
