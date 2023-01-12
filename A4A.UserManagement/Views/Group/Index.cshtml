@@ -160,51 +160,6 @@
             <br />
             <span id="ccua" class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Council/Committee Unlimited Alternates</span>
             <hr />
-            <div data-bind="with: UMSubscribeModel">
-                <div id="DivCommitteeMsg">
-                    <div id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></div>
-                    <span class="text-danger margin-topbot10 niceLabel bold" data-bind='text: $data.errorMessage()'></span>
-                </div>
-                <div id="DivSaveCommitteeRoles" class="savecommitteeroles savebtn">
-                    <button class="btn btn-primary" type='submit' onclick="saveA4ACommitteeRoles()">Save Council/Committee Unlimited Alternates</button>
-                </div>
-
-                <div class="row">
-                    <div class="control-label col-sm-1">
-                        <label class="control-label niceLabel"> Email Administrator</label>
-                    </div>
-
-                    <div class="control-label col-sm-3">
-                        <label class="niceLabel"> Chair</label>
-                    </div>
-
-                    <div class="control-label col-sm-1">
-                        <label class="niceLabel"> Email Administrator</label>
-                    </div>
-
-                    <div class="control-label col-sm-3">
-                        <label class="niceLabel"> Vice Chair</label>
-                    </div>
-                </div>
-
-                <div class='row'>
-                    <div class='col-sm-1' style='text-align:center'>
-                        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkCommitteeStaff}, checked:CheckStatusCommitteeStaff' />
-                    </div>
-                    <div class='col-sm-3'>
-                        <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupChairGGA" data-bind="ko_autocomplete: { source: getLanguagesCommittee, select: selectCommitteeChair ,minLength: 3 }" />
-                        <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeCommitteeChairGroupUser'>Delete</a>
-                    </div>
-                    <div class='col-sm-1' style='text-align:center'>
-                        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkCommitteeGroupUser}, checked:CheckStatusCommitteeGroupUser' />
-                    </div>
-                    <div class='col-sm-3'>
-                        <input type="text" class="chosen form-control" style="width:300px;margin-top:-7px;" id="GroupViceChairGGA" data-bind="ko_autocomplete: { source: getLanguagesCommittee, select: selectCommitteeViceChair ,minLength: 3 }" />
-                        <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeCommitteeViceChairGroupUser'>Delete</a>
-                    </div>
-                </div>
-            </div>
-
             <div data-bind="with: addCouncilCommitteeGGA">
                 @Html.Partial("_CouncilCommitteeGGA")
             </div>
@@ -215,7 +170,7 @@
             <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Informational Contact</span>
             <hr />
             <div data-bind="with: UMSubscribeModel">
-                <div id="DivInformationalContactMsg">
+                <div id="DivInformationalContactMsg" class="savebtn">
                     <span class="text-success niceLabel margin-topbot10 bold" data-bind="text: InfoMessage"></span>
                     <span class="text-danger niceLabel margin-topbot10 bold" data-bind="text: $data.errorMessage" id="ErrMessageMemSub"></span>
                 </div>
@@ -235,7 +190,7 @@
             <br />
             <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Contacts</span>
             <hr />
-            <div data-bind="with: UMSubscribeModel">
+            <div data-bind="with: UMSubscribeModel" class="savebtn">
                 <div id="DivContactMsg">
                     <span class="text-success niceLabel margin-topbot10 bold" data-bind="text: InfoMessage"></span>
                     <span class="text-danger niceLabel margin-topbot10 bold" data-bind="text: $data.errorMessage" id="ErrMessageMemSub"></span>

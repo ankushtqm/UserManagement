@@ -634,33 +634,6 @@ var AutoCompleteExample;
             $(".overlay").hide();
         };
 
-        ViewModel.prototype.getLanguagesCommittee = function (request, response) {
-            $(".overlay").show();
-            var gtypeid = $('#hdnGroupTypeId').val();
-            var url = '';
-            if ($('#hdnGroupTypeId').val())
-                url = '/api/GetAllContacts/?grouptype=' + gtypeid;
-            else
-                url = '/api/GetAllContacts/';
-            $.ajax({
-                url: url,
-                type: 'GET',
-                cache: false,
-                data: request,
-                dataType: 'json',
-                success: function (json) {
-                    response($.map(json, function (key, value) {
-                        return {
-                            label: value, //exchanged by NA - changed the reuslt to sorted dictionary 3/26/2019
-                            text: key,
-                            value: ""
-                        }
-                    }));
-                }
-            });
-            $(".overlay").hide();
-        };
-
         ViewModel.prototype.selectedValues = ko.observableArray();
         /////////////////////////////////////////////////////////////////////
         /***  Subscribe/Informational -  Select User to Add     ***/
@@ -912,184 +885,6 @@ var AutoCompleteExample;
             $(".overlay").hide();
         };
 
-
-        ViewModel.prototype.selectCommitteeChair = function (event, ui) {
-            try {
-                debugger;
-                $(".overlay").show();
-                var gId = 0;
-                ViewModel.prototype.errorMessage = ko.observable(); //Check on this
-                if (isNaN(ViewModel.prototype.gId())) { gId = $('#hdnGroupId').val(); }
-                else {
-                    gId = ViewModel.prototype.gId();
-                }
-                $('#DivMsgA4AStaffContainer').hide();
-                $('#DivCompanyMsg').hide();
-                $('#DivCommitteeMsg').show();
-                $('#DivInformationalContactMsg').hide();
-                $('#DivSaveInformationalContactMsg').hide();
-                $('#DivContactMsg').hide();
-                $('#DivSaveContactMsg').hide();
-                $('#DivTaskGroupMsg').hide();
-                $('#DivSaveTaskGroupMsg').hide();
-                var company = '';
-                if (ui.item.label) {
-                    company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
-                    $('#hdnChairComp').val(company);
-                    var txtprim = $("#Prim" + company.replace(/\s/g, ''));
-                    try {
-                        debugger;
-                        if ((txtprim !== null) && txtprim.val().length > 0 && $('#hdnGroupTypeId').val() != 9 && $('#hdnGroupTypeId').val() != 10 && $('#hdnGroupTypeId').val() != 1 && $('#hdnGroupTypeId').val() != 2) {
-                            $('.spnMessage').text("You already have a primary representative for " + company + ".  Select another company chair or delete the contact below.").css("color", "red");
-                            setTimeout(function () { $('.spnMessage').text(""); }, 6000);
-                            $("#GroupChairGGA").val(""); //Clear the GGA Textbox
-                            $("#GroupChair").val(""); //Clear the chair for Coun comm Textbox
-                            $('#hdnChairComp').val(""); //Clear the company hidden field too
-                            $(".overlay").hide();
-                            return false;
-                        }
-                        else if ($("#Prim" + $('#hdnChairComp').val().replace(/\s/g, '')).val().length > 0 && $("#Alt" + $('#hdnChairComp').val().replace(/\s/g, '')).val().length > 0) {
-                            $('.spnMessage').html("You already have a primary representative and alternate representative for " + company + ".  Select another company chair or delete the contact below.").css("color", "red");
-                            setTimeout(function () { $('.spnMessage').html(""); }, 6000);
-                            $("#GroupChair").val(""); //Clear the textbox 
-                            $('#hdnChairComp').val(""); //Clear the company hidden field too
-                            $(".overlay").hide();
-                            return false;
-                        }
-                    }
-                    catch (Err) {
-                        $(".overlay").hide();
-                    }
-                }
-                if (!(company.length > 0)) {
-                    $('.spnMessage').text("No company name found for Chair. So the selection could not be completed");
-                    $(".overlay").hide();
-                    return false;
-                }
-                debugger;
-                var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Chair": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": company }];
-                var dataObject = ko.utils.stringifyJson(temp);
-                $("#hdnChkStaffUserId").val(ui.item.text);
-
-                $.ajax({
-                    url: '/api/UserGroup',
-                    type: 'post',
-                    async: false,
-                    data: dataObject,
-                    contentType: 'application/json',
-                    success: function (data) {
-                        debugger;
-                        alert("1");
-                        $('.spnMessage').html(ui.item.label + "has been successfully saved as Chair!!").css("color", "green");
-                        setTimeout(function () { $('.spnMessage').html(""); }, 6000);
-                        ViewModel.prototype.DisablePrimBox();
-                    },
-                    error: function (exception) {
-                        debugger;
-                        $('.spnMessage').html("Error in saving Group Chair" + exception.responseText).css("color", "red");
-                        ui["item"]["value"] = ""; //Yay figured out how to clear autocomplete ui 
-                        if ($('#hdnViceChairComp').val().indexOf($('#hdnChairComp').val()) < 0) //**Enable only if there is no vice chair from the company**
-                        {
-                            $("#Prim" + company.replace(/\s/g, '')).prop("disabled", false);
-                            $("#Alt" + company.replace(/\s/g, '')).prop("disabled", false);//enable the primary for that company as chair not saved
-                        }
-                        $('#hdnChairComp').val(""); //Clear the company hidden field too
-                    }
-                }).done(function (data) {
-                    $(".overlay").hide();
-                });
-            }
-            catch (Err) {
-                $(".overlay").hide();
-            }
-            $(".overlay").hide();
-        };
-
-        ViewModel.prototype.selectCommitteeViceChair = function (event, ui) {
-            try {
-                $(".overlay").show();
-                //Get Gid now
-                var gId = 0;
-                if (isNaN(ViewModel.prototype.gId())) { gId = $('#hdnGroupId').val(); }
-                else
-                    gId = ViewModel.prototype.gId();
-                ViewModel.prototype.errorMessage = ko.observable();
-                var company = '';
-                $('#DivMsgA4AStaffContainer').hide();
-                $('#DivCompanyMsg').hide();
-                $('#DivCommitteeMsg').show();
-                $('#DivInformationalContactMsg').hide();
-                $('#DivSaveInformationalContactMsg').hide();
-                $('#DivContactMsg').hide();
-                $('#DivSaveContactMsg').hide();
-                $('#DivTaskGroupMsg').hide();
-                $('#DivSaveTaskGroupMsg').hide();
-                if (ui.item.label) {
-                    company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
-                    $('#hdnViceChairComp').val(company);
-                    try {
-                        var txtprim = $("#Prim" + company.replace(/\s/g, ''));
-                        if ((txtprim !== null) && txtprim.val().length > 0 && $('#hdnGroupTypeId').val() != 9 && $('#hdnGroupTypeId').val() != 10 && $('#hdnGroupTypeId').val() != 1 && $('#hdnGroupTypeId').val() != 2) {
-                            $('.spnMessage').html("You already have a primary representative for " + company + ".  Select another company vice chair or delete the contact below.").css("color", "red");
-                            setTimeout(function () { $('.spnMessage').html(""); }, 6000);
-                            $("#GroupViceChairGGA").val(""); //Clear the textbox 
-                            $('#hdnViceChairComp').val(""); //Clear the company hidden field too
-                            $(".overlay").hide();
-                            return false;
-                        }
-                        else if ($("#Prim" + $('#hdnViceChairComp').val().replace(/\s/g, '')).val().length > 0 && $("#Alt" + $('#hdnViceChairComp').val().replace(/\s/g, '')).val().length > 0) {
-                            $('.spnMessage').html("You already have a primary representative and alternate representative for " + company + ".  Select another company vice chair or delete the contact below.").css("color", "red");
-                            setTimeout(function () { $('.spnMessage').html(""); }, 6000);
-                            $("#GroupViceChair").val(""); //Clear the textbox 
-                            $('#hdnViceChairComp').val(""); //Clear the company hidden field too
-                            $(".overlay").hide();
-                            return false;
-                        }
-                    }
-                    catch (Err) {
-                    }
-                }
-                if (!(company.length > 0)) {
-                    $('.spnMessage').html("No company name found for Vice Chair. So the selection could not be completed");
-                    setTimeout(function () { $('.spnMessage').html(""); }, 6000);
-                    return;
-                }
-
-                $("#hdnChkGroupUserId").val(ui.item.text);
-                var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "ViceChair": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": company }];
-                var dataObject = ko.utils.stringifyJson(temp);
-                $.ajax({
-                    url: '/api/UserGroup',
-                    type: 'post',
-                    async: false,
-                    data: dataObject,
-                    contentType: 'application/json',
-                    success: function (data) {
-                        $('.spnMessage').html(ui.item.label + "has been successfully saved as Vice Chair!!").css("color", "green");
-                        setTimeout(function () { $('.spnMessage').html(""); }, 6000);
-                        ViewModel.prototype.DisablePrimBox();
-                        $('#hdnPrimary').val();
-                    },
-                    error: function (exception) {
-                        $('.spnMessage').html("Error in saving Group Vice Chair" + exception.responseText).css("color", "red");
-                        ui["item"]["value"] = '';
-                        if ($('#hdnChairComp').val().indexOf($('#hdnViceChairComp').val()) < 0) //**Enable only if there is no chair from the company**
-                        {
-                            $("#Prim" + company.replace(/\s/g, '')).prop("disabled", false);
-                            $("#Alt" + company.replace(/\s/g, '')).prop("disabled", false); //enable the primary for that company as vice chair not saved
-                        }
-                        $('#hdnViceChairComp').val(""); //Clear the company hidden field too
-                    }
-                }).done(function (data) {
-                    $(".overlay").hide();
-                });
-            }
-            catch (Err) { $(".overlay").hide(); }
-            $(".overlay").hide();
-        };
-
-
-        /////////////////////////////////////////////////////////////////////////////
         /***   Participant/Informational - Add all users to Group - not being used ***/
         ////////////////////////////////////////////////////////////////////////////
         ViewModel.prototype.addGroup = function () {
@@ -1409,26 +1204,6 @@ var AutoCompleteExample;
             }
             ChkGroupUser.set(gId, event.target.checked)
         }
-
-        ViewModel.prototype.selectchkCommitteeStaff = function (item, event) {
-            if (isNaN(ViewModel.prototype.gId())) {
-                gId = $('#hdnGroupId').val();
-            }
-            else {
-                gId = ViewModel.prototype.gId();
-            }
-            ChkStaffCommittee.set(gId, event.target.checked)
-        }
-
-        ViewModel.prototype.selectchkCommitteeGroupUser = function (item, event) {
-            if (isNaN(ViewModel.prototype.gId())) {
-                gId = $('#hdnGroupId').val();
-            }
-            else {
-                gId = ViewModel.prototype.gId();
-            }
-            ChkGroupUserCommittee.set(gId, event.target.checked)
-        }
         return ViewModel;
     })();
     AutoCompleteExample.ViewModel = ViewModel;
@@ -1557,7 +1332,6 @@ var TaskForceWorkGroup;
                             data: dataObject,
                             contentType: 'application/json',
                             success: function (data) {
-                                debugger;
                                 $("#tskErrorMsg").css("color", "Green");
                                 $("#tskErrorMsg").html(ui.item.label + "has been added to the group"); // TODO: Fix it to use ViewModel.prototype.errorMessage. For somereason ViewModel.prototype.errorMessage was not updating and showing up 1/18/18
                                 setTimeout(function () { $("#tskErrorMsg").html("") }, 6000);
@@ -1650,7 +1424,6 @@ var TaskForceWorkGroup;
                 success: function (data) {
                     var result = JSON.parse(data);
                     for (i = 0; i < result.length; i++) {
-                        debugger;
                         var temp = {};
                         temp['Name'] = result[i].UserName;
                         temp['CompanyName'] = result[i].CompanyName; //Removed (  )  because we made company seperate field
@@ -2029,6 +1802,7 @@ var councilCommitteeGGAViewModel = function () {
         self.userSelected(ui.item.label);
         self.userSelectedId(ui.item.text);
     }
+
     this.selectPrimAltUser4Company = function (event, ui) {
         if (!isNaN($('#hdnGroupId').val())) {
             self.gId($('#hdnGroupId').val());
@@ -2204,6 +1978,7 @@ var councilCommitteeGGAViewModel = function () {
             return false;
         }
     };
+
     function RemoveGroupUser(URL) {
         $.ajax({
             url: URL,
@@ -2230,6 +2005,7 @@ var councilCommitteeGGAViewModel = function () {
         self.userSelected(null);
         self.userSelectedId(null);
     };
+
     this.GetAllUsers = function (request, response) {
         var text = request.term;
         var comp = self.company();
@@ -2334,6 +2110,203 @@ var councilCommitteeGGAViewModel = function () {
             error: function (exception) { ViewModel.prototype.errorMessage(exception.responseText); }
         });
     };
+
+    this.getLanguagesCommittee = function (request, response) {
+        $(".overlay").show();
+        var gtypeid = $('#hdnGroupTypeId').val();
+        var url = '';
+        if ($('#hdnGroupTypeId').val())
+            url = '/api/GetAllContacts/?grouptype=' + gtypeid;
+        else
+            url = '/api/GetAllContacts/';
+        $.ajax({
+            url: url,
+            type: 'GET',
+            cache: false,
+            data: request,
+            dataType: 'json',
+            success: function (json) {
+                response($.map(json, function (key, value) {
+                    return {
+                        label: value,
+                        text: key,
+                        value: ""
+                    };
+                }));
+            }
+        });
+        $(".overlay").hide();
+    };
+
+    this.selectCommitteeChair = function (event, ui) {
+        try {
+            $(".overlay").show();
+            var gId = 0;
+            gId = $('#hdnGroupId').val();
+            $('#DivMsgA4AStaffContainer').hide();
+            $('#DivCompanyMsg').hide();
+            $('#DivCommitteeMsg').show();
+            $('#DivInformationalContactMsg').hide();
+            $('#DivSaveInformationalContactMsg').hide();
+            $('#DivContactMsg').hide();
+            $('#DivSaveContactMsg').hide();
+            $('#DivTaskGroupMsg').hide();
+            $('#DivSaveTaskGroupMsg').hide();
+            var company = '';
+            if (ui.item.label) {
+                company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
+                $('#hdnChairComp').val(company);
+                var txtprim = $("#Prim" + company.replace(/\s/g, ''));
+                try {
+                    if ((txtprim !== null) && txtprim.val().length > 0 && $('#hdnGroupTypeId').val() != 9 && $('#hdnGroupTypeId').val() != 10 && $('#hdnGroupTypeId').val() != 1 && $('#hdnGroupTypeId').val() != 2) {
+                        $('.spnMessage').text("You already have a primary representative for " + company + ".  Select another company chair or delete the contact below.").css("color", "red");
+                        setTimeout(function () { $('.spnMessage').text(""); }, 6000);
+                        $("#GroupChairGGA").val(""); //Clear the GGA Textbox
+                        $("#GroupChair").val(""); //Clear the chair for Coun comm Textbox
+                        $('#hdnChairComp').val(""); //Clear the company hidden field too
+                        $(".overlay").hide();
+                        return false;
+                    }
+                    else if ($("#Prim" + $('#hdnChairComp').val().replace(/\s/g, '')).val().length > 0 && $("#Alt" + $('#hdnChairComp').val().replace(/\s/g, '')).val().length > 0) {
+                        $('.spnMessage').html("You already have a primary representative and alternate representative for " + company + ".  Select another company chair or delete the contact below.").css("color", "red");
+                        setTimeout(function () { $('.spnMessage').html(""); }, 6000);
+                        $("#GroupChair").val(""); //Clear the textbox 
+                        $('#hdnChairComp').val(""); //Clear the company hidden field too
+                        $(".overlay").hide();
+                        return false;
+                    }
+                }
+                catch (Err) {
+                    $(".overlay").hide();
+                }
+            }
+            if (!(company.length > 0)) {
+                $('.spnMessage').text("No company name found for Chair. So the selection could not be completed");
+                $(".overlay").hide();
+                return false;
+            }
+
+            var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Chair": true, "GroupId": $('#hdnGroupId').val(), "CompanyName": company }];
+            var dataObject = ko.utils.stringifyJson(temp);
+            $("#hdnChkStaffUserId").val(ui.item.text);
+
+            $.ajax({
+                url: '/api/UserGroup',
+                type: 'post',
+                async: false,
+                data: dataObject,
+                contentType: 'application/json',
+                success: function (data) {
+                    alert("1");
+                    $('.spnMessage').html(ui.item.label + "has been successfully saved as Chair!!").css("color", "green");
+                    setTimeout(function () { $('.spnMessage').html(""); }, 6000);
+                },
+                error: function (exception) {
+                    $('.spnMessage').html("Error in saving Group Chair" + exception.responseText).css("color", "red");
+                    ui["item"]["value"] = ""; //Yay figured out how to clear autocomplete ui 
+                    if ($('#hdnViceChairComp').val().indexOf($('#hdnChairComp').val()) < 0) //**Enable only if there is no vice chair from the company**
+                    {
+                        $("#Prim" + company.replace(/\s/g, '')).prop("disabled", false);
+                        $("#Alt" + company.replace(/\s/g, '')).prop("disabled", false);//enable the primary for that company as chair not saved
+                    }
+                    $('#hdnChairComp').val(""); //Clear the company hidden field too
+                }
+            }).done(function (data) {
+                $(".overlay").hide();
+            });
+        }
+        catch (Err) {
+            $(".overlay").hide();
+        }
+        $(".overlay").hide();
+    };
+
+    this.selectCommitteeViceChair = function (event, ui) {
+        try {
+            $(".overlay").show();
+            //Get Gid now
+            var gId = 0;
+            gId = $('#hdnGroupId').val();
+            var company = '';
+            $('#DivMsgA4AStaffContainer').hide();
+            $('#DivCompanyMsg').hide();
+            $('#DivCommitteeMsg').show();
+            $('#DivInformationalContactMsg').hide();
+            $('#DivSaveInformationalContactMsg').hide();
+            $('#DivContactMsg').hide();
+            $('#DivSaveContactMsg').hide();
+            $('#DivTaskGroupMsg').hide();
+            $('#DivSaveTaskGroupMsg').hide();
+            if (ui.item.label) {
+                company = ui.item.label.trim().slice(ui.item.label.lastIndexOf('(') + 1, -1);
+                $('#hdnViceChairComp').val(company);
+                try {
+                    var txtprim = $("#Prim" + company.replace(/\s/g, ''));
+                    if ((txtprim !== null) && txtprim.val().length > 0 && $('#hdnGroupTypeId').val() != 9 && $('#hdnGroupTypeId').val() != 10 && $('#hdnGroupTypeId').val() != 1 && $('#hdnGroupTypeId').val() != 2) {
+                        $('.spnMessage').html("You already have a primary representative for " + company + ".  Select another company vice chair or delete the contact below.").css("color", "red");
+                        setTimeout(function () { $('.spnMessage').html(""); }, 6000);
+                        $("#GroupViceChairGGA").val(""); //Clear the textbox 
+                        $('#hdnViceChairComp').val(""); //Clear the company hidden field too
+                        $(".overlay").hide();
+                        return false;
+                    }
+                    else if ($("#Prim" + $('#hdnViceChairComp').val().replace(/\s/g, '')).val().length > 0 && $("#Alt" + $('#hdnViceChairComp').val().replace(/\s/g, '')).val().length > 0) {
+                        $('.spnMessage').html("You already have a primary representative and alternate representative for " + company + ".  Select another company vice chair or delete the contact below.").css("color", "red");
+                        setTimeout(function () { $('.spnMessage').html(""); }, 6000);
+                        $("#GroupViceChair").val(""); //Clear the textbox 
+                        $('#hdnViceChairComp').val(""); //Clear the company hidden field too
+                        $(".overlay").hide();
+                        return false;
+                    }
+                }
+                catch (Err) {
+                }
+            }
+            if (!(company.length > 0)) {
+                $('.spnMessage').html("No company name found for Vice Chair. So the selection could not be completed");
+                setTimeout(function () { $('.spnMessage').html(""); }, 6000);
+                return;
+            }
+
+            $("#hdnChkGroupUserId").val(ui.item.text);
+            var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "ViceChair": true, "GroupId": $('#hdnGroupId').val(), "CompanyName": company }];
+            var dataObject = ko.utils.stringifyJson(temp);
+            $.ajax({
+                url: '/api/UserGroup',
+                type: 'post',
+                async: false,
+                data: dataObject,
+                contentType: 'application/json',
+                success: function (data) {
+                    $('.spnMessage').html(ui.item.label + "has been successfully saved as Vice Chair!!").css("color", "green");
+                    setTimeout(function () { $('.spnMessage').html(""); }, 6000);
+                    $('#hdnPrimary').val();
+                },
+                error: function (exception) {
+                    $('.spnMessage').html("Error in saving Group Vice Chair" + exception.responseText).css("color", "red");
+                    ui["item"]["value"] = '';
+                    if ($('#hdnChairComp').val().indexOf($('#hdnViceChairComp').val()) < 0) //**Enable only if there is no chair from the company**
+                    {
+                        $("#Prim" + company.replace(/\s/g, '')).prop("disabled", false);
+                        $("#Alt" + company.replace(/\s/g, '')).prop("disabled", false); //enable the primary for that company as vice chair not saved
+                    }
+                    $('#hdnViceChairComp').val(""); //Clear the company hidden field too
+                }
+            }).done(function (data) {
+                $(".overlay").hide();
+            });
+        }
+        catch (Err) { $(".overlay").hide(); }
+        $(".overlay").hide();
+    };
+
+    this.selectchkCommitteeStaff = function (event, ui) {
+        ChkStaffCommittee.set($('#hdnGroupTypeId').val(), ui.target.checked)
+    }
+
+    this.selectchkCommitteeGroupUser = function (item, event) {
+        ChkGroupUserCommittee.set($('#hdnGroupTypeId').val(), ui.target.checked)
+    }
 };
 function DisablePrimary() {
     try {
@@ -2751,6 +2724,7 @@ function saveA4ACommitteeCompanyRoles() {
         }
     });
     SendEmailAdmin = new Map();
+    A4AModelEmailAdmin = new Array();
     A4AModelEmailAdmin = new Array();
     setTimeout(function () { $('.spnMessage').text(""); }, 10000);
 }
