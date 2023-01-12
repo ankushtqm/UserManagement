@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.ApplicationBlocks.Data; 
 using ATA.Member.Util;
+using System.Runtime.InteropServices;
 //using ATA.Member.Util;
 
 
@@ -41,7 +42,8 @@ namespace ATA.ObjectModel
 
         private string _companyName;
         private string _userName;
- 
+        private string _Type;
+
         #endregion
 
         #region public properties
@@ -380,6 +382,20 @@ namespace ATA.ObjectModel
             set
             {
                 _companyName = value;
+            }
+        }
+
+        [DataObjectProperty("Type", SqlDbType.Int, true)]
+        public string Type
+        {
+            get
+            {
+                return _Type;
+            }
+
+            set
+            {
+                _Type = value;
             }
         }
         #endregion

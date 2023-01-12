@@ -998,7 +998,10 @@ namespace A4A.UM.Controllers
                                             }
 
                                             Transactions.setUserGroupTransaction(ug.GroupId, TransactionType.UserGroup_UserRemoved, CommitteeRole.Chair, DBUtilAPIController.CurrentUser().UserId);
-                                            UserGroupJsonModel.DeleteGroupUserbyRole(ug.GroupId, 3);
+                                            if (ug.Type != "7")
+                                            {
+                                                UserGroupJsonModel.DeleteGroupUserbyRole(ug.GroupId, 3);
+                                            }
                                         }
 
                                         else if (ug.ViceChair)
@@ -1020,7 +1023,10 @@ namespace A4A.UM.Controllers
                                             }
 
                                             Transactions.setUserGroupTransaction(ug.GroupId, TransactionType.UserGroup_UserRemoved, CommitteeRole.ViceChair, DBUtilAPIController.CurrentUser().UserId);
-                                            UserGroupJsonModel.DeleteGroupUserbyRole(ug.GroupId, 4);
+                                            if (ug.Type != "7")
+                                            {
+                                                UserGroupJsonModel.DeleteGroupUserbyRole(ug.GroupId, 4);
+                                            }
                                         }
                                     }
                                     else
@@ -1046,7 +1052,10 @@ namespace A4A.UM.Controllers
                                                 return Request.CreateResponse(HttpStatusCode.NotFound, err);
                                             }
                                             Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserRemoved, CommitteeRole.Primary, DBUtilAPIController.CurrentUser().UserId);
-                                            UserGroupJsonModel.DeleteGroupUserbyCompany(ug.CompanyName, ug.GroupId, 1);
+                                            if (ug.Type != "7")
+                                            {
+                                                UserGroupJsonModel.DeleteGroupUserbyCompany(ug.CompanyName, ug.GroupId, 1);
+                                            }
                                         }
                                         else
                                         if (ug.Alternate && !IsGGA)
@@ -1058,7 +1067,10 @@ namespace A4A.UM.Controllers
                                                 return Request.CreateResponse(HttpStatusCode.NotFound, err);
                                             }
                                             Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserRemoved, CommitteeRole.Alternate, DBUtilAPIController.CurrentUser().UserId);
-                                            UserGroupJsonModel.DeleteGroupUserbyCompany(ug.CompanyName, ug.GroupId, 2);
+                                            if (ug.Type != "7")
+                                            {
+                                                UserGroupJsonModel.DeleteGroupUserbyCompany(ug.CompanyName, ug.GroupId, 2);
+                                            }
                                         }
                                         else
                                         if (ug.Chair)
@@ -1082,7 +1094,10 @@ namespace A4A.UM.Controllers
                                                 return Request.CreateResponse(HttpStatusCode.NotFound, err);
                                             }
                                             Transactions.setUserGroupTransaction(ug.GroupId, TransactionType.UserGroup_UserRemoved, CommitteeRole.Chair, DBUtilAPIController.CurrentUser().UserId);
-                                            UserGroupJsonModel.DeleteGroupUserbyRole(ug.GroupId, 3);
+                                            if (ug.Type != "7")
+                                            {
+                                                UserGroupJsonModel.DeleteGroupUserbyRole(ug.GroupId, 3);
+                                            }
                                         }
                                         else if (ug.ViceChair)
                                         {
@@ -1106,7 +1121,10 @@ namespace A4A.UM.Controllers
                                             }
 
                                             Transactions.setUserGroupTransaction(ug.GroupId, TransactionType.UserGroup_UserRemoved, CommitteeRole.ViceChair, DBUtilAPIController.CurrentUser().UserId);
-                                            UserGroupJsonModel.DeleteGroupUserbyRole(ug.GroupId, 4);
+                                            if (ug.Type != "7")
+                                            {
+                                                UserGroupJsonModel.DeleteGroupUserbyRole(ug.GroupId, 4);
+                                            }
                                         }
                                         else
                                         {
@@ -1119,7 +1137,10 @@ namespace A4A.UM.Controllers
                                                     return Request.CreateResponse(HttpStatusCode.NotFound, err);
                                                 }
                                                 Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserRemoved, CommitteeRole.Primary, DBUtilAPIController.CurrentUser().UserId);
-                                                UserGroupJsonModel.DeleteGroupUserbyCompany(ug.CompanyName, ug.GroupId, 1);
+                                                if (ug.Type != "7")
+                                                {
+                                                    UserGroupJsonModel.DeleteGroupUserbyCompany(ug.CompanyName, ug.GroupId, 1);
+                                                }
                                             }
                                             else
                                         if (ug.Chair && isContact)
@@ -1131,7 +1152,10 @@ namespace A4A.UM.Controllers
                                                     return Request.CreateResponse(HttpStatusCode.NotFound, err);
                                                 }
                                                 Transactions.setUserGroupTransaction(ug.GroupId, TransactionType.UserGroup_UserRemoved, CommitteeRole.Chair, DBUtilAPIController.CurrentUser().UserId);
-                                                UserGroupJsonModel.DeleteGroupUserbyRole(ug.GroupId, 3);
+                                                if (ug.Type != "7")
+                                                {
+                                                    UserGroupJsonModel.DeleteGroupUserbyRole(ug.GroupId, 3);
+                                                }
                                             }
                                             else if (ug.ViceChair && isContact)
                                             {
@@ -1143,7 +1167,10 @@ namespace A4A.UM.Controllers
                                                 }
 
                                                 Transactions.setUserGroupTransaction(ug.GroupId, TransactionType.UserGroup_UserRemoved, CommitteeRole.ViceChair, DBUtilAPIController.CurrentUser().UserId);
-                                                UserGroupJsonModel.DeleteGroupUserbyRole(ug.GroupId, 4);
+                                                if (ug.Type != "7")
+                                                {
+                                                    UserGroupJsonModel.DeleteGroupUserbyRole(ug.GroupId, 4);
+                                                }
                                             }
                                         }
                                         if (CheckPrimaryAlternate(ug.GroupId, ug, ug.CompanyName, out string errorMsg) && (grp.GroupTypeId == 1 || grp.GroupTypeId == 2))

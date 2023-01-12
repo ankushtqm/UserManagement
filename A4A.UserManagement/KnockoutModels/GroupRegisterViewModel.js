@@ -763,7 +763,7 @@ var AutoCompleteExample;
                     $(".overlay").hide();
                     return false;
                 }
-                var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Chair": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": company }];
+                var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Chair": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": company, "Type": "3" }];
                 var dataObject = ko.utils.stringifyJson(temp);
                 $("#hdnChkStaffUserId").val(ui.item.text);
 
@@ -852,8 +852,7 @@ var AutoCompleteExample;
                 }
 
                 $("#hdnChkGroupUserId").val(ui.item.text);
-
-                var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "ViceChair": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": company }];
+                var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "ViceChair": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": company, "Type": "3" }];
                 var dataObject = ko.utils.stringifyJson(temp);
                 $.ajax({
                     url: '/api/UserGroup',
@@ -2055,6 +2054,7 @@ var councilCommitteeGGAViewModel = function () {
             }
         });
     };
+
     /////////////////////////////////////////////////////////////////////
     /***   Council Committe GGA- LOAD Users from UserGroup in the DB     ***/
     ////////////////////////////////////////////////////////////////////
@@ -2066,6 +2066,7 @@ var councilCommitteeGGAViewModel = function () {
             type: "GET",
             contentType: 'application/json',
             success: function (data) {
+                debugger;
                 var result = JSON.parse(data);
                 for (i = 0; i < result.length; i++) {
                     if (result[i].RoleId === 1) {
@@ -2076,11 +2077,10 @@ var councilCommitteeGGAViewModel = function () {
                             self.people.push(new CommitteePrimAlt(result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, false, true, false, result[i].CheckStatus));
                         }
                         else
-                            if (result[i].RoleId === 3) {
+                            if (result[i].RoleId === 3 && result[i].type === 7) {
                                 $('#GroupChairGGA').val(result[i].UserName + ' (' + result[i].CompanyName + ')');
                                 $('#hdnChairComp').val(result[i].CompanyName);
                                 DisablePrimary();
-
                             }
                             else
                                 if (result[i].RoleId === 4) {
@@ -2186,7 +2186,7 @@ var councilCommitteeGGAViewModel = function () {
                 return false;
             }
 
-            var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Chair": true, "GroupId": $('#hdnGroupId').val(), "CompanyName": company }];
+            var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Chair": true, "GroupId": $('#hdnGroupId').val(), "CompanyName": company, "Type": "7" }];
             var dataObject = ko.utils.stringifyJson(temp);
             $("#hdnChkStaffUserId").val(ui.item.text);
 
@@ -2197,7 +2197,6 @@ var councilCommitteeGGAViewModel = function () {
                 data: dataObject,
                 contentType: 'application/json',
                 success: function (data) {
-                    alert("1");
                     $('.spnMessage').html(ui.item.label + "has been successfully saved as Chair!!").css("color", "green");
                     setTimeout(function () { $('.spnMessage').html(""); }, 6000);
                 },
@@ -2269,7 +2268,7 @@ var councilCommitteeGGAViewModel = function () {
             }
 
             $("#hdnChkGroupUserId").val(ui.item.text);
-            var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "ViceChair": true, "GroupId": $('#hdnGroupId').val(), "CompanyName": company }];
+            var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "ViceChair": true, "GroupId": $('#hdnGroupId').val(), "CompanyName": company, "Type": "7" }];
             var dataObject = ko.utils.stringifyJson(temp);
             $.ajax({
                 url: '/api/UserGroup',
@@ -2308,6 +2307,7 @@ var councilCommitteeGGAViewModel = function () {
         ChkGroupUserCommittee.set($('#hdnGroupTypeId').val(), ui.target.checked)
     }
 };
+
 function DisablePrimary() {
     try {
         $('#z-tab3').find('input, button').prop('disabled', true);
@@ -2388,10 +2388,16 @@ $(document).ready(function () {
                             }
                             else
                                 if (result[i].RoleId === 3) {
-                                    $('#GroupChair').val(Name + ' (' + t + ')');
-                                    $('#hdnChairComp').val(result[i].CompanyName);
-                                    CheckStatusStaff(result[i].CheckStatus);
-                                    CheckStatusCommitteeStaff(result[i].CheckStatus);
+                                    if (result[i].Type == "3") {
+                                        $('#GroupChair').val(Name + ' (' + t + ')');
+                                        $('#hdnChairComp').val(result[i].CompanyName);
+                                        CheckStatusStaff(result[i].CheckStatus);
+                                    }
+                                    else if (result[i].Type == "7") {
+                                        $('#GroupChairGGA').val(Name + ' (' + t + ')');
+                                        $('#hdnChairComp').val(result[i].CompanyName);
+                                        CheckStatusCommitteeStaff(result[i].CheckStatus);
+                                    }
                                     $("#hdnChkStaffUserId").val(result[i].UserId);
                                 }
                                 else
