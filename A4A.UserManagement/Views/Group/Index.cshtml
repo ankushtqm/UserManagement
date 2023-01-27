@@ -29,6 +29,15 @@
         margin-right: -15px;
         margin-left: -0px !important;
     }
+
+    .grouplabel {
+        padding-left: 0px !important;
+    }
+
+    .table > thead > tr > th {
+        vertical-align: bottom;
+        border-bottom: none !important;
+    }
 </style>
 
 @section heading{<h4 class="niceLabel-bold" id="Headtitle">Create/Edit Group</h4>}
@@ -149,11 +158,12 @@
         </div>
         <!-- TAB 3 -->
         <div id="z-tab3">
+            <br />
             <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Council/Committee Contacts</span>
             <hr />
             <div data-bind="with: UMSubscribeModel">
                 @Html.Partial("_CouncilCommittee")
-            </div> 
+            </div>
         </div>
         <!-- TAB 7 -->
         <div id="z-tab7">
@@ -581,7 +591,6 @@
                 processData: false,
                 contentType: "application/json; charset=utf-8",
                 success: function (result) {
-
                     var table = $("#tblSubscribers").DataTable({
                         "aaData": JSON.parse(result),
                         retrieve: true,
@@ -670,7 +679,7 @@
                 if (x.length <= 7)
                     return x.replace(/[^\d]+/g, '').replace(/(\d+)(\d{4})/, '$1' + '-' + '$2');
                 else if (x.length <= 10)
-                    return x.replace(/[^\d]+/g, '').replace(/(\d+)(\d{4})/, '$1' + '-' + '$2').replace(/(\d+)(\d{3})/, '$1' + '-' + '$2'); //.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+                    return x.replace(/[^\d]+/g, '').replace(/(\d+)(\d{4})/, '$1' + '-' + '$2').replace(/(\d+)(\d{3})/, '$1' + '-' + '$2');
                 else
                     return x.replace(/[^\d]+/g, '').replace(/(\d+)(\d{4})/, '$1' + '-' + '$2').replace(/(\d+)(\d{3})/, '$1' + '-' + '$2').replace(/(\d+)(\d{3})/, '$1' + '-' + '$2');
             }

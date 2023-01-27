@@ -6,23 +6,29 @@
         <input type="text" class="chosen form-control" style="width:300px;" placeholder="Search Contacts" id="tskGrpUser" data-bind="ko_autocomplete: { source: GetAllUsers, select: selectTskFrGroupUser ,minLength: 3 }" />
         <a href='#' class='text-danger' data-bind="click: clearTaskGroupUser">Delete</a>
     </p>
-    <table class="table" data-bind='visible: $data.selectedTskForUser().length > 0'>
+    <table class="table informationalroles" data-bind='visible: $data.selectedTskForUser().length > 0'>
         <thead>
             <tr>
-                <th class="control-label">Email Administrator</th>
+                <th class="control-label">Company Name</th>
                 <th class="control-label">Name</th>
-                <th class="control-label">Company </th>
+                <th class="control-label">Email Administrator</th>
                 <th class="control-label">Role</th>
             </tr>
         </thead>
         <tbody data-bind="foreach: $data.selectedTskForUser().sort(function(l,r) { return l.Name == r.Name ? 0 : (l.Name < r.Name ? -1 : 1)}) ">
             <tr>
-                <td class="element-width"><input type='checkbox' name='EmailAdmin' data-bind="value:UserId, checked:CheckStatus" onchange="chkTaskGroupRoles(this)" /></td>
-                <td><span data-bind='text: Name'></span> </td>
                 <td><span data-bind='text: CompanyName'></span></td>
+                <td><span data-bind='text: Name'></span> </td>
+                <td class="element-width"><input type='checkbox' name='EmailAdmin' data-bind="value:UserId, checked:CheckStatus" onchange="chkTaskGroupRoles(this)" /></td>
                 <td><span data-bind='text: role'></span></td>
                 <td><a href='#' data-bind='click: $parent.removeUMTaskForceContacts'>Delete</a></td>
             </tr>
         </tbody>
     </table>
 </div>
+
+<style>
+    .informationalroles {
+        width: 57% !important
+    }
+</style>

@@ -639,6 +639,7 @@ var AutoCompleteExample;
         /***  Subscribe/Informational -  Select User to Add     ***/
         ////////////////////////////////////////////////////////////////////
         ViewModel.prototype.selectLanguage = function (event, ui) {
+            debugger;
             try {
                 $(".overlay").show();
                 //Get Gid now 
@@ -662,14 +663,14 @@ var AutoCompleteExample;
                 if (+$("#hdnSubscribeInformational").val() === 1) //ViewModel.prototype.SorI not working for somereason so changed to hidden field.
                 {
                     role = "Participant";
-                    temp = [{ "Name": UsernCompname, "UserId": ui.item.text, "Participant": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false }];
-                    temp1 = { "Name": UsernCompname, "UserId": ui.item.text, "Participant": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false };
+                    temp = [{ "Name": UsernCompname, "UserId": ui.item.text, "Participant": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false, "Type": "4" }];
+                    temp1 = { "Name": UsernCompname, "UserId": ui.item.text, "Participant": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false, "Type": "4" };
                 }
                 else
                     if (+$("#hdnSubscribeInformational").val() === 2) {
                         role = "Informational";
-                        temp = [{ "Name": UsernCompname, "UserId": ui.item.text, "Informational": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false }];
-                        temp1 = { "Name": UsernCompname, "UserId": ui.item.text, "Informational": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false };
+                        temp = [{ "Name": UsernCompname, "UserId": ui.item.text, "Informational": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false, "Type": "4" }];
+                        temp1 = { "Name": UsernCompname, "UserId": ui.item.text, "Informational": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false, "Type": "4" };
                     }
                     else {
                         ViewModel.prototype.errorMessage("Subscription group type is not selected, Contact IT for help!");
@@ -1185,6 +1186,7 @@ var AutoCompleteExample;
         }
 
         ViewModel.prototype.selectchkStaff = function (item, event) {
+            debugger;
             if (isNaN(ViewModel.prototype.gId())) {
                 gId = $('#hdnGroupId').val();
             }
@@ -1538,6 +1540,7 @@ function councilCommitteeViewModel(params) {
     }
     self.selectedValues = ko.observableArray();
     self.selectPrimary = function (event, ui) {
+        debugger;
         try {
             $(".overlay").show()
             var compPrimError = (params.Company).replace(/\s+/g, '') + "PrimError";
@@ -1558,7 +1561,7 @@ function councilCommitteeViewModel(params) {
             if (!(gId > 0)) //Added on 042018 because alternate was not getting gId value //added here for uniformity
                 gId = $('#hdnGroupId').val() || parseInt(getGID('gid'));
             /**Build the data to be posted**/
-            var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Primary": true, GroupId: gId, CompanyName: params.Company }];
+            var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Primary": true, GroupId: gId, CompanyName: params.Company, "Type": "3" }];
             var dataObject = ko.utils.stringifyJson(temp);
 
             $.ajax({
@@ -1597,6 +1600,7 @@ function councilCommitteeViewModel(params) {
         }
         $(".overlay").hide();
     };
+
     self.removePrimGroupUser = function (item, event) {
         $(".overlay").show();
         if (params.Company.length > 0 && !isNaN(gId)) {
@@ -1705,7 +1709,7 @@ function councilCommitteeViewModel(params) {
             $('#DivTaskGroupMsg').hide();
             $('#DivSaveTaskGroupMsg').hide();
 
-            var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Alternate": true, GroupId: gId, CompanyName: params.Company }];
+            var temp = [{ "Name": ui.item.label, "UserId": ui.item.text, "Alternate": true, GroupId: gId, CompanyName: params.Company, "Type": "3" }];
             var dataObject = ko.utils.stringifyJson(temp);
             $.ajax({
                 url: '/api/UserGroup',
@@ -1803,6 +1807,7 @@ var councilCommitteeGGAViewModel = function () {
     }
 
     this.selectPrimAltUser4Company = function (event, ui) {
+        debugger;
         if (!isNaN($('#hdnGroupId').val())) {
             self.gId($('#hdnGroupId').val());
             gId = $('#hdnGroupId').val();
@@ -1832,6 +1837,7 @@ var councilCommitteeGGAViewModel = function () {
                 temp[roleName.replace(/\s/g, '').trim()] = true;
                 temp['GroupId'] = self.gId();
                 temp['CompanyName'] = CompanyName;
+                temp['Type'] = "3";
                 var dataObject = ko.utils.stringifyJson(temp);
                 dataObject = "[" + dataObject + "]"; //Otherwise the dataobject at the API is null
 
@@ -2300,11 +2306,12 @@ var councilCommitteeGGAViewModel = function () {
     };
 
     this.selectchkCommitteeStaff = function (event, ui) {
-        ChkStaffCommittee.set($('#hdnGroupTypeId').val(), ui.target.checked)
+        ChkStaffCommittee.set($('#hdnGroupTypeId').val(), ui.target.checked);
     }
 
-    this.selectchkCommitteeGroupUser = function (item, event) {
-        ChkGroupUserCommittee.set($('#hdnGroupTypeId').val(), ui.target.checked)
+    this.selectchkCommitteeGroupUser = function (item, ui) {
+        debugger;
+        ChkGroupUserCommittee.set($('#hdnGroupTypeId').val(), ui.target.checked);
     }
 };
 
@@ -2344,13 +2351,14 @@ $(document).ready(function () {
     // Register knockout UI components
     ko.components.register('primaryalternate', {
         viewModel: councilCommitteeViewModel,
-        template: "<div class='row' style='margin-bottom:8px;'> <div class='col-sm-2'> <span class='niceLabel' data-bind='text: Company'></span></div>" +
+        template: "<div class='row' style='margin-bottom:8px;'>" +
+            "<div class='col-sm-2'><span class='niceLabel' data-bind='text: Company'></span></div>" +
+            "<div class='col-sm-2'><input type='text' class='P1 chosen form-control' style='width:300px;' data-bind='value:PrimUserValue,attr: { id:PrimaryID()},ko_autocomplete: { source: getCompanyUsers, select: selectPrimary ,minLength: 3,close: closeSelect }' /></div>" +
             "<div class='col-sm-1' style='text-align:center'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkPrimaryID()}, event:{ change: selectCompanyNamePrimary}, checked:CheckStatusPrimary' /></div>" +
-            "<div class='col-sm-3'><input type='text' class='P1 chosen form-control' style='width:300px;' data-bind='value:PrimUserValue,attr: { id:PrimaryID()},ko_autocomplete: { source: getCompanyUsers, select: selectPrimary ,minLength: 3,close: closeSelect }' />" +
-            "<a href='#' class='text-danger btndelete' style='vertical-align: middle;padding-left:7px;' data-bind='click: $data.removePrimGroupUser'>Delete</a></div>" +
+            "<div class='col-sm-1'><a href='#' class='text-danger btndelete' data-bind='click: $data.removePrimGroupUser'>Delete</a></div>" +
+            "<div class='col-sm-2'><input type='text' class='A1 chosen form-control' style='width:300px;' data-bind='value:AltUserValue,attr: { id:AlternateID() },ko_autocomplete: { source: getCompanyUsers, select: selectAlternate ,minLength:3,close: closeSelect }' /></div>" +
             "<div class='col-sm-1' style='text-align:center'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkAlternateID()}, event:{ change: selectCompanyNameAlternate}, checked:CheckStatusAlternate' /></div>" +
-            "<div class='col-sm-3'><input type='text' class='A1 chosen form-control' style='width:300px;' data-bind='value:AltUserValue,attr: { id:AlternateID() },ko_autocomplete: { source: getCompanyUsers, select: selectAlternate ,minLength:3,close: closeSelect }'/>" +
-            "<a href='#' class='text-danger btndelete' style='vertical-align: middle;padding-left:7px;' data-bind='click: removeAltGroupUser'>Delete</a></div></div>"
+            "<div class='col-sm-1'><a href='#' class='text-danger btndelete' data-bind='click: removeAltGroupUser'>Delete</a></div></div>"
     });
 
     function getGID(sParam) {
@@ -2532,6 +2540,7 @@ function handleClick(myRadio) {
 }
 
 function saveA4ARoles() {
+    debugger;
     saveA4ACompanyNamePrimaryRoles();
     saveA4ACompanyNameAlternateRoles();
     saveA4AStaffRoles();
@@ -2618,6 +2627,7 @@ function saveA4ACompanyNameAlternateRoles() {
 }
 
 function saveA4AStaffRoles() {
+    debugger;
     for (var key of ChkStaff.keys()) {
         A4AModelChkStaff.push({
             groupId: self.gId(),
@@ -2766,6 +2776,7 @@ function saveA4ACommitteeStaffRoles() {
 }
 
 function saveA4ACommitteeGroupUserRoles() {
+    debugger;
     for (var key of ChkGroupUserCommittee.keys()) {
         A4AModelChkGroupUserCommittee.push({
             groupId: self.gId(),
