@@ -713,6 +713,7 @@ var AutoCompleteExample;
          * Works for CouncilCommitteeGGA & Regular Councilcommitee Chair/Vice Chair Add and delete */
         ////////////////////////////////////////////////////////////////////
         ViewModel.prototype.selectChair = function (event, ui) {
+            debugger;
             try {
                 $(".overlay").show();
                 var gId = 0;
@@ -1187,6 +1188,7 @@ var AutoCompleteExample;
 
         ViewModel.prototype.selectchkStaff = function (item, event) {
             debugger;
+            $('#hdnSaveEmailAdminValue').val("3");
             if (isNaN(ViewModel.prototype.gId())) {
                 gId = $('#hdnGroupId').val();
             }
@@ -1194,9 +1196,28 @@ var AutoCompleteExample;
                 gId = ViewModel.prototype.gId();
             }
             ChkStaff.set(gId, event.target.checked)
+
+            if ($('#hdnChkStaffUserId').val() == "") {
+                $('#DivMsgA4AStaffContainer').hide();
+                $('#DivCompanyMsg').show();
+                $('#DivCommitteeMsg').hide();
+                $('#DivInformationalContactMsg').hide();
+                $('#DivSaveInformationalContactMsg').hide();
+                $('#DivContactMsg').hide();
+                $('#DivSaveContactMsg').hide();
+                $('#DivTaskGroupMsg').hide();
+                $('#DivSaveTaskGroupMsg').hide();
+                $('.spnMessage').html("Please select user").css("color", "red");
+                setTimeout(function () { $('.spnMessage').text(""); }, 10000);
+                $('#hdnCommiteeSaveValue').val("0");
+            }
+            else {
+                $('#hdnCommiteeSaveValue').val("1");
+            }
         }
 
         ViewModel.prototype.selectchkGroupUser = function (item, event) {
+            $('#hdnSaveEmailAdminValue').val("3");
             if (isNaN(ViewModel.prototype.gId())) {
                 gId = $('#hdnGroupId').val();
             }
@@ -1204,6 +1225,24 @@ var AutoCompleteExample;
                 gId = ViewModel.prototype.gId();
             }
             ChkGroupUser.set(gId, event.target.checked)
+
+            if ($('#hdnChkGroupUserId').val() == "") {
+                $('#DivMsgA4AStaffContainer').hide();
+                $('#DivCompanyMsg').show();
+                $('#DivCommitteeMsg').hide();
+                $('#DivInformationalContactMsg').hide();
+                $('#DivSaveInformationalContactMsg').hide();
+                $('#DivContactMsg').hide();
+                $('#DivSaveContactMsg').hide();
+                $('#DivTaskGroupMsg').hide();
+                $('#DivSaveTaskGroupMsg').hide();
+                $('.spnMessage').html("Please select user").css("color", "red");
+                setTimeout(function () { $('.spnMessage').text(""); }, 10000);
+                $('#hdnCommiteeSaveValue').val("0");
+            }
+            else {
+                $('#hdnCommiteeSaveValue').val("1");
+            }
         }
         return ViewModel;
     })();
@@ -1743,12 +1782,15 @@ function councilCommitteeViewModel(params) {
     };
 
     this.selectCompanyNamePrimary = function (event, ui) {
+        debugger;
+        $('#hdnSaveEmailAdminValue').val("3");
         if (params.Company.length > 0 && !isNaN(gId)) {
             CompanyNamePrimary.set(params.Company, ui.target.checked)
         }
     };
 
     this.selectCompanyNameAlternate = function (event, ui) {
+        $('#hdnSaveEmailAdminValue').val("3");
         if (params.Company.length > 0 && !isNaN(gId)) {
             CompanyNameAlternate.set(params.Company, ui.target.checked)
         }
@@ -2554,14 +2596,19 @@ function saveA4ARoles() {
     $('#DivSaveContactMsg').hide();
     $('#DivTaskGroupMsg').hide();
     $('#DivSaveTaskGroupMsg').hide();
-    if ($('#hdnSaveRoleValues').val() == "1") {
-        $('.spnMessage').html("Council/Committee Contacts changes saved successfully").css("color", "green");
-    }
-    else if ($('#hdnSaveRoleValues').val() == "0") {
-        $('.spnMessage').text("Error updating the records:");
+    if ($('#hdnSaveEmailAdminValue').val() == "3") {
+        if ($('#hdnSaveRoleValues').val() == "1") {
+            $('.spnMessage').html("Council/Committee Contacts changes saved successfully").css("color", "green");
+        }
+        else if ($('#hdnSaveRoleValues').val() == "0") {
+            $('.spnMessage').text("Error updating the records:");
+        }
+        else {
+            $('.spnMessage').html("Council/Committee Contacts changes saved successfully").css("color", "green");
+        }
     }
     else {
-        $('.spnMessage').html("Council/Committee Contacts changes saved successfully").css("color", "green");
+        $('.spnMessage').html("Please select email adminstrator value").css("color", "red");
     }
     setTimeout(function () { $('.spnMessage').text(""); }, 10000);
 }
@@ -2807,6 +2854,7 @@ function saveA4ACommitteeGroupUserRoles() {
 }
 
 function chkInformationalRoles(e) {
+    $('#hdnSaveEmailAdminValue').val("4");
     chkInformationalUser.set(e.value, e.checked)
 }
 

@@ -1961,6 +1961,7 @@ namespace A4A.UM.Controllers
         [HttpPost]
         public string SaveCouncilCommitteeCompanyDtl(List<GroupCompanyUserRoles> groupCompanyUserRole)
         {
+            string Message = string.Empty;
             try
             {
                 UserGroupJsonModel userGroup = new UserGroupJsonModel();
@@ -1987,6 +1988,14 @@ namespace A4A.UM.Controllers
                             cmd.Parameters.AddRange(spm);
                             cmd.CommandType = CommandType.StoredProcedure;
                             UsereId = Int32.Parse(cmd.ExecuteScalar().ToString());
+                            if (UsereId == 0)
+                            {
+                                Message = "Please select user";
+                            }
+                            else
+                            {
+                                Message = "Council/Committee Contacts changes saved successfully";
+                            }
                         }
                     }
 
@@ -2034,7 +2043,7 @@ namespace A4A.UM.Controllers
             {
                 throw new Exception("Error in saving group user roles.", ex.InnerException);
             }
-            return "Succesfully Updated!";
+            return Message;
         }
 
         [Route("api/SaveCouncilCommitteeStaffDtl")]
