@@ -639,7 +639,6 @@ var AutoCompleteExample;
         /***  Subscribe/Informational -  Select User to Add     ***/
         ////////////////////////////////////////////////////////////////////
         ViewModel.prototype.selectLanguage = function (event, ui) {
-            debugger;
             try {
                 $(".overlay").show();
                 //Get Gid now 
@@ -713,7 +712,6 @@ var AutoCompleteExample;
          * Works for CouncilCommitteeGGA & Regular Councilcommitee Chair/Vice Chair Add and delete */
         ////////////////////////////////////////////////////////////////////
         ViewModel.prototype.selectChair = function (event, ui) {
-            debugger;
             try {
                 $(".overlay").show();
                 var gId = 0;
@@ -1187,7 +1185,6 @@ var AutoCompleteExample;
         }
 
         ViewModel.prototype.selectchkStaff = function (item, event) {
-            debugger;
             $('#hdnSaveEmailAdminValue').val("3");
             if (isNaN(ViewModel.prototype.gId())) {
                 gId = $('#hdnGroupId').val();
@@ -1579,7 +1576,6 @@ function councilCommitteeViewModel(params) {
     }
     self.selectedValues = ko.observableArray();
     self.selectPrimary = function (event, ui) {
-        debugger;
         try {
             $(".overlay").show()
             var compPrimError = (params.Company).replace(/\s+/g, '') + "PrimError";
@@ -1782,7 +1778,6 @@ function councilCommitteeViewModel(params) {
     };
 
     this.selectCompanyNamePrimary = function (event, ui) {
-        debugger;
         $('#hdnSaveEmailAdminValue').val("3");
         if (params.Company.length > 0 && !isNaN(gId)) {
             CompanyNamePrimary.set(params.Company, ui.target.checked)
@@ -1849,7 +1844,6 @@ var councilCommitteeGGAViewModel = function () {
     }
 
     this.selectPrimAltUser4Company = function (event, ui) {
-        debugger;
         if (!isNaN($('#hdnGroupId').val())) {
             self.gId($('#hdnGroupId').val());
             gId = $('#hdnGroupId').val();
@@ -2114,7 +2108,6 @@ var councilCommitteeGGAViewModel = function () {
             type: "GET",
             contentType: 'application/json',
             success: function (data) {
-                debugger;
                 var result = JSON.parse(data);
                 for (i = 0; i < result.length; i++) {
                     if (result[i].RoleId === 1) {
@@ -2352,7 +2345,6 @@ var councilCommitteeGGAViewModel = function () {
     }
 
     this.selectchkCommitteeGroupUser = function (item, ui) {
-        debugger;
         ChkGroupUserCommittee.set($('#hdnGroupTypeId').val(), ui.target.checked);
     }
 };
@@ -2582,7 +2574,6 @@ function handleClick(myRadio) {
 }
 
 function saveA4ARoles() {
-    debugger;
     saveA4ACompanyNamePrimaryRoles();
     saveA4ACompanyNameAlternateRoles();
     saveA4AStaffRoles();
@@ -2674,7 +2665,6 @@ function saveA4ACompanyNameAlternateRoles() {
 }
 
 function saveA4AStaffRoles() {
-    debugger;
     for (var key of ChkStaff.keys()) {
         A4AModelChkStaff.push({
             groupId: self.gId(),
@@ -2823,7 +2813,6 @@ function saveA4ACommitteeStaffRoles() {
 }
 
 function saveA4ACommitteeGroupUserRoles() {
-    debugger;
     for (var key of ChkGroupUserCommittee.keys()) {
         A4AModelChkGroupUserCommittee.push({
             groupId: self.gId(),
