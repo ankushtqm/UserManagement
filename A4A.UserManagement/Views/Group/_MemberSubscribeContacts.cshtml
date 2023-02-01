@@ -5,7 +5,7 @@
 <div class="GroupSubscriber" id="GroupSubscriberContainer">
     <label for="acSubInfoUser">Contact: </label>
     <p>
-        <input type="text" class="acSubInfoUser chosen form-control" style="width:300px;" placeholder="Search Contacts" id="acSubInfoUser" data-bind="ko_autocomplete: {source: getLanguages, select: selectLanguage ,minLength: 3 }" />
+        <input type="text" class="acSubInfoUser chosen form-control" style="width:300px;" placeholder="Search Contacts" id="acSubInfoUser" data-bind="ko_autocomplete: {source: getLanguages, select: selectLanguageContacts ,minLength: 3 }" />
         <a href='#' class='text-danger btndelete' data-bind="click: clearSubscribertxt">Delete</a>
     </p>
     <table class="table informationalroles" data-bind='visible: $data.selectedValues().length > 0'>

@@ -639,6 +639,7 @@ var AutoCompleteExample;
         /***  Subscribe/Informational -  Select User to Add     ***/
         ////////////////////////////////////////////////////////////////////
         ViewModel.prototype.selectLanguage = function (event, ui) {
+            debugger;
             try {
                 $(".overlay").show();
                 //Get Gid now 
@@ -688,6 +689,76 @@ var AutoCompleteExample;
                         ViewModel.prototype.selectedValues.push(temp1);
                         ViewModel.prototype.InfoMessage("User " + usrname + " has been successfully added!");
                         setTimeout(function () { ViewModel.prototype.InfoMessage(""); $('#z-tab4').find('a').show(); if ($('#hdnchkRadioId').val() != "1") { $("input[name='EmailAdmin']").prop("disabled", true); $('#DivSaveInformationalRoles').hide(); } else { $("input[name='EmailAdmin']").prop("disabled", false); $('#DivSaveInformationalRoles').show(); } }, 1000);
+                    },
+                    error: function (exception) {
+                        try {
+                            ViewModel.prototype.errorMessage("Error in adding user to the group:" + exception.responseText); //started working after changing the errorMessage from div to span. 
+                            setTimeout(function () { ViewModel.prototype.errorMessage(""); }, 15000);
+                        }
+                        catch (Err) {
+                            alert("Error in adding user to group:" + exception.responseText);
+                        }
+                    }
+                }).done(function (data) { });
+            }
+            catch (Err) {
+                $(".overlay").hide();
+            }
+            setTimeout(function () { $(".overlay").hide(); }, 1000);
+            return '';
+        };
+
+        ViewModel.prototype.selectLanguageContacts = function (event, ui) {
+            debugger;
+            try {
+                $(".overlay").show();
+                //Get Gid now 
+                var gId = 0;
+                gId = $('#hdnGroupId').val(); ///check for groupid value.TODO:cleaning up the code 
+                if (!(gId > 0) && !(ViewModel.prototype.gId() > 0)) {
+                    ViewModel.prototype.errorMessage("Invalid GroupID. Your changes will not be saved! Contact the IT Administrator!");
+                    setTimeout(function () { ViewModel.prototype.errorMessage(""); }, 6000);
+                }
+                else {
+                    ViewModel.prototype.errorMessage("");
+                }
+
+                var role = '';
+                var temp, temp1;
+                //Get CompanyName out of the username
+                var UsernCompname = ui.item.label;
+                var startindex = UsernCompname.indexOf('(');
+                var cname = UsernCompname.substring(startindex + 1).replace(')', ''); //Get the Company out of the Company Name string.
+                var usrname = UsernCompname.replace(UsernCompname.substring(startindex), ''); //Get the companyname out of the username
+                if (+$("#hdnSubscribeInformational").val() === 1) //ViewModel.prototype.SorI not working for somereason so changed to hidden field.
+                {
+                    role = "Participant";
+                    temp = [{ "Name": UsernCompname, "UserId": ui.item.text, "Participant": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false, "Type": "4" }];
+                    temp1 = { "Name": UsernCompname, "UserId": ui.item.text, "Participant": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false, "Type": "4" };
+                }
+                else
+                    if (+$("#hdnSubscribeInformational").val() === 2) {
+                        role = "Informational";
+                        temp = [{ "Name": UsernCompname, "UserId": ui.item.text, "Informational": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false, "Type": "4" }];
+                        temp1 = { "Name": UsernCompname, "UserId": ui.item.text, "Informational": true, "GroupId": ViewModel.prototype.gId(), "CompanyName": cname, "CheckStatus": false, "Type": "4" };
+                    }
+                    else {
+                        ViewModel.prototype.errorMessage("Subscription group type is not selected, Contact IT for help!");
+                        setTimeout(function () { ViewModel.prototype.errorMessage(""); }, 6000);
+                        return;
+                    }
+
+                var dataObject = ko.utils.stringifyJson(temp);
+                $.ajax({
+                    url: '/api/UserGroup',
+                    type: 'post',
+                    data: dataObject,
+                    async: false,
+                    contentType: 'application/json',
+                    success: function (data) {
+                        ViewModel.prototype.selectedValues.push(temp1);
+                        ViewModel.prototype.InfoMessage("User " + usrname + " has been successfully added!");
+                        setTimeout(function () { ViewModel.prototype.InfoMessage(""); $('#z-tab5').find('a').show(); if ($('#hdnchkRadioId').val() != "1") { $("input[name='EmailAdmin']").prop("disabled", true); $('#DivSaveContactsRoles').hide(); } else { $("input[name='EmailAdmin']").prop("disabled", false); $('#DivSaveContactsRoles').show(); } }, 1000);
                     },
                     error: function (exception) {
                         try {
@@ -979,7 +1050,7 @@ var AutoCompleteExample;
                     contentType: 'application/json',
                     success: function (data) {
                         ViewModel.prototype.InfoMessage("User removed from the group successfully!");
-                        setTimeout(function () { ViewModel.prototype.InfoMessage(""); }, 3000);
+                        setTimeout(function () { ViewModel.prototype.InfoMessage(""); }, 5000);
                         ViewModel.prototype.selectedValues.remove(contact);
                     },
                     error: function (xhr, status, error) {
@@ -1040,6 +1111,7 @@ var AutoCompleteExample;
                 else
                     gId = ViewModel.prototype.gId();
                 var URL = "/api/RemoveGrpUsrbyRole/?GroupId=" + gId + "&RoleId=" + 3
+                CheckStatusStaff(false);
                 //Delete the user from database and clear the field 
                 var result = ViewModel.prototype.RemoveGroupUser(URL, '', 'Chair');
 
@@ -1051,6 +1123,7 @@ var AutoCompleteExample;
 
         ViewModel.prototype.removeViceChairGroupUser = function (item, event) {
             try {
+                debugger;
                 $(".overlay").show();
                 /* Note: Reset the hidden value */
                 $('#hdnViceChairComp').val('');
@@ -1068,6 +1141,7 @@ var AutoCompleteExample;
                 $('#GroupViceChair').val('');
                 $('#GroupViceChairGGA').val('');
                 var URL = "/api/RemoveGrpUsrbyRole/?GroupId=" + gId + "&RoleId=" + 4;
+                CheckStatusGroupUser(false);
                 /* Note: Delete the user from database and clear the field  */
                 var result = ViewModel.prototype.RemoveGroupUser(URL, '', 'Vice Chair');
                 $(event.target).prev().val('');
@@ -2341,10 +2415,12 @@ var councilCommitteeGGAViewModel = function () {
     };
 
     this.selectchkCommitteeStaff = function (event, ui) {
+        $('#hdnSaveEmailAdminValue').val("7");
         ChkStaffCommittee.set($('#hdnGroupTypeId').val(), ui.target.checked);
     }
 
     this.selectchkCommitteeGroupUser = function (item, ui) {
+        $('#hdnSaveEmailAdminValue').val("7");
         ChkGroupUserCommittee.set($('#hdnGroupTypeId').val(), ui.target.checked);
     }
 };
@@ -2725,6 +2801,7 @@ function saveA4AGroupUserRoles() {
 }
 
 function EmailAdmin(e) {
+    $('#hdnSaveEmailAdminValue').val("7");
     SendEmailAdmin.set(e.value, e.checked)
 }
 
@@ -2741,14 +2818,19 @@ function saveA4ACommitteeRoles() {
     $('#DivSaveContactMsg').hide();
     $('#DivTaskGroupMsg').hide();
     $('#DivSaveTaskGroupMsg').hide();
-    if ($('#hdnSaveRoleValues').val() == "1") {
-        $('.spnMessage').html("Council/Committee Unlimited Alternates changes saved successfully").css("color", "green");
-    }
-    else if ($('#hdnSaveRoleValues').val() == "0") {
-        $('.spnMessage').text("Error updating the records:");
+    if ($('#hdnSaveEmailAdminValue').val() == "7") {
+        if ($('#hdnSaveRoleValues').val() == "1") {
+            $('.spnMessage').html("Council/Committee Unlimited Alternates changes saved successfully").css("color", "green");
+        }
+        else if ($('#hdnSaveRoleValues').val() == "0") {
+            $('.spnMessage').text("Error updating the records:");
+        }
+        else {
+            $('.spnMessage').html("Council/Committee Unlimited Alternates changes saved successfully").css("color", "green");
+        }
     }
     else {
-        $('.spnMessage').html("Council/Committee Unlimited Alternates changes saved successfully").css("color", "green");
+        $('.spnMessage').html("Please select email adminstrator value").css("color", "red");
     }
     setTimeout(function () { $('.spnMessage').text(""); }, 10000);
 }
@@ -2873,7 +2955,12 @@ function saveA4AInformationalRoles() {
         contentType: 'application/json',
         dataType: "Json",
         success: function (result) {
-            $('.spnMessage').html("Informational Contact changes saved successfully").css("color", "green");
+            if ($('#hdnSaveEmailAdminValue').val() == "4") {
+                $('.spnMessage').html("Informational Contact changes saved successfully").css("color", "green");
+            }
+            else {
+                $('.spnMessage').html("Please select email adminstrator value").css("color", "red");
+            }
         },
         error: function (exception) {
             $('.spnMessage').text("Error updating the records:" + exception.responseText);
@@ -2885,6 +2972,7 @@ function saveA4AInformationalRoles() {
 }
 
 function chkContactRoles(e) {
+    $('#hdnSaveEmailAdminValue').val("5");
     chkContactUser.set(e.value, e.checked)
 }
 
@@ -2914,7 +3002,12 @@ function saveA4AContactsRoles() {
         contentType: 'application/json',
         dataType: "Json",
         success: function (result) {
-            $('.spnMessage').html("Contact changes saved successfully").css("color", "green");
+            if ($('#hdnSaveEmailAdminValue').val() == "5") {
+                $('.spnMessage').html("Contact changes saved successfully").css("color", "green");
+            }
+            else {
+                $('.spnMessage').html("Please select email adminstrator value").css("color", "red");
+            }
         },
         error: function (exception) {
             $('.spnMessage').text("Error updating the records:" + exception.responseText);
