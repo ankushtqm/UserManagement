@@ -639,7 +639,6 @@ var AutoCompleteExample;
         /***  Subscribe/Informational -  Select User to Add     ***/
         ////////////////////////////////////////////////////////////////////
         ViewModel.prototype.selectLanguage = function (event, ui) {
-            debugger;
             try {
                 $(".overlay").show();
                 //Get Gid now 
@@ -709,7 +708,6 @@ var AutoCompleteExample;
         };
 
         ViewModel.prototype.selectLanguageContacts = function (event, ui) {
-            debugger;
             try {
                 $(".overlay").show();
                 //Get Gid now 
@@ -1123,7 +1121,6 @@ var AutoCompleteExample;
 
         ViewModel.prototype.removeViceChairGroupUser = function (item, event) {
             try {
-                debugger;
                 $(".overlay").show();
                 /* Note: Reset the hidden value */
                 $('#hdnViceChairComp').val('');
