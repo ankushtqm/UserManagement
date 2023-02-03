@@ -8,7 +8,7 @@
         <input type="text" class="acSubInfoUser chosen form-control" style="width:300px;" placeholder="Search Contacts" id="acSubInfoUser" data-bind="ko_autocomplete: {source: getLanguages, select: selectLanguage ,minLength: 3 }" />
         <a href='#' class='text-danger btndelete' data-bind="click: clearSubscribertxt">Delete</a>
     </p>
-    <table class="table informationalroles" data-bind='visible: $data.selectedValues().length > 0'>
+    <table class="table" data-bind='visible: $data.selectedValues().length > 0'>
         <thead>
             <tr>
                 <th class="control-label">Company Name</th>
@@ -23,13 +23,10 @@
                 <td class="element-width"><span data-bind="text: Name"></span></td>
                 <td class="element-width"><input type='checkbox' name='EmailAdmin' data-bind="value:UserId, checked:CheckStatus" onchange="chkInformationalRoles(this)" /></td>
                 <td class="element-width"><a href='#' data-bind='click: $parent.removeUMInfoContacts'>Delete</a></td>
+                <td class="element-width"></td>
+                <td class="element-width"></td>
+                <td class="element-width"></td>
             </tr>
         </tbody>
     </table>
 </div>
-
-<style>
-    .informationalroles {
-        width: 57% !important
-    }
-</style>

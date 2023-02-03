@@ -3016,6 +3016,7 @@ function saveA4AContactsRoles() {
 }
 
 function chkTaskGroupRoles(e) {
+    $('#hdnSaveEmailAdminValue').val("6");
     chkTaskGroupUser.set(e.value, e.checked)
 }
 
@@ -3045,7 +3046,12 @@ function saveA4ATaskGroupRoles() {
         contentType: 'application/json',
         dataType: "Json",
         success: function (result) {
-            $('.spnMessage').html("Task Force changes saved successfully").css("color", "green");
+            if ($('#hdnSaveEmailAdminValue').val() == "6") {
+                $('.spnMessage').html("Task Force changes saved successfully").css("color", "green");
+            }
+            else {
+                $('.spnMessage').html("Please select email adminstrator value").css("color", "red");
+            }
         },
         error: function (exception) {
             $('.spnMessage').text("Error updating the records:" + exception.responseText);
