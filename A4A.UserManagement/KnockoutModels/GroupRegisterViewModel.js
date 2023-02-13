@@ -260,6 +260,7 @@ function Group(HiddenGroupId, GroupName, AppliesToSiteId, GroupTypeId, LyrisList
     self.ShowErr = ko.observable(false);
 
     self.addGroup = function () {
+        debugger;
         //Reset Info Message
         self.InfoMessage("");
         //get the Mission editor data
@@ -956,6 +957,7 @@ var AutoCompleteExample;
         /***   Participant/Informational - Add all users to Group - not being used ***/
         ////////////////////////////////////////////////////////////////////////////
         ViewModel.prototype.addGroup = function () {
+            debugger;
             try {
                 $(".overlay").show();
                 var dataObject = ko.utils.stringifyJson(ViewModel.prototype.selectedValues);
@@ -2459,12 +2461,12 @@ $(document).ready(function () {
     ko.components.register('primaryalternate', {
         viewModel: councilCommitteeViewModel,
         template: "<div class='row' style='margin-bottom:8px;'>" +
-            "<div class='col-sm-2'><span class='niceLabel' data-bind='text: Company'></span></div>" +
+            "<div class='col-sm-1'><span class='niceLabel' data-bind='text: Company'></span></div>" +
             "<div class='col-sm-2'><input type='text' class='P1 chosen form-control' style='width:300px;' data-bind='value:PrimUserValue,attr: { id:PrimaryID()},ko_autocomplete: { source: getCompanyUsers, select: selectPrimary ,minLength: 3,close: closeSelect }' /></div>" +
-            "<div class='col-sm-1' style='text-align:center'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkPrimaryID()}, event:{ change: selectCompanyNamePrimary}, checked:CheckStatusPrimary' /></div>" +
+            "<div class='col-sm-1'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkPrimaryID()}, event:{ change: selectCompanyNamePrimary}, checked:CheckStatusPrimary' /></div>" +
             "<div class='col-sm-1'><a href='#' class='text-danger btndelete' data-bind='click: $data.removePrimGroupUser'>Delete</a></div>" +
-            "<div class='col-sm-2'><input type='text' class='A1 chosen form-control' style='width:300px;' data-bind='value:AltUserValue,attr: { id:AlternateID() },ko_autocomplete: { source: getCompanyUsers, select: selectAlternate ,minLength:3,close: closeSelect }' /></div>" +
-            "<div class='col-sm-1' style='text-align:center'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkAlternateID()}, event:{ change: selectCompanyNameAlternate}, checked:CheckStatusAlternate' /></div>" +
+            "<div class='col-sm-2' style='padding-left:50px'><input type='text' class='A1 chosen form-control' style='width:300px;' data-bind='value:AltUserValue,attr: { id:AlternateID() },ko_autocomplete: { source: getCompanyUsers, select: selectAlternate ,minLength:3,close: closeSelect }' /></div>" +
+            "<div class='col-sm-1' style='padding-left:50px'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkAlternateID()}, event:{ change: selectCompanyNameAlternate}, checked:CheckStatusAlternate' /></div>" +
             "<div class='col-sm-1'><a href='#' class='text-danger btndelete' data-bind='click: removeAltGroupUser'>Delete</a></div></div>"
     });
 
@@ -2672,7 +2674,7 @@ function saveA4ARoles() {
         }
     }
     else {
-        $('.spnMessage').html("Please select email adminstrator value").css("color", "red");
+        $('.spnMessage').html("All users in this list should have at least one email admin checkbox selected. Please choose a email admin checkbox for 'Council/Committee Contacts' before saving").css("color", "red");
     }
     setTimeout(function () { $('.spnMessage').text(""); }, 10000);
 }
@@ -2827,7 +2829,7 @@ function saveA4ACommitteeRoles() {
         }
     }
     else {
-        $('.spnMessage').html("Please select email adminstrator value").css("color", "red");
+        $('.spnMessage').html("All users in this list should have at least one email admin checkbox selected. Please choose a email admin checkbox for 'Council/Committee Unlimited Alternates' before saving").css("color", "red");
     }
     setTimeout(function () { $('.spnMessage').text(""); }, 10000);
 }
@@ -2956,7 +2958,7 @@ function saveA4AInformationalRoles() {
                 $('.spnMessage').html("Informational Contact changes saved successfully").css("color", "green");
             }
             else {
-                $('.spnMessage').html("Please select email adminstrator value").css("color", "red");
+                $('.spnMessage').html("All users in this list should have at least one email admin checkbox selected. Please choose a email admin checkbox for 'Informational Contact' before saving").css("color", "red");
             }
         },
         error: function (exception) {
@@ -3003,7 +3005,7 @@ function saveA4AContactsRoles() {
                 $('.spnMessage').html("Contact changes saved successfully").css("color", "green");
             }
             else {
-                $('.spnMessage').html("Please select email adminstrator value").css("color", "red");
+                $('.spnMessage').html("All users in this list should have at least one email admin checkbox selected. Please choose a email admin checkbox for 'Contact' before saving").css("color", "red");
             }
         },
         error: function (exception) {
@@ -3050,7 +3052,7 @@ function saveA4ATaskGroupRoles() {
                 $('.spnMessage').html("Task Force changes saved successfully").css("color", "green");
             }
             else {
-                $('.spnMessage').html("Please select email adminstrator value").css("color", "red");
+                $('.spnMessage').html("All users in this list should have at least one email admin checkbox selected. Please choose a email admin checkbox for 'Task Force' before saving").css("color", "red");
             }
         },
         error: function (exception) {

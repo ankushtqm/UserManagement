@@ -8,52 +8,53 @@
 </div>
 
 <div class="row">
+    <div class="control-label col-sm-1">
+        <label class="niceLabel"> Role</label>
+    </div>
+
     <div class="control-label col-sm-2">
-        <label class="niceLabel"> Chair</label>
+        <label class="control-label niceLabel"> Contact</label>
     </div>
 
     <div class="control-label col-sm-1">
-        <label class="control-label niceLabel"> Email Administrator</label>
+        <label class="control-label niceLabel"> Email Admin</label>
     </div>
 
     <div class="control-label col-sm-1">
         <label class="control-label niceLabel"> Delete</label>
     </div>
-
-    <div class="control-label col-sm-2">
-        <label class="niceLabel"> Vice Chair</label>
-    </div>
-
-    <div class="control-label col-sm-1">
-        <label class="niceLabel"> Email Administrator</label>
-    </div>
-
-    <div class="control-label col-sm-1">
-        <label class="niceLabel"> Delete</label>
-    </div>
 </div>
 
 <div class='row'>
+    <div class='col-sm-1'>
+        <label class="niceLabel committelbl"> Chair</label>
+    </div>
     <div class='col-sm-2'>
         <input type="text" class="chosen form-control" style="width:300px;" id="GroupChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectChair ,minLength: 3 }" />
     </div>
-    <div class='col-sm-1' style='text-align:center'>
+    <div class='col-sm-1'>
         <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkStaff}, checked:CheckStatusStaff' />
     </div>
     <div class='col-sm-1'>
         <a href='#' class='text-danger btndelete' style='padding-left:1px;' data-bind='click: $data.removeChairGroupUser'>Delete</a>
     </div>
+</div>
 
+<div class='row' style="margin-top:7px">
+    <div class='col-sm-1'>
+        <label class="niceLabel committelbl"> Vice Chair</label>
+    </div>
     <div class='col-sm-2'>
         <input type="text" class="chosen form-control" style="width:300px;" id="GroupViceChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectViceChair ,minLength: 3 }" />
     </div>
-    <div class='col-sm-1' style='text-align:center'>
+    <div class='col-sm-1'>
         <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkGroupUser}, checked:CheckStatusGroupUser' />
     </div>
     <div class='col-sm-1'>
         <a href='#' class='text-danger btndelete' style='padding-left:1px;' data-bind='click: $data.removeViceChairGroupUser'>Delete</a>
     </div>
 </div>
+
 <br />
 
 <div>
@@ -61,7 +62,7 @@
 </div>
 
 <div class="row">
-    <div class="control-label col-sm-2">
+    <div class="control-label col-sm-1">
         <label class="control-label niceLabel"> Company</label>
     </div>
 
@@ -70,19 +71,19 @@
     </div>
 
     <div class="control-label col-sm-1">
-        <label class="niceLabel"> Email Administrator</label>
+        <label class="niceLabel"> Email Admin</label>
     </div>
 
     <div class="control-label col-sm-1">
         <label class="niceLabel"> Delete</label>
     </div>
 
-    <div class="control-label col-sm-2">
+    <div class="control-label col-sm-2" style="padding-left:50px">
         <label class="niceLabel"> Alternate</label>
     </div>
 
-    <div class="control-label col-sm-1">
-        <label class="niceLabel"> Email Administrator</label>
+    <div class="control-label col-sm-1" style="padding-left:50px">
+        <label class="niceLabel"> Email Admin</label>
     </div>
 
     <div class="control-label col-sm-1">

@@ -640,6 +640,7 @@ namespace A4A.UM.Controllers
                                 ugjm1.UserId = currentUID;
                                 ugjm1.ManageGroup = true;
                                 ugjm1.Save();
+                                AddA4AUsertoLyrisGroup(ugjm);
                                 //AddA4AUsertoLyrisGroup(ugjm);   - 9/20/2018 - JD wanted the Manage Group not be in Lyris
                                 Transactions.setUserGroupTransaction(cgid, currentUID, TransactionType.UserGroup_UserAdded, CommitteeRole.ManageGroup);
                             }
@@ -1191,7 +1192,7 @@ namespace A4A.UM.Controllers
                                         ug.GroupId = childGroup.GroupId;
                                         ug.Save();
                                         Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserAdded, DBUtilAPIController.CurrentUser().UserId, true);
-                                        //AddUsertoLyrisGroup(ug);
+                                        AddUsertoLyrisGroup(ug);
                                     }
                                     catch (Exception ex)
                                     {
@@ -1202,7 +1203,7 @@ namespace A4A.UM.Controllers
                                 {
                                     ug.Save();
                                     Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserAdded, DBUtilAPIController.CurrentUser().UserId, true);
-                                    //AddUsertoLyrisGroup(ug);
+                                    AddUsertoLyrisGroup(ug);
                                 }
 
                             }
