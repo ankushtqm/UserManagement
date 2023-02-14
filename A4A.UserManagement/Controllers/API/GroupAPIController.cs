@@ -609,7 +609,6 @@ namespace A4A.UM.Controllers
                         Group.IsChildGroup = false;
                         Group.Save();
 
-
                         try
                         {
                             //Save Transaction for Group Creation
@@ -621,7 +620,7 @@ namespace A4A.UM.Controllers
                             ugjm.ManageGroup = true;
                             ugjm.Save();
                             Transactions.setUserGroupTransaction(Group.GroupId, currentUID, TransactionType.UserGroup_UserAdded, CommitteeRole.ManageGroup);
-
+                            //AddA4AUsertoLyrisGroup(ugjm);
                             //AddA4AUsertoLyrisGroup(ugjm); removed by NA on 9/15/2018 - JD/SM want to not make Manage Contact a subscriber in the Lyris
 
                             //If GAB is true add the group to the Exchange
@@ -640,7 +639,8 @@ namespace A4A.UM.Controllers
                                 ugjm1.UserId = currentUID;
                                 ugjm1.ManageGroup = true;
                                 ugjm1.Save();
-                                AddA4AUsertoLyrisGroup(ugjm);
+                                AddUsertoLyrisGroup(ugjm1);
+                                //AddA4AUsertoLyrisGroup(ugjm1);
                                 //AddA4AUsertoLyrisGroup(ugjm);   - 9/20/2018 - JD wanted the Manage Group not be in Lyris
                                 Transactions.setUserGroupTransaction(cgid, currentUID, TransactionType.UserGroup_UserAdded, CommitteeRole.ManageGroup);
                             }
