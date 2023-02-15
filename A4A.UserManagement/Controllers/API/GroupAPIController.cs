@@ -606,7 +606,7 @@ namespace A4A.UM.Controllers
                             /************Remove admin@a4a.org or any email set as admin and is added to Lyris - config - keyword - SusQTechLyrisManagerEmail ********************/
                             removeadmin = LyrisMember.RemoveAdminfromList(Group.LyrisListName);
                         }
-                        Group.IsChildGroup = false;
+                        Group.IsChildGroup = true;
                         Group.Save();
 
                         try
@@ -630,6 +630,7 @@ namespace A4A.UM.Controllers
                             if (Group.IsCommittee)
                             {
                                 int cgid = Group.createChildGroupsRetID(Group);
+                                Group.createChildGroups(Group);
                                 string LyrsSD = string.Format("{0}{1}", Group.LyrisShortDescription, "Info");
                                 //Note: Save Transaction for Child Group
                                 Transactions.setTransaction(cgid, currentUID, "GroupName", LyrsSD, "LyrisListName", Group.LyrisListName, TransactionType.GroupCreated);
@@ -639,7 +640,6 @@ namespace A4A.UM.Controllers
                                 ugjm1.UserId = currentUID;
                                 ugjm1.ManageGroup = true;
                                 ugjm1.Save();
-                                AddUsertoLyrisGroup(ugjm1);
                                 //AddA4AUsertoLyrisGroup(ugjm1);
                                 //AddA4AUsertoLyrisGroup(ugjm);   - 9/20/2018 - JD wanted the Manage Group not be in Lyris
                                 Transactions.setUserGroupTransaction(cgid, currentUID, TransactionType.UserGroup_UserAdded, CommitteeRole.ManageGroup);
@@ -897,7 +897,7 @@ namespace A4A.UM.Controllers
                 {
                     ATAGroup grp = new ATAGroup(ug.GroupId);
                     IsGGA = (grp.GroupTypeId == 7 || grp.GroupTypeId == 8 || grp.GroupTypeId == 9 || grp.GroupTypeId == 10) ? true : IsGGA;
-                    
+
                     //bool isGGAGroup = IsGGA; //todo: Remove the isGGA from api method parameter list
                     bool isDoublePrimary = (grp.GroupTypeId == 9 || grp.GroupTypeId == 10) ? true : false;
 
@@ -1199,13 +1199,30 @@ namespace A4A.UM.Controllers
                                         throw new Exception("Error in accessing the child group", ex.InnerException);
                                     }
                                 }
+                                else if (ug.Type == "4" || ug.Type == "5" || ug.Type == "6")
+                                {
+                                    try
+                                    {
+                                        ug.Save();
+                                        Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserAdded, DBUtilAPIController.CurrentUser().UserId, true);
+
+                                        ATAGroup childGroup = grp.GetCommitteeChildGroup();
+                                        ug.GroupId = childGroup.GroupId;
+                                        ug.Save();
+                                        Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserAdded, DBUtilAPIController.CurrentUser().UserId, true);
+                                        AddUsertoLyrisGroup(ug);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        throw new Exception("Error in accessing the child group", ex.InnerException);
+                                    }
+                                }
                                 else
                                 {
                                     ug.Save();
                                     Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserAdded, DBUtilAPIController.CurrentUser().UserId, true);
                                     AddUsertoLyrisGroup(ug);
                                 }
-
                             }
                             else
                             {
@@ -1316,7 +1333,6 @@ namespace A4A.UM.Controllers
                 string name = dr["Name"].ToString();
                 string email = dr["Email"].ToString();
                 string groupName = dr["GroupName"].ToString();
-
 
                 bool ret = AddUsertoLyrisDB(name, email, groupName);
                 return ret;
@@ -2034,7 +2050,7 @@ namespace A4A.UM.Controllers
                             ManageGroup = false,
                             EmailAdmin = CheckStatus,
                             BounceReports = false,
-                            StaffSubscribe = false
+                            StaffSubscribe = true
                         };
                         UpdateLyrisStaffRoles(userGroup, new CommitteeRole[] { CommitteeRole.ManageGroup, CommitteeRole.EmailAdmin, CommitteeRole.BounceReports, CommitteeRole.StaffSubscribe });
                     }
@@ -2093,7 +2109,7 @@ namespace A4A.UM.Controllers
                             ManageGroup = false,
                             EmailAdmin = CheckStatus,
                             BounceReports = false,
-                            StaffSubscribe = false
+                            StaffSubscribe = true
                         };
                         UpdateLyrisStaffRoles(userGroup, new CommitteeRole[] { CommitteeRole.ManageGroup, CommitteeRole.EmailAdmin, CommitteeRole.BounceReports, CommitteeRole.StaffSubscribe });
                     }
@@ -2151,7 +2167,7 @@ namespace A4A.UM.Controllers
                         ManageGroup = false,
                         EmailAdmin = CheckStatus,
                         BounceReports = false,
-                        StaffSubscribe = false
+                        StaffSubscribe = true
                     };
                     UpdateLyrisStaffRoles(userGroup, new CommitteeRole[] { CommitteeRole.ManageGroup, CommitteeRole.EmailAdmin, CommitteeRole.BounceReports, CommitteeRole.StaffSubscribe });
                 }
