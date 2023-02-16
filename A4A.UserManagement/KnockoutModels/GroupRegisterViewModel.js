@@ -2948,7 +2948,7 @@ function saveA4AInformationalRoles() {
     $('#DivSaveTaskGroupMsg').hide();
     let dataobj = JSON.stringify(A4AModelInformationalUser)
     $.ajax({
-        url: '/api/savecommitteeroles',
+        url: '/api/savecontactroles',
         type: "post",
         data: dataobj,
         contentType: 'application/json',
@@ -2995,7 +2995,7 @@ function saveA4AContactsRoles() {
     $('#DivSaveTaskGroupMsg').hide();
     let dataobj = JSON.stringify(A4AModelContactUser)
     $.ajax({
-        url: '/api/savecommitteeroles',
+        url: '/api/savecontactroles',
         type: "post",
         data: dataobj,
         contentType: 'application/json',
@@ -3042,7 +3042,7 @@ function saveA4ATaskGroupRoles() {
     $('#DivSaveTaskGroupMsg').show();
     let dataobj = JSON.stringify(A4AModelTaskGroupUser)
     $.ajax({
-        url: '/api/savecommitteeroles',
+        url: '/api/savecontactroles',
         type: "post",
         data: dataobj,
         contentType: 'application/json',

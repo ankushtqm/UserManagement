@@ -630,8 +630,19 @@ namespace A4A.UM.Controllers
                             if (Group.IsCommittee)
                             {
                                 int cgid = Group.createChildGroupsRetID(Group);
-                                Group.createChildGroups(Group);
+                                //Group.createChildGroups(Group);
                                 string LyrsSD = string.Format("{0}{1}", Group.LyrisShortDescription, "Info");
+                                string LyrisListName = string.Format("{0}info", Group.LyrisListName);
+                                string LyrisShortDescription = string.Format("{0}{1}", Group.LyrisShortDescription, "Info");
+                                if (!SkipLyrisManager)
+                                {
+                                    Group.LyrisListName = this.LyrisManager2.CreateList(Group.LyrisListType, LyrisListName, LyrisShortDescription, LyrisTopic);
+                                    Group.updateList(LyrisListName, LyrisShortDescription, true);
+                                    LyrisMember.UpdateLyrisSend(LyrisListName, Group.LyrisSendId);
+                                    removeadmin = LyrisMember.RemoveAdminfromList(LyrisListName);
+                                }
+
+                                //removeadmin = LyrisMember.RemoveAdminfromList(LyrsSD);
                                 //Note: Save Transaction for Child Group
                                 Transactions.setTransaction(cgid, currentUID, "GroupName", LyrsSD, "LyrisListName", Group.LyrisListName, TransactionType.GroupCreated);
                                 //Note: Add current user as Manage Group Role so they can edit it in the future.
@@ -929,6 +940,7 @@ namespace A4A.UM.Controllers
                     {   //Checks if the user has a role in the group already - of yes then return error
                         if (UserGroupJsonModel.UserExistsinGroup(ug) < 1)
                         {
+                            ug.StaffSubscribe = true;
                             if (ug.GroupId > 0 || !string.IsNullOrEmpty(ug.CompanyName))
                             {
                                 if ((ug.Primary || ug.Alternate || ug.Chair || ug.ViceChair))
@@ -1184,44 +1196,54 @@ namespace A4A.UM.Controllers
                                 }
 
                                 //Check if isCommittee and a parent group and CommitteeRoleID = 12 - Informational  -- Commented by NA 9/20/2018 - JD &SM wanted the council and committee lists to work independently
-                                if (grp.IsCommittee && !grp.IsChildGroup && ug.Informational)
-                                {
-                                    try
-                                    {
-                                        ATAGroup childGroup = grp.GetCommitteeChildGroup();
-                                        ug.GroupId = childGroup.GroupId;
-                                        ug.Save();
-                                        Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserAdded, DBUtilAPIController.CurrentUser().UserId, true);
-                                        AddUsertoLyrisGroup(ug);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        throw new Exception("Error in accessing the child group", ex.InnerException);
-                                    }
-                                }
-                                else if (ug.Type == "4" || ug.Type == "5" || ug.Type == "6")
-                                {
-                                    try
-                                    {
-                                        ug.Save();
-                                        Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserAdded, DBUtilAPIController.CurrentUser().UserId, true);
 
-                                        ATAGroup childGroup = grp.GetCommitteeChildGroup();
-                                        ug.GroupId = childGroup.GroupId;
-                                        ug.Save();
-                                        Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserAdded, DBUtilAPIController.CurrentUser().UserId, true);
-                                        AddUsertoLyrisGroup(ug);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        throw new Exception("Error in accessing the child group", ex.InnerException);
-                                    }
-                                }
-                                else
+                                if (grp.GroupTypeId == 3 || grp.GroupTypeId == 4 || grp.GroupTypeId == 5 || grp.GroupTypeId == 6)
                                 {
                                     ug.Save();
                                     Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserAdded, DBUtilAPIController.CurrentUser().UserId, true);
                                     AddUsertoLyrisGroup(ug);
+                                }
+                                else
+                                {
+                                    if (grp.IsCommittee && !grp.IsChildGroup && ug.Informational)
+                                    {
+                                        try
+                                        {
+                                            ATAGroup childGroup = grp.GetCommitteeChildGroup();
+                                            ug.GroupId = childGroup.GroupId;
+                                            ug.Save();
+                                            Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserAdded, DBUtilAPIController.CurrentUser().UserId, true);
+                                            AddUsertoLyrisGroup(ug);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            throw new Exception("Error in accessing the child group", ex.InnerException);
+                                        }
+                                    }
+                                    else if (ug.Type == "4" || ug.Type == "5" || ug.Type == "6")
+                                    {
+                                        try
+                                        {
+                                            ug.Save();
+                                            Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserAdded, DBUtilAPIController.CurrentUser().UserId, true);
+
+                                            ATAGroup childGroup = grp.GetCommitteeChildGroup();
+                                            ug.GroupId = childGroup.GroupId;
+                                            ug.Save();
+                                            Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserAdded, DBUtilAPIController.CurrentUser().UserId, true);
+                                            AddUsertoLyrisGroup(ug);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            throw new Exception("Error in accessing the child group", ex.InnerException);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ug.Save();
+                                        Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserAdded, DBUtilAPIController.CurrentUser().UserId, true);
+                                        AddUsertoLyrisGroup(ug);
+                                    }
                                 }
                             }
                             else
@@ -1299,6 +1321,46 @@ namespace A4A.UM.Controllers
                 lyruser.ReceiveAdminEmail = ug.BounceReports;
                 lyruser.IsAdmin = ug.EmailAdmin;
                 lyruser.NoMail = !ug.StaffSubscribe; //ug.Participant; It is staffsubscribe for a4a users , participant is for other contcats - chaning this because subscribe want working
+
+                if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(groupName))
+                {
+                    //Check if the user already exists and save if it doesn't 
+                    List<string> previousSelectedListNames = LyrisMember.GetListNamesByMemberEmail(email);
+                    if (!previousSelectedListNames.Contains(groupName))
+                    {
+                        LyrisMember.AddMemberToList(email, name, groupName);
+                        LyrisMember.UpdateListAdmin(lyruser.EmailAddress, groupName, lyruser.IsAdmin, lyruser.ReceiveAdminEmail, lyruser.NoMail);
+                    }
+                    else
+                    {
+                        LyrisMember.UpdateListAdmin(lyruser.EmailAddress, groupName, lyruser.IsAdmin, lyruser.ReceiveAdminEmail, lyruser.NoMail);
+                    }
+                }
+                ret = true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("In AddUsertoLyrisGroup: " + ex.Message);
+            }
+
+            return ret;
+        }
+
+        public bool AddContactUsertoLyrisGroup(UserGroupJsonModel ug)
+        {
+            bool ret = false;
+            try
+            {
+                DataTable dt = GetUserGroupDetails(ug);
+                DataRow dr = dt.Rows[0];
+                string name = dr["Name"].ToString();
+                string email = dr["Email"].ToString();
+                string groupName = string.Format("{0}info", dr["GroupName"].ToString());
+
+                LyrisMember lyruser = new LyrisMember(email);
+                lyruser.ReceiveAdminEmail = ug.BounceReports;
+                lyruser.IsAdmin = ug.EmailAdmin;
+                lyruser.NoMail = !ug.StaffSubscribe;
 
                 if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(groupName))
                 {
@@ -1974,6 +2036,18 @@ namespace A4A.UM.Controllers
             }
         }
 
+        private void UpdateLyrisRoles(UserGroupJsonModel ug, CommitteeRole[] roles)
+        {
+            if (ug.StaffSubscribe || ug.EmailAdmin || ug.BounceReports)
+            {
+                AddContactUsertoLyrisGroup(ug);
+            }
+            else
+            {
+                RemoveUserfromLyrisGroup(ug);
+            }
+        }
+
         [Route("api/SaveCouncilCommitteeCompanyDtl")]
         [HttpPost]
         public string SaveCouncilCommitteeCompanyDtl(List<GroupCompanyUserRoles> groupCompanyUserRole)
@@ -2169,7 +2243,66 @@ namespace A4A.UM.Controllers
                         BounceReports = false,
                         StaffSubscribe = true
                     };
+
                     UpdateLyrisStaffRoles(userGroup, new CommitteeRole[] { CommitteeRole.ManageGroup, CommitteeRole.EmailAdmin, CommitteeRole.BounceReports, CommitteeRole.StaffSubscribe });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error in saving group user roles.", ex.InnerException);
+            }
+            return "Succesfully Updated!";
+        }
+
+        [Route("api/savecontactroles")]
+        [HttpPost]
+        public string SaveContactUserDtl(List<GroupCommitteeUserRoles> groupCommitteeUserRole)
+        {
+            try
+            {
+                UserGroupJsonModel userGroup = new UserGroupJsonModel();
+                for (int i = 0; i < groupCommitteeUserRole.Count; i++)
+                {
+                    int GroupId = groupCommitteeUserRole[i].GroupId;
+                    int UserId = groupCommitteeUserRole[i].UserId;
+                    bool CheckStatus = groupCommitteeUserRole[i].Value;
+                    DataTable dt = groupCommitteeUserRole.ToDataTable<GroupCommitteeUserRoles>();
+                    using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
+                    {
+                        StringBuilder sql = new StringBuilder();
+                        using (SqlCommand cmd = new SqlCommand("p_Save_UserGroup_Council_Committee_Dtl", con))
+                        {
+                            con.Open();
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@GroupId", GroupId);
+                            cmd.Parameters.AddWithValue("@UserId", UserId);
+                            cmd.Parameters.AddWithValue("@Value", CheckStatus);
+                            var reader = cmd.ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    groupCommitteeUserRole.Add(new GroupCommitteeUserRoles()
+                                    {
+                                        GroupId = Int32.Parse(reader["GroupId"].ToString()),
+                                        UserId = Int32.Parse(reader["UserId"].ToString()),
+                                        Value = Convert.ToBoolean(reader["Value"].ToString())
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    userGroup = new UserGroupJsonModel()
+                    {
+                        GroupId = GroupId,
+                        UserId = UserId,
+                        ManageGroup = false,
+                        EmailAdmin = CheckStatus,
+                        BounceReports = false,
+                        StaffSubscribe = true
+                    };
+
+                    UpdateLyrisRoles(userGroup, new CommitteeRole[] { CommitteeRole.ManageGroup, CommitteeRole.EmailAdmin, CommitteeRole.BounceReports, CommitteeRole.StaffSubscribe });
                 }
             }
             catch (Exception ex)
