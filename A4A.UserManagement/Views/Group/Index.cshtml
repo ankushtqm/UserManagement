@@ -15,7 +15,7 @@
     .groupname {
         position: relative;
         font-family: Helvetica,sans-serif;
-        font-size: 14px;
+        font-size: 12px;
         -webkit-transition: all 0.15s ease-out 0s;
         transition: all 0.15s ease-out 0s;
         font-weight: bold;
@@ -89,7 +89,7 @@
         <!-- TAB 0 -->
         <div id="DivGroupType">
             <div>
-                <h4 class="niceLabel-bold text-warning" style="color: #666;" id="chooseGroupType">Choose Group Type</h4>
+                <h4 class="niceLabel-bold text-warning" style="Color: #333333;" id="chooseGroupType">Choose Group Type</h4>
                 <hr />
                 <select class="form-control" id="drpGroupType"></select>
                 <label id="lblGroupType" class="niceLabel"></label>
@@ -115,7 +115,7 @@
             <div id="UMNote" style="color:red;display:none;font-weight:600;">Note: Distribution groups are used for email only and intended for lists that contain member or non-member subscribers. These groups cannot be used to permission a website. If you need an A4A  list, council/committee or a website group  created, please submit an IT Help ticket and we will handle.  </div>
             <br />
             <div data-bind="with: addGroupViewModel">
-                <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Group Properties</span>
+                <span class="GroupTitle niceLabel-bold text-warning" style="Color: #333333;">Group Properties</span>
                 <div style="float:right;">
                     <table id="tblSubscribers" class="niceLabel-default  display" style="display:none" width="100%">
                         <thead>
@@ -157,7 +157,7 @@
         <div id="z-tab2">
             <div data-bind="with: addA4AStaffViewModel">
                 <br />
-                <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">A4A Staff</span>
+                <span class="GroupTitle niceLabel-bold text-warning" style="Color: #333333;">A4A Staff</span>
                 <hr />
                 @Html.Partial("_A4AStaff")
             </div>
@@ -165,7 +165,7 @@
         <!-- TAB 3 -->
         <div id="z-tab3">
             <br />
-            <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Council/Committee Contacts</span>
+            <span class="GroupTitle niceLabel-bold text-warning" style="Color: #333333;">Council/Committee Contacts</span>
             <hr />
             <div data-bind="with: UMSubscribeModel">
                 @Html.Partial("_CouncilCommittee")
@@ -174,7 +174,7 @@
         <!-- TAB 7 -->
         <div id="z-tab7">
             <br />
-            <span id="ccua" class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Council/Committee Unlimited Alternates</span>
+            <span id="ccua" class="GroupTitle niceLabel-bold text-warning" style="Color: #333333;">Council/Committee Unlimited Alternates</span>
             <hr />
             <div data-bind="with: addCouncilCommitteeGGA">
                 @Html.Partial("_CouncilCommitteeGGA")
@@ -183,7 +183,7 @@
         <!-- TAB 4 -->
         <div id="z-tab4">
             <br />
-            <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Informational Contact</span>
+            <span class="GroupTitle niceLabel-bold text-warning" style="Color: #333333;">Informational Contact</span>
             <hr />
             <div data-bind="with: UMSubscribeModel">
                 <div id="DivInformationalContactMsg" class="savebtn">
@@ -204,7 +204,7 @@
         <!-- TAB 5 -->
         <div id="z-tab5">
             <br />
-            <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Contacts</span>
+            <span class="GroupTitle niceLabel-bold text-warning" style="Color: #333333;">Contacts</span>
             <hr />
             <div data-bind="with: UMSubscribeModel" class="savebtn">
                 <div id="DivContactMsg">
@@ -225,7 +225,7 @@
         <!-- TAB 6 -->
         <div id="z-tab6">
             <br />
-            <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Task Force, Work Groups, Industry Groups & Networks</span>
+            <span class="GroupTitle niceLabel-bold text-warning" style="Color: #333333;">Task Force, Work Groups, Industry Groups & Networks</span>
             <hr />
             <div data-bind="with: addTaskForceWorkGroup">
                 <div id="DivTaskGroupMsg">
@@ -245,7 +245,7 @@
         </div>
         <br />
         <div id="transaction">
-            <span class="GroupTitle niceLabel-bold text-warning" style="color: #666;">Transaction History</span>
+            <span class="GroupTitle niceLabel-bold text-warning" style="Color: #333333;">Transaction History</span>
             <div data-bind="with: addGroupViewModel">
                 <hr />
                 @Html.Partial("_GroupTransaction")

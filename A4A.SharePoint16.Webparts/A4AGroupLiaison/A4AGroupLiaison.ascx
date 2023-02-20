@@ -16,7 +16,7 @@
     } 
 </style>
 
-<h4><asp:Label ID="lblGroupName" runat="server" Style="font-size: 14px;color: #555;font-family: 'Helvetica Neue', Arial, sans-serif;">LIAISON</asp:Label></h4>
+<h4><asp:Label ID="lblGroupName" runat="server" Style="font-size: 12px;color: #555;font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">LIAISON</asp:Label></h4>
 <table>
     <tr>
   <td class="tdGroupLiaison valigntop"><div ID="lblMessage1" runat="server" /></td>

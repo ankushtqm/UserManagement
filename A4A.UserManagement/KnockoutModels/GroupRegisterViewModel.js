@@ -2464,10 +2464,10 @@ $(document).ready(function () {
             "<div class='col-sm-1'><span class='niceLabel' data-bind='text: Company'></span></div>" +
             "<div class='col-sm-2'><input type='text' class='P1 chosen form-control' style='width:300px;' data-bind='value:PrimUserValue,attr: { id:PrimaryID()},ko_autocomplete: { source: getCompanyUsers, select: selectPrimary ,minLength: 3,close: closeSelect }' /></div>" +
             "<div class='col-sm-1'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkPrimaryID()}, event:{ change: selectCompanyNamePrimary}, checked:CheckStatusPrimary' /></div>" +
-            "<div class='col-sm-1'><a href='#' class='text-danger btndelete' data-bind='click: $data.removePrimGroupUser'>Delete</a></div>" +
+            "<div class='col-sm-1'><a href='#' class='text-danger btndelete' style='font-size: 12px;' data-bind='click: $data.removePrimGroupUser'>Delete</a></div>" +
             "<div class='col-sm-2' style='padding-left:50px'><input type='text' class='A1 chosen form-control' style='width:300px;' data-bind='value:AltUserValue,attr: { id:AlternateID() },ko_autocomplete: { source: getCompanyUsers, select: selectAlternate ,minLength:3,close: closeSelect }' /></div>" +
             "<div class='col-sm-1' style='padding-left:50px'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkAlternateID()}, event:{ change: selectCompanyNameAlternate}, checked:CheckStatusAlternate' /></div>" +
-            "<div class='col-sm-1'><a href='#' class='text-danger btndelete' data-bind='click: removeAltGroupUser'>Delete</a></div></div>"
+            "<div class='col-sm-1'><a href='#' class='text-danger btndelete' style='font-size: 12px;' data-bind='click: removeAltGroupUser'>Delete</a></div></div>"
     });
 
     function getGID(sParam) {

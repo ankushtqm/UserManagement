@@ -14,7 +14,7 @@
 	    margin-top: -2px!important;
         margin-left: 1em !important; 
         color:#0072BC; 
-        font-family: 'Helvetica Neue', Arial, sans-serif; text-transform: uppercase; 
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-transform: uppercase; 
         width: 220px;
 	}  
 	#DeltaTopNavigation{ 

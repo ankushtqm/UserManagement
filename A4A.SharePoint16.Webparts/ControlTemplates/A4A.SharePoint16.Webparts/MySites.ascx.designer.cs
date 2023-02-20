@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace A4A.SharePoint16.Webparts {
-    
-    
-    public partial class MySites {
-        
+namespace A4A.SharePoint16.Webparts.ControlTemplates.A4A.SharePoint16.Webparts
+{
+
+
+    public partial class MySites
+    {
+
         /// <summary>
         /// ddlMySites control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace A4A.SharePoint16.Webparts {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlMySites;
-        
+
         /// <summary>
         /// lblMessage control.
         /// </summary>

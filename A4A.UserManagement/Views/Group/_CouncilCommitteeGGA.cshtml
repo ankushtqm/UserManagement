@@ -36,7 +36,7 @@
         <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkCommitteeStaff}, checked:CheckStatusCommitteeStaff' />
     </div>
     <div class='col-sm-1'>
-        <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeCommitteeChairGroupUser'>Delete</a>
+        <a href='#' class='text-danger' style='padding-left: 1px; font-size: 12px;' data-bind='click: $data.removeCommitteeChairGroupUser'>Delete</a>
     </div>
 </div>
 
@@ -51,7 +51,7 @@
         <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkCommitteeGroupUser}, checked:CheckStatusCommitteeGroupUser' />
     </div>
     <div class='col-sm-1'>
-        <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeCommitteeViceChairGroupUser'>Delete</a>
+        <a href='#' class='text-danger' style='padding-left: 1px; font-size: 12px;' data-bind='click: $data.removeCommitteeViceChairGroupUser'>Delete</a>
     </div>
 </div>
 
@@ -61,9 +61,9 @@
 </div>
 <br />
 <p>
-    <span class="bold " style="vertical-align:middle;">Contact:</span>
+    <span class="bold " style="vertical-align:middle; font-size:12px">Contact:</span>
     <input type="text" class="chosen form-control" style="width:200px;" id="ggaUser" placeholder="Enter Username.." data-bind="ko_autocomplete: { source: GetAllUserWithCompany,select: selectPrimAltUser,minLength: 3 }" />
-    <a href='#' class='text-danger' data-bind="click: clearGGAUser" style="font-size:1em;">Delete</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="bold " style="vertical-align:middle;">Role:</span>
+    <a href='#' class='text-danger' data-bind="click: clearGGAUser" style="font-size: 12px; ">Delete</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="bold " style="vertical-align: middle; font-size: 12px">Role:</span>
     <select id="inpGGAGroupRole" class="form-control" data-bind="options: Roles, optionsText: 'name', optionsValue: 'id', value:role, event:{ change: selectPrimAltUser4Company}, optionsCaption: 'Choose Role'" style="width:180px;"></select>
 </p>
 <br />
@@ -81,7 +81,7 @@
                         <span class="niceLabel-default italic text-info" data-bind="text: Type"></span>
                     </div>
                     <div id="DivRemoveCommitteePrimAlt" class="col-lg-1">
-                        <a href="#" class='text-danger' data-bind="click: $parents[1].removeCommitteePrimAlt">Delete</a>
+                        <a href="#" class='text-danger' style="font-size: 12px;" data-bind="click: $parents[1].removeCommitteePrimAlt">Delete</a>
                     </div>
                 </div>
             </li>

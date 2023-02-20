@@ -3,13 +3,13 @@ article, aside, audio, canvas, command, datalist, details, embed, figcaption, fi
 mark, rp, rt, ruby, summary, time{ display: inline }
 
 /* Global properties ======================================================== */
-body { 
-	background:#212222;
-	background-image:url(../images/2.jpg); 
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size:100% 100%; 
-	color:#666;
+body {
+	background: #212222;
+	background-image: url(../images/2.jpg);
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: 100% 100%;
+	Color: #333333;
 } 
 html, body { height:100%;}
 .container {

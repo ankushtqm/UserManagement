@@ -31,7 +31,7 @@
             <tr>
                 <th class="niceLabel">Name</th>
                 <th class="niceLabel">Manage Group</th>
-                <th class="niceLabel">Email Administrator</th>
+                <th class="niceLabel">Email Admin</th>
                 <th class="niceLabel">Receive Bounce Reports</th>
                 <th class="niceLabel">Subscribe</th>
             </tr>
@@ -43,9 +43,9 @@
                 <td class="element-width"><input type="checkbox" name="EmailAdmin" data-bind='checked: EmailAdmin' />  </td>
                 <td class="element-width"><input type="checkbox" data-bind='checked: BounceReports' />  </td>
                 <td class="element-width"><input type="checkbox" data-bind='checked: StaffSubscribe' />  </td>
-                <td data-bind="if: isAdmin()"><a href='#' data-bind='click: $parent.removeA4AStaff'>Delete</a></td>
-                <td data-bind="if: shouldShowDelete() && !isAdmin()"><a href='#' data-bind='click: $parent.removeA4AStaff'>Delete</a></td>
-                <td data-bind="if: !isAdmin() && !ManageGroup && !shouldShowDelete()"><a href='#' data-bind='click: $parent.removeA4AStaff'>Delete</a></td>
+                <td data-bind="if: isAdmin()" style="font-size: 12px;"><a href='#' data-bind='click: $parent.removeA4AStaff'>Delete</a></td>
+                <td data-bind="if: shouldShowDelete() && !isAdmin()" style="font-size: 12px;"><a href='#' data-bind='click: $parent.removeA4AStaff'>Delete</a></td>
+                <td data-bind="if: !isAdmin() && !ManageGroup && !shouldShowDelete()" style="font-size: 12px;"><a href='#' data-bind='click: $parent.removeA4AStaff'>Delete</a></td>
             </tr>
         </tbody>
     </table>

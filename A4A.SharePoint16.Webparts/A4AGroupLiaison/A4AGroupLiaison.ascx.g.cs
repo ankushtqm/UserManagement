@@ -66,7 +66,7 @@ namespace A4A.SharePoint16.Webparts.A4AGroupLiaison {
             this.lblGroupName = @__ctrl;
             @__ctrl.ApplyStyleSheetSkin(this.Page);
             @__ctrl.ID = "lblGroupName";
-            ((System.Web.UI.IAttributeAccessor)(@__ctrl)).SetAttribute("Style", "font-size: 14px;color: #555;font-family: \'Helvetica Neue\', Arial, sans-serif;");
+            ((System.Web.UI.IAttributeAccessor)(@__ctrl)).SetAttribute("Style", "font-size: 14px;color: #555;font-family: \'Helvetica Neue\', Helvetica, Arial, sans-serif;");
             System.Web.UI.IParserAccessor @__parser = ((System.Web.UI.IParserAccessor)(@__ctrl));
             @__parser.AddParsedSubObject(new System.Web.UI.LiteralControl("LIAISON"));
             return @__ctrl;

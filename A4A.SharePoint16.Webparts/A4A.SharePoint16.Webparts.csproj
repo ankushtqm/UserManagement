@@ -102,11 +102,6 @@
     <Compile Include="A4AGroupLiaison\A4AGroupLiaison.ascx.cs">
       <DependentUpon>A4AGroupLiaison.ascx</DependentUpon>
     </Compile>
-    <Compile Include="A4AGroupLiaison\A4AGroupLiaison.ascx.g.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>A4AGroupLiaison.ascx</DependentUpon>
-    </Compile>
     <Compile Include="A4AGroupMembership\A4AGroupMembership.ascx.cs">
       <DependentUpon>A4AGroupMembership.ascx</DependentUpon>
     </Compile>
@@ -190,7 +185,6 @@
   <ItemGroup>
     <Content Include="A4AGroupLiaison\A4AGroupLiaison.ascx">
       <Generator>SharePointWebPartCodeGenerator</Generator>
-      <LastGenOutput>A4AGroupLiaison.ascx.g.cs</LastGenOutput>
     </Content>
     <Content Include="A4AGroupLiaison\Elements.xml" />
     <Content Include="A4AGroupMembership\A4AGroupMembership.ascx">
