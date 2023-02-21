@@ -244,7 +244,7 @@ input[type="checkbox"].input-validation-error {
     font-family:Helvetica,sans-serif;
     font-style: italic;
     font-weight:bold;
-    font-size: 14px;
+    font-size: 12px;
     color: #21ADDF;
     pointer-events: none;
     -webkit-transition: all 0.15s ease-out 0s;

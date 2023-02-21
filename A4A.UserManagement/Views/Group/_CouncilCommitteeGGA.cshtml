@@ -7,55 +7,7 @@
     <button class="btn btn-primary" type='submit' onclick="saveA4ACommitteeRoles()">Save Council/Committee Unlimited Alternates</button>
 </div>
 
-<div class="row">
-    <div class="control-label col-sm-1">
-        <label class="niceLabel"> Role</label>
-    </div>
-
-    <div class="control-label col-sm-2">
-        <label class="control-label niceLabel"> Contact</label>
-    </div>
-
-    <div class="control-label col-sm-1">
-        <label class="control-label niceLabel"> Email Admin</label>
-    </div>
-
-    <div class="control-label col-sm-1">
-        <label class="control-label niceLabel"> Delete</label>
-    </div>
-</div>
-
-<div class='row'>
-    <div class='col-sm-1'>
-        <label class="niceLabel committelbl"> Chair</label>
-    </div>
-    <div class='col-sm-2'>
-        <input type="text" class="chosen form-control" style="width:300px;" id="GroupChairGGA" data-bind="ko_autocomplete: { source: getLanguagesCommittee, select: selectCommitteeChair ,minLength: 3 }" />
-    </div>
-    <div class='col-sm-1'>
-        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkCommitteeStaff}, checked:CheckStatusCommitteeStaff' />
-    </div>
-    <div class='col-sm-1'>
-        <a href='#' class='text-danger' style='padding-left: 1px; font-size: 12px;' data-bind='click: $data.removeCommitteeChairGroupUser'>Delete</a>
-    </div>
-</div>
-
-<div class='row' style="margin-top:7px">
-    <div class='col-sm-1'>
-        <label class="niceLabel committelbl"> Vice Chair</label>
-    </div>
-    <div class='col-sm-2'>
-        <input type="text" class="chosen form-control" style="width:300px;" id="GroupViceChairGGA" data-bind="ko_autocomplete: { source: getLanguagesCommittee, select: selectCommitteeViceChair ,minLength: 3 }" />
-    </div>
-    <div class='col-sm-1'>
-        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkCommitteeGroupUser}, checked:CheckStatusCommitteeGroupUser' />
-    </div>
-    <div class='col-sm-1'>
-        <a href='#' class='text-danger' style='padding-left: 1px; font-size: 12px;' data-bind='click: $data.removeCommitteeViceChairGroupUser'>Delete</a>
-    </div>
-</div>
-
-<div id="DivCouncilCommiteeMsg">
+<div id="DivCouncilCommiteeMsg" style="margin-top:10px">
     <span class="text-left text-danger niceLabel italic margin-topbot10  bold" data-bind="text:errorMessage()"></span>
     <span class="text-left text-success niceLabel italic margin-topbot10 bold" data-bind="text:infoMessage()"></span>
 </div>
@@ -63,29 +15,70 @@
 <p>
     <span class="bold " style="vertical-align:middle; font-size:12px">Contact:</span>
     <input type="text" class="chosen form-control" style="width:200px;" id="ggaUser" placeholder="Enter Username.." data-bind="ko_autocomplete: { source: GetAllUserWithCompany,select: selectPrimAltUser,minLength: 3 }" />
-    <a href='#' class='text-danger' data-bind="click: clearGGAUser" style="font-size: 12px; ">Delete</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="bold " style="vertical-align: middle; font-size: 12px">Role:</span>
+    <a href='#' class='text-danger' data-bind="click: clearGGAUser" style="font-size: 12px; ">Delete</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    <span class="bold " style="vertical-align: middle; font-size: 12px">Role:</span>
     <select id="inpGGAGroupRole" class="form-control" data-bind="options: Roles, optionsText: 'name', optionsValue: 'id', value:role, event:{ change: selectPrimAltUser4Company}, optionsCaption: 'Choose Role'" style="width:180px;"></select>
 </p>
 <br />
-<ul data-bind="foreach:Companies">
-    <li>
-        <h2 class="text-justify text-info bold niceLabel" data-bind="text:name"></h2>
-        <ul data-bind="foreach: $parent.people.index.CompanyName()[$data.name]">
-            <li style="margin-left:20px;">
-                <div class="row padding-4">
-                    <div class="col-lg-3">
-                        <input type="checkbox" name="EmailAdmin" data-bind="value:UserId, checked:CheckStatus" onchange="EmailAdmin(this)" />
-                        <span data-bind="text: Name"></span>
-                    </div>
-                    <div class="col-lg-1">
-                        <span class="niceLabel-default italic text-info" data-bind="text: Type"></span>
-                    </div>
-                    <div id="DivRemoveCommitteePrimAlt" class="col-lg-1">
-                        <a href="#" class='text-danger' style="font-size: 12px;" data-bind="click: $parents[1].removeCommitteePrimAlt">Delete</a>
-                    </div>
-                </div>
-            </li>
-        </ul>
-        <hr />
-    </li>
-</ul>
+
+<div>
+    <div class="control-label col-sm-12" style="padding-left:0px">
+        <label class="niceLabel">Leadership</label>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="padding-left:0px">Company</th>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Role</th>
+                <th>Email Admin</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><span data-bind='text: CompanyName'></span></td>
+                <td><span data-bind="text: Name"></span></td>
+                <td><input type='checkbox' name='EmailAdmin' data-bind="value:UserId, checked:CheckStatus" onchange="chkInformationalRoles(this)" /></td>
+                <td><a href='#' style="font-size: 12px;" data-bind='click: $parent.removeUMInfoContacts'>Delete</a></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div style="margin-top:10px">
+    <div class="control-label col-sm-12" style="padding-left:0px">
+        <label class="niceLabel">Primary, Alternates, Informational Contacts</label>
+    </div>
+
+    <table class="table" data-bind='visible: $data.selectedUserCompanyValues().length > 0'>
+        <thead>
+            <tr>
+                <th style="padding-left:0px">Company</th>
+                <th>Last Name</th>
+                <th>First Name</th>
+                <th>Role</th>
+                <th>Email Admin</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: $data.selectedUserCompanyValues().sort(function(l,r) { return l.Name == r.Name ? 0 : (l.Name < r.Name ? -1 : 1)}) ">
+            <tr>
+                <td><span data-bind='text: CompanyName'></span></td>
+                <td><span data-bind="text: FirstName"></span></td>
+                <td><span data-bind="text: LastName"></span></td>
+                <td><span data-bind="text: RoleName"></span></td>
+                <td><input type='checkbox' name='EmailAdmin' data-bind="value:UserId, checked:CheckStatus" onchange="chkInformationalRoles(this)" /></td>
+                <td><a href='#' style="font-size: 12px;" data-bind='click: $parent.removeUMInfoContacts'>Delete</a></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
