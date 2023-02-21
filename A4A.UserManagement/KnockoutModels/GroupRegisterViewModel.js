@@ -1873,7 +1873,9 @@ function councilCommitteeViewModel(params) {
 ///////////////////////////////////////
 //GGA CommitteePrimAlt
 ////////////////////////////////////// 
-var CommitteePrimAlt = function (Name, UserId, Type, CompanyName, Alternate, Primary, Informational, CheckStatus) {
+var CommitteePrimAlt = function (FirstName, LastName, Name, UserId, Type, CompanyName, Alternate, Primary, Informational, CheckStatus) {
+    this.FirstName = ko.observable(FirstName);
+    this.LastName = ko.observable(LastName);
     this.Name = ko.observable(Name);
     this.UserId = ko.observable(UserId);
     this.CompanyName = ko.observable(CompanyName);
@@ -1932,6 +1934,9 @@ var councilCommitteeGGAViewModel = function () {
             var usrname = UsernCompname.replace(UsernCompname.substring(startindex), ''); //Get the companyname out of the username
             var role = self.role();
             var roleName = $("#inpGGAGroupRole option[value='" + role + "']").text();
+            var Username = usrname.indexOf(',');
+            var LastName = usrname.substring(Username + 1).replace(',', '').trim();
+            var FirstName = usrname.replace(', ' + LastName, '').trim();
             var comp = CompanyName;
             if (($('#hdnGroupTypeId').val() != 9 && $('#hdnGroupTypeId').val() != 10) && roleName.toLowerCase().trim().indexOf('primary') !== -1 && ($('#hdnChairComp').val().trim().indexOf(CompanyName) !== -1 || $('#hdnViceChairComp').val().trim().indexOf(CompanyName) !== -1)) {
                 self.errorMessage("This company already has a representative assigned for Chair/ViceChair. So cannot add Primary!"); //Removed the alternate and added clause check only for adding primary users if a chair/vice chair is selected
@@ -1969,7 +1974,7 @@ var councilCommitteeGGAViewModel = function () {
                                         data: dataObject,
                                         contentType: 'application/json',
                                         success: function (data) {
-                                            self.people.push(new CommitteePrimAlt(usrname, self.userSelectedId(), roleName, CompanyName, true, false, false, false));
+                                            self.people.push(new CommitteePrimAlt(FirstName, LastName, usrname, self.userSelectedId(), roleName, CompanyName, true, false, false, false));
                                             self.infoMessage("Successfully added a Primary user to " + CompanyName);
                                             if ($('#hdnchkRadioId').val() != "1") {
                                                 $("input[name='EmailAdmin']").prop("disabled", true);
@@ -2006,7 +2011,7 @@ var councilCommitteeGGAViewModel = function () {
                             data: dataObject,
                             contentType: 'application/json',
                             success: function (data) {
-                                self.people.push(new CommitteePrimAlt(usrname, self.userSelectedId(), roleName, CompanyName, false, false, true, false));
+                                self.people.push(new CommitteePrimAlt(FirstName, LastName, usrname, self.userSelectedId(), roleName, CompanyName, false, false, true, false));
                                 self.infoMessage("Successfully added an Informational user to " + CompanyName);
                                 if ($('#hdnchkRadioId').val() != "1") {
                                     $("input[name='EmailAdmin']").prop("disabled", true);
@@ -2034,7 +2039,7 @@ var councilCommitteeGGAViewModel = function () {
                             data: dataObject,
                             contentType: 'application/json',
                             success: function (data) {
-                                self.people.push(new CommitteePrimAlt(usrname, self.userSelectedId(), roleName, CompanyName, false, true, false, false));
+                                self.people.push(new CommitteePrimAlt(FirstName, LastName, usrname, self.userSelectedId(), roleName, CompanyName, false, true, false, false));
                                 self.infoMessage("Successfully added an Alternate user to " + CompanyName);
                                 if ($('#hdnchkRadioId').val() != "1") {
                                     $("input[name='EmailAdmin']").prop("disabled", true);
@@ -2184,11 +2189,11 @@ var councilCommitteeGGAViewModel = function () {
                 var result = JSON.parse(data);
                 for (i = 0; i < result.length; i++) {
                     if (result[i].RoleId === 1) {
-                        self.people.push(new CommitteePrimAlt(result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, true, false, false, result[i].CheckStatus));
+                        self.people.push(new CommitteePrimAlt(result[i].FirstName, result[i].LastName, result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, true, false, false, result[i].CheckStatus));
                     }
                     else
                         if (result[i].RoleId === 2) {
-                            self.people.push(new CommitteePrimAlt(result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, false, true, false, result[i].CheckStatus));
+                            self.people.push(new CommitteePrimAlt(result[i].FirstName, result[i].LastName, result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, false, true, false, result[i].CheckStatus));
                         }
                         else
                             if (result[i].RoleId === 3 && result[i].type === 7) {
@@ -2218,7 +2223,7 @@ var councilCommitteeGGAViewModel = function () {
             success: function (data) {
                 var result = JSON.parse(data);
                 for (i = 0; i < result.length; i++) {
-                    self.people.push(new CommitteePrimAlt(result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, false, false, true, result[i].CheckStatus));
+                    self.people.push(new CommitteePrimAlt(result[i].FirstName, result[i].LastName, result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, false, false, true, result[i].CheckStatus));
                 }
             },
             error: function (exception) { ViewModel.prototype.errorMessage(exception.responseText); }
