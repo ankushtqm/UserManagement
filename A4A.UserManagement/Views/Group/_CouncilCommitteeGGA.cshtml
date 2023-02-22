@@ -67,7 +67,8 @@
     <select id="inpGGAGroupRole" class="form-control" data-bind="options: Roles, optionsText: 'name', optionsValue: 'id', value:role, event:{ change: selectPrimAltUser4Company}, optionsCaption: 'Choose Role'" style="width:180px;"></select>
 </p>
 <br />
-<ul data-bind="foreach:Companies">
+
+@*<ul data-bind="foreach:Companies">
     <li>
         <h2 class="text-justify text-info bold niceLabel" data-bind="text:name"></h2>
         <ul data-bind="foreach: $parent.people.index.CompanyName()[$data.name]">
@@ -88,4 +89,31 @@
         </ul>
         <hr />
     </li>
-</ul>
+</ul>*@
+
+<table class="table" data-bind='visible: A4ACommitteStaffList().length > 0'>
+    <thead>
+        <tr>
+            <th class="niceLabel">Company Name</th>
+            <th class="niceLabel">Last Name</th>
+            <th class="niceLabel">First Name</th>
+            <th class="niceLabel">Role</th>
+            <th class="niceLabel">Email Admin</th>
+            <th class="niceLabel">Delete</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: A4ACommitteStaffList().sort(function(l,r) { return l.CompanyName == r.CompanyName ? 0 : (l.CompanyName < r.CompanyName ? -1 : 1)}) ">
+        <tr>
+            <td class="element-width"><span class='required niceLabel' data-bind='text: CompanyName'></span></td>
+            <td class="element-width"><span class='required niceLabel' data-bind='text: FirstName'></span></td>
+            <td class="element-width"><span class='required niceLabel' data-bind='text: LastName'></span></td>
+            <td class="element-width"><span class='required niceLabel' data-bind='text: Role'></span></td>
+            <td class="element-width"><input type="checkbox" name="EmailAdmin" data-bind='value:UserId, checked:CheckStatus' onchange="EmailAdmin(this)" /></td>
+            <td>
+                <div id="DivRemoveCommitteePrimAlt">
+                    <a href="#" class='text-danger' data-bind="click: $parents[1].removeCommitteePrimAlt">Delete</a>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>

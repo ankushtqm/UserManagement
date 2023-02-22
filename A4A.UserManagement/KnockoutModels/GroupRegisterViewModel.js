@@ -1902,6 +1902,7 @@ var councilCommitteeGGAViewModel = function () {
     self.company = ko.observable();
     self.userSelected = ko.observable();
     self.userSelectedId = ko.observable();
+    self.A4ACommitteStaffList = ko.observableArray();
     self.GetCompanies = $.getJSON('/api/GetCompanies/?isMember=' + true, function (data) {
         $.each(data, function (key, value) {
             self.Companies.push({ id: value, name: key });
@@ -1919,6 +1920,7 @@ var councilCommitteeGGAViewModel = function () {
     }
 
     this.selectPrimAltUser4Company = function (event, ui) {
+        debugger;
         if (!isNaN($('#hdnGroupId').val())) {
             self.gId($('#hdnGroupId').val());
             gId = $('#hdnGroupId').val();
@@ -1928,12 +1930,14 @@ var councilCommitteeGGAViewModel = function () {
             setTimeout(function () { self.errorMessage(""); }, 6000);
         }
         else {
+            debugger;
             var UsernCompname = self.userSelected();
             var startindex = UsernCompname.indexOf('(');
             var CompanyName = UsernCompname.substring(startindex + 1).replace(')', '').trim(); //Get the Company out of the Company Name string.
             var usrname = UsernCompname.replace(UsernCompname.substring(startindex), ''); //Get the companyname out of the username
             var role = self.role();
             var roleName = $("#inpGGAGroupRole option[value='" + role + "']").text();
+            var Role = roleName;
             var Username = usrname.indexOf(',');
             var LastName = usrname.substring(Username + 1).replace(',', '').trim();
             var FirstName = usrname.replace(', ' + LastName, '').trim();
@@ -1952,6 +1956,10 @@ var councilCommitteeGGAViewModel = function () {
                 temp['GroupId'] = self.gId();
                 temp['CompanyName'] = CompanyName;
                 temp['Type'] = "3";
+
+
+                var temp1 = { "CompanyName": CompanyName, "UserId": self.userSelectedId(), "FirstName": FirstName, "LastName": LastName, "Role": Role, "CheckStatus": false, "Type": "7" };
+
                 var dataObject = ko.utils.stringifyJson(temp);
                 dataObject = "[" + dataObject + "]"; //Otherwise the dataobject at the API is null
 
@@ -1967,41 +1975,34 @@ var councilCommitteeGGAViewModel = function () {
                             PrimaryExists = data
                         }).done(
                             function () {
-                                if (!PrimaryExists || $('#hdnGroupTypeId').val() == 9 || $('#hdnGroupTypeId').val() == 10) {
-                                    $.ajax({
-                                        url: '/api/UserGroupGGA',
-                                        type: 'post',
-                                        data: dataObject,
-                                        contentType: 'application/json',
-                                        success: function (data) {
-                                            self.people.push(new CommitteePrimAlt(FirstName, LastName, usrname, self.userSelectedId(), roleName, CompanyName, true, false, false, false));
-                                            self.infoMessage("Successfully added a Primary user to " + CompanyName);
-                                            if ($('#hdnchkRadioId').val() != "1") {
-                                                $("input[name='EmailAdmin']").prop("disabled", true);
-                                                $('#DivSaveCommitteeRoles').hide();
-                                            }
-                                            else {
-                                                $("input[name='EmailAdmin']").prop("disabled", false);
-                                                $('#DivSaveCommitteeRoles').show();
-                                            }
-                                            $('#DivRemoveCommitteePrimAlt').find("a").show();
-                                            setTimeout(function () { self.infoMessage(""); }, 6000);
-                                            return false;
-                                        },
-                                        error: function (xhr, status, error) {
-                                            self.errorMessage("Error in adding user: " + xhr.responseText);
-                                            self.role("");
-                                            setTimeout(function () { self.errorMessage(""); }, 6000);
+                                $.ajax({
+                                    url: '/api/UserGroupGGA',
+                                    type: 'post',
+                                    data: dataObject,
+                                    contentType: 'application/json',
+                                    success: function (data) {
+                                        debugger;
+                                        self.A4ACommitteStaffList.push(temp1);
+                                        self.people.push(new CommitteePrimAlt(FirstName, LastName, usrname, self.userSelectedId(), roleName, CompanyName, true, false, false, false));
+                                        self.infoMessage("Successfully added a Primary user to " + CompanyName);
+                                        if ($('#hdnchkRadioId').val() != "1") {
+                                            $("input[name='EmailAdmin']").prop("disabled", true);
+                                            $('#DivSaveCommitteeRoles').hide();
                                         }
-                                    });
-                                }
-                                else {
-                                    self.errorMessage("A primary has already been set for this " + CompanyName + ".Please delete the current primary and then add this user!");
-                                    setTimeout(function () { self.errorMessage(""); }, 6000);
-                                    $("#ggaUser").val("");
-                                    self.role("");
-                                    self.company(null);
-                                }
+                                        else {
+                                            $("input[name='EmailAdmin']").prop("disabled", false);
+                                            $('#DivSaveCommitteeRoles').show();
+                                        }
+                                        $('#DivRemoveCommitteePrimAlt').find("a").show();
+                                        setTimeout(function () { self.infoMessage(""); }, 6000);
+                                        return false;
+                                    },
+                                    error: function (xhr, status, error) {
+                                        self.errorMessage("Error in adding user: " + xhr.responseText);
+                                        self.role("");
+                                        setTimeout(function () { self.errorMessage(""); }, 6000);
+                                    }
+                                });
                             });
                     }
                     else if (roleName === "Informational") {
@@ -2011,6 +2012,7 @@ var councilCommitteeGGAViewModel = function () {
                             data: dataObject,
                             contentType: 'application/json',
                             success: function (data) {
+                                self.A4ACommitteStaffList.push(temp1);
                                 self.people.push(new CommitteePrimAlt(FirstName, LastName, usrname, self.userSelectedId(), roleName, CompanyName, false, false, true, false));
                                 self.infoMessage("Successfully added an Informational user to " + CompanyName);
                                 if ($('#hdnchkRadioId').val() != "1") {
@@ -2039,6 +2041,7 @@ var councilCommitteeGGAViewModel = function () {
                             data: dataObject,
                             contentType: 'application/json',
                             success: function (data) {
+                                self.A4ACommitteStaffList.push(temp1);
                                 self.people.push(new CommitteePrimAlt(FirstName, LastName, usrname, self.userSelectedId(), roleName, CompanyName, false, true, false, false));
                                 self.infoMessage("Successfully added an Alternate user to " + CompanyName);
                                 if ($('#hdnchkRadioId').val() != "1") {
@@ -2186,14 +2189,31 @@ var councilCommitteeGGAViewModel = function () {
             type: "GET",
             contentType: 'application/json',
             success: function (data) {
+                debugger;
                 var result = JSON.parse(data);
                 for (i = 0; i < result.length; i++) {
                     if (result[i].RoleId === 1) {
-                        self.people.push(new CommitteePrimAlt(result[i].FirstName, result[i].LastName, result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, true, false, false, result[i].CheckStatus));
+                        self.A4ACommitteStaffList.push({
+                            CompanyName: result[i].CompanyName,
+                            UserId: result[i].UserId,
+                            FirstName: result[i].FirstName,
+                            LastName: result[i].LastName,
+                            Role: result[i].Role,
+                            CheckStatus: result[i].CheckStatus
+                        });
+                        self.people.push(new CommitteePrimAlt("", "", result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, true, false, false, result[i].CheckStatus));
                     }
                     else
                         if (result[i].RoleId === 2) {
-                            self.people.push(new CommitteePrimAlt(result[i].FirstName, result[i].LastName, result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, false, true, false, result[i].CheckStatus));
+                            self.A4ACommitteStaffList.push({
+                                CompanyName: result[i].CompanyName,
+                                UserId: result[i].UserId,
+                                FirstName: result[i].FirstName,
+                                LastName: result[i].LastName,
+                                Role: result[i].Role,
+                                CheckStatus: result[i].CheckStatus
+                            });
+                            self.people.push(new CommitteePrimAlt("", "", result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, false, true, false, result[i].CheckStatus));
                         }
                         else
                             if (result[i].RoleId === 3 && result[i].type === 7) {
@@ -2221,9 +2241,18 @@ var councilCommitteeGGAViewModel = function () {
             type: "GET",
             contentType: 'application/json',
             success: function (data) {
+                debugger;
                 var result = JSON.parse(data);
                 for (i = 0; i < result.length; i++) {
-                    self.people.push(new CommitteePrimAlt(result[i].FirstName, result[i].LastName, result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, false, false, true, result[i].CheckStatus));
+                    self.A4ACommitteStaffList.push({
+                        CompanyName: result[i].CompanyName,
+                        UserId: result[i].UserId,
+                        FirstName: result[i].FirstName,
+                        LastName: result[i].LastName,
+                        Role: result[i].Role,
+                        CheckStatus: result[i].CheckStatus
+                    });
+                    self.people.push(new CommitteePrimAlt("", "", result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, false, false, true, result[i].CheckStatus));
                 }
             },
             error: function (exception) { ViewModel.prototype.errorMessage(exception.responseText); }
@@ -2805,6 +2834,7 @@ function saveA4AGroupUserRoles() {
 }
 
 function EmailAdmin(e) {
+    debugger;
     $('#hdnSaveEmailAdminValue').val("7");
     SendEmailAdmin.set(e.value, e.checked)
 }
