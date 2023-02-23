@@ -260,7 +260,6 @@ function Group(HiddenGroupId, GroupName, AppliesToSiteId, GroupTypeId, LyrisList
     self.ShowErr = ko.observable(false);
 
     self.addGroup = function () {
-        debugger;
         //Reset Info Message
         self.InfoMessage("");
         //get the Mission editor data
@@ -957,7 +956,6 @@ var AutoCompleteExample;
         /***   Participant/Informational - Add all users to Group - not being used ***/
         ////////////////////////////////////////////////////////////////////////////
         ViewModel.prototype.addGroup = function () {
-            debugger;
             try {
                 $(".overlay").show();
                 var dataObject = ko.utils.stringifyJson(ViewModel.prototype.selectedValues);
@@ -1896,12 +1894,15 @@ var councilCommitteeGGAViewModel = function () {
     self.Roles = ko.observableArray([
         { id: "2", name: "Alternate" },
         { id: "1", name: "Primary" },
-        { id: "5", name: "Informational" }]);
+        { id: "5", name: "Informational" },
+        { id: "3", name: "Chair" },
+        { id: "4", name: "Vice Chair" }]);
     self.role = ko.observable();
     self.Companies = ko.observableArray();
     self.company = ko.observable();
     self.userSelected = ko.observable();
     self.userSelectedId = ko.observable();
+    self.A4ACommitteList = ko.observableArray();
     self.A4ACommitteStaffList = ko.observableArray();
     self.GetCompanies = $.getJSON('/api/GetCompanies/?isMember=' + true, function (data) {
         $.each(data, function (key, value) {
@@ -1920,7 +1921,6 @@ var councilCommitteeGGAViewModel = function () {
     }
 
     this.selectPrimAltUser4Company = function (event, ui) {
-        debugger;
         if (!isNaN($('#hdnGroupId').val())) {
             self.gId($('#hdnGroupId').val());
             gId = $('#hdnGroupId').val();
@@ -1930,7 +1930,6 @@ var councilCommitteeGGAViewModel = function () {
             setTimeout(function () { self.errorMessage(""); }, 6000);
         }
         else {
-            debugger;
             var UsernCompname = self.userSelected();
             var startindex = UsernCompname.indexOf('(');
             var CompanyName = UsernCompname.substring(startindex + 1).replace(')', '').trim(); //Get the Company out of the Company Name string.
@@ -1981,7 +1980,6 @@ var councilCommitteeGGAViewModel = function () {
                                     data: dataObject,
                                     contentType: 'application/json',
                                     success: function (data) {
-                                        debugger;
                                         self.A4ACommitteStaffList.push(temp1);
                                         self.people.push(new CommitteePrimAlt(FirstName, LastName, usrname, self.userSelectedId(), roleName, CompanyName, true, false, false, false));
                                         self.infoMessage("Successfully added a Primary user to " + CompanyName);
@@ -2063,6 +2061,64 @@ var councilCommitteeGGAViewModel = function () {
                             }
                         });
                     }
+                    else if (roleName === "Chair") {
+                        $.ajax({
+                            url: '/api/UserGroupGGA',
+                            type: 'post',
+                            data: dataObject,
+                            contentType: 'application/json',
+                            success: function (data) {
+                                self.A4ACommitteList.push(temp1);
+                                self.people.push(new CommitteePrimAlt(FirstName, LastName, usrname, self.userSelectedId(), roleName, CompanyName, false, true, false, false));
+                                self.infoMessage(CompanyName + " has been successfully saved as Chair!!");
+                                if ($('#hdnchkRadioId').val() != "1") {
+                                    $("input[name='EmailAdmin']").prop("disabled", true);
+                                    $('#DivSaveCommitteeRoles').hide();
+                                }
+                                else {
+                                    $("input[name='EmailAdmin']").prop("disabled", false);
+                                    $('#DivSaveCommitteeRoles').show();
+                                }
+                                $('#DivRemoveCommitteePrimAlt').find("a").show();
+                                setTimeout(function () { self.infoMessage(""); }, 6000);
+                                return false;
+                            },
+                            error: function (xhr, status, error) {
+                                self.errorMessage("Error in adding user: " + xhr.responseText);
+                                self.role("");
+                                setTimeout(function () { self.errorMessage(""); }, 6000);
+                            }
+                        });
+                    }
+                    else if (roleName === "Vice Chair") {
+                        $.ajax({
+                            url: '/api/UserGroupGGA',
+                            type: 'post',
+                            data: dataObject,
+                            contentType: 'application/json',
+                            success: function (data) {
+                                self.A4ACommitteList.push(temp1);
+                                self.people.push(new CommitteePrimAlt(FirstName, LastName, usrname, self.userSelectedId(), roleName, CompanyName, false, true, false, false));
+                                self.infoMessage(CompanyName + " has been successfully saved as Vice Chair!!");
+                                if ($('#hdnchkRadioId').val() != "1") {
+                                    $("input[name='EmailAdmin']").prop("disabled", true);
+                                    $('#DivSaveCommitteeRoles').hide();
+                                }
+                                else {
+                                    $("input[name='EmailAdmin']").prop("disabled", false);
+                                    $('#DivSaveCommitteeRoles').show();
+                                }
+                                $('#DivRemoveCommitteePrimAlt').find("a").show();
+                                setTimeout(function () { self.infoMessage(""); }, 6000);
+                                return false;
+                            },
+                            error: function (xhr, status, error) {
+                                self.errorMessage("Error in adding user: " + xhr.responseText);
+                                self.role("");
+                                setTimeout(function () { self.errorMessage(""); }, 6000);
+                            }
+                        });
+                    }
                 }
                 else {
                     self.errorMessage("The user " + match.Name() + " already exists under " + match.CompanyName() + " ");
@@ -2072,6 +2128,58 @@ var councilCommitteeGGAViewModel = function () {
                 $("#ggaUser").val('');
                 self.role("");
             }
+        }
+    };
+
+    self.removeCommitteeList = function (CommitteeList) {
+        $(".overlay").show();
+        if (isNaN(self.gId())) {
+            self.errorMessage("GroupId is missing. The user cannot be removed from the group.");
+            setTimeout(function () { self.errorMessage(""); }, 6000);
+            return false;
+        }
+        if (isNaN(CommitteeList["UserId"])) {
+            self.errorMessage("User Information is missing. The user cannot be removed from the group. Please contact IT");
+            setTimeout(function () { self.errorMessage(""); }, 6000);
+            return false;
+        }
+        else {
+            self.people.remove(CommitteeList);
+            var role = 0;
+            if (CommitteeList["Role"] === "Chair")
+                role = 3;
+            if (CommitteeList["Role"] === "Vice Chair")
+                role = 4;
+            var URL = "/api/RemoveGrpUsrbyUserId/?UserId=" + CommitteeList["UserId"] + "&GroupId=" + self.gId() + "&RoleId=" + role;
+            RemoveGroupUser(URL);
+            $(".overlay").hide();
+            return false;
+        }
+    };
+
+    self.removeCommitteeStaffList = function (CommitteeStaffList) {
+        $(".overlay").show();
+        if (isNaN(self.gId())) {
+            self.errorMessage("GroupId is missing. The user cannot be removed from the group.");
+            setTimeout(function () { self.errorMessage(""); }, 6000);
+            return false;
+        }
+        if (isNaN(CommitteeStaffList["UserId"])) {
+            self.errorMessage("User Information is missing. The user cannot be removed from the group. Please contact IT");
+            setTimeout(function () { self.errorMessage(""); }, 6000);
+            return false;
+        }
+        else {
+            self.people.remove(CommitteeStaffList);
+            var role = 1;
+            if (CommitteeStaffList["Role"] === "Alternate")
+                role = 2;
+            if (CommitteeStaffList["Role"] === "Informational")
+                role = 5;
+            var URL = "/api/RemoveGrpUsrbyUserId/?UserId=" + CommitteeStaffList["UserId"] + "&GroupId=" + self.gId() + "&RoleId=" + role;
+            RemoveGroupUser(URL);
+            $(".overlay").hide();
+            return false;
         }
     };
 
@@ -2182,6 +2290,66 @@ var councilCommitteeGGAViewModel = function () {
     /***   Council Committe GGA- LOAD Users from UserGroup in the DB     ***/
     ////////////////////////////////////////////////////////////////////
     self.load = function (groupid) {
+        debugger;
+        /*if (sessionStorage.getItem("A4ACommitteList")) { setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30); }*/
+        $.ajax({
+            url: '/api/GetGroupUserlineItem/?GroupId=' + groupid + '&RoleId=1,2,3,4,5',
+            type: 'get',
+            contentType: 'application/json',
+            success: function (data) {
+                debugger;
+                var table;
+                if ($.fn.dataTable.isDataTable('#A4ACommitteDtl')) {
+                    table = $('#A4ACommitteDtl').DataTable();
+                    table.clear();
+                    table.rows.add(JSON.parse(data)).draw();
+                }
+                else {
+                    table = $("#A4ACommitteDtl").DataTable({
+                        "aaData": JSON.parse(data),
+                        retrieve: true,
+                        "deferRender": true,
+                        bProcessing: true,
+                        paging: false,
+                        bAutoWidth: false,
+                        "oLanguage": {
+                            "sEmptyTable": "No Groups found!"
+                        },
+                        aoColumns: [
+                            { mData: "CompanyName"},
+                            { mData: "LastName" },
+                            { mData: "FirstName"},
+                            { mData: "Role" },
+                            { mData: "CheckStatus"},
+                            { mData: ""},
+                        ]
+                        , "aoColumnDefs": [
+                            { "bVisible": true, "aTargets": [1, 2, 3, 4, 5] },
+                            {
+                                "aTargets": [4],
+                                "mRender": function (data, type, full) {
+                                    return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" > ';
+                                }
+                            },
+                            {
+                                "aTargets": [5],
+                                "mRender": function (data, type, full) {
+                                    return '<a href="#" class="text-danger" onclick="CommitteDelete(' + full.UserId + ', "' + full.Role + '")">Delete</a>';
+                                }
+                            }
+                        ],
+                        "order": [[3, 'asc']]
+                    });
+                }
+            },
+            error: function (exception) {
+                alert('Exception in get My Groups:' + exception.responseText);
+            }
+        }).done(function (data) {
+            setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30);
+            sessionStorage.setItem("A4ACommitteDtl", true);
+        });
+
         var query = "/api/GetGroupUserlineItem/?GroupId=" + groupid + "&RoleId=1,2,3,4";
         self.errorMessage("");
         $.ajax({
@@ -2189,7 +2357,6 @@ var councilCommitteeGGAViewModel = function () {
             type: "GET",
             contentType: 'application/json',
             success: function (data) {
-                debugger;
                 var result = JSON.parse(data);
                 for (i = 0; i < result.length; i++) {
                     if (result[i].RoleId === 1) {
@@ -2216,7 +2383,27 @@ var councilCommitteeGGAViewModel = function () {
                             self.people.push(new CommitteePrimAlt("", "", result[i].UserName, result[i].UserId, result[i].Role, result[i].CompanyName, false, true, false, result[i].CheckStatus));
                         }
                         else
-                            if (result[i].RoleId === 3 && result[i].type === 7) {
+                            if (result[i].RoleId === 3 && result[i].Type === "3") {
+                                self.A4ACommitteList.push({
+                                    CompanyName: result[i].CompanyName,
+                                    UserId: result[i].UserId,
+                                    FirstName: result[i].FirstName,
+                                    LastName: result[i].LastName,
+                                    Role: result[i].Role,
+                                    CheckStatus: result[i].CheckStatus
+                                });
+                            }
+                            else if (result[i].RoleId === 4 && result[i].Type === "3") {
+                                self.A4ACommitteList.push({
+                                    CompanyName: result[i].CompanyName,
+                                    UserId: result[i].UserId,
+                                    FirstName: result[i].FirstName,
+                                    LastName: result[i].LastName,
+                                    Role: result[i].Role,
+                                    CheckStatus: result[i].CheckStatus
+                                });
+                            }
+                            else if (result[i].RoleId === 3 && result[i].type === 7) {
                                 $('#GroupChairGGA').val(result[i].UserName + ' (' + result[i].CompanyName + ')');
                                 $('#hdnChairComp').val(result[i].CompanyName);
                                 DisablePrimary();
@@ -2241,7 +2428,6 @@ var councilCommitteeGGAViewModel = function () {
             type: "GET",
             contentType: 'application/json',
             success: function (data) {
-                debugger;
                 var result = JSON.parse(data);
                 for (i = 0; i < result.length; i++) {
                     self.A4ACommitteStaffList.push({
@@ -2834,7 +3020,6 @@ function saveA4AGroupUserRoles() {
 }
 
 function EmailAdmin(e) {
-    debugger;
     $('#hdnSaveEmailAdminValue').val("7");
     SendEmailAdmin.set(e.value, e.checked)
 }
@@ -3098,3 +3283,37 @@ function saveA4ATaskGroupRoles() {
     A4AModelTaskGroupUser = new Array();
     setTimeout(function () { $('.spnMessage').text(""); }, 10000);
 }
+
+
+//$(document).ready(function () {
+//    table = $("#A4ACommitteList").DataTable({
+//        retrieve: true,
+//        "deferRender": true,
+//        bProcessing: true,
+//        paging: false,
+//        bAutoWidth: false,
+//        bFilter: false, bInfo: false,
+//        "aaSorting": [4, "desc"],
+//        aoColumns: [
+//            { mData: "Action" },
+//            { mData: "Details" },
+//            { mData: "modifiedby" },
+//            { mData: "TransactionDate" },
+//            { mData: "TDTimeStamp", "asSorting": ["desc"] },
+//        ],
+//        "aoColumnDefs": [
+//            { "asSorting": ["desc"], "aTargets": [4] },
+//            { "aDataSort": [4], "aTargets": [3] },
+//            {
+//                "aTargets": [4],
+//                "bVisible": false,
+//                "bSearchable": false
+//            },
+//        ],
+//        "bInfo": false,
+//        "bLengthChange": false,
+//        "oLanguage": {
+//            "sEmptyTable": "No Transactions found for the group."
+//        }
+//    });
+//});

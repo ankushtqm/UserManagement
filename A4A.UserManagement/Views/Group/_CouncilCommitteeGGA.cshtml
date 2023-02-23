@@ -7,6 +7,10 @@
     <button class="btn btn-primary" type='submit' onclick="saveA4ACommitteeRoles()">Save Council/Committee Unlimited Alternates</button>
 </div>
 
+<div class="preloader">
+    <div><img src="~/images/Preloader-2.gif" /></div>
+</div>
+
 <div class="row">
     <div class="control-label col-sm-1">
         <label class="niceLabel"> Role</label>
@@ -68,33 +72,46 @@
 </p>
 <br />
 
-@*<ul data-bind="foreach:Companies">
-    <li>
-        <h2 class="text-justify text-info bold niceLabel" data-bind="text:name"></h2>
-        <ul data-bind="foreach: $parent.people.index.CompanyName()[$data.name]">
-            <li style="margin-left:20px;">
-                <div class="row padding-4">
-                    <div class="col-lg-3">
-                        <input type="checkbox" name="EmailAdmin" data-bind="value:UserId, checked:CheckStatus" onchange="EmailAdmin(this)" />
-                        <span data-bind="text: Name"></span>
-                    </div>
-                    <div class="col-lg-1">
-                        <span class="niceLabel-default italic text-info" data-bind="text: Type"></span>
-                    </div>
-                    <div id="DivRemoveCommitteePrimAlt" class="col-lg-1">
-                        <a href="#" class='text-danger' data-bind="click: $parents[1].removeCommitteePrimAlt">Delete</a>
-                    </div>
-                </div>
-            </li>
-        </ul>
-        <hr />
-    </li>
-</ul>*@
-
-<table class="table" data-bind='visible: A4ACommitteStaffList().length > 0'>
+<table id="A4ACommitteDtl">
     <thead>
         <tr>
-            <th class="niceLabel">Company Name</th>
+            <th class="niceLabel" style="padding-left:0px">Company Name</th>
+            <th class="niceLabel">Last Name</th>
+            <th class="niceLabel">First Name</th>
+            <th class="niceLabel">Role</th>
+            <th class="niceLabel">Email Admin</th>
+            <th class="niceLabel">Delete</th>
+        </tr>
+    </thead>
+</table>
+
+<table class="table" data-bind='visible: A4ACommitteList().length > 0'>
+    <thead>
+        <tr>
+            <th class="niceLabel" style="padding-left:0px">Company Name</th>
+            <th class="niceLabel">Last Name</th>
+            <th class="niceLabel">First Name</th>
+            <th class="niceLabel">Role</th>
+            <th class="niceLabel">Email Admin</th>
+            <th class="niceLabel">Delete</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: A4ACommitteList().sort(function(l,r) { return l.CompanyName == r.CompanyName ? 0 : (l.CompanyName < r.CompanyName ? -1 : 1)}) ">
+        <tr>
+            <td class="element-width" style="padding-left:0px"><span class='required niceLabel' data-bind='text: CompanyName'></span></td>
+            <td class="element-width"><span class='required niceLabel' data-bind='text: FirstName'></span></td>
+            <td class="element-width"><span class='required niceLabel' data-bind='text: LastName'></span></td>
+            <td class="element-width"><span class='required niceLabel' data-bind='text: Role'></span></td>
+            <td class="element-width"><input type="checkbox" name="EmailAdmin" data-bind='value:UserId, checked:CheckStatus' onchange="EmailAdmin(this)" /></td>
+            <td><a href="#" class='text-danger' data-bind='click: $parent.removeCommitteeList'>Delete</a></td>
+        </tr>
+    </tbody>
+</table>
+
+<table id="A4ACommitteStaffList" class="table" data-bind='visible: A4ACommitteStaffList().length > 0'>
+    <thead>
+        <tr>
+            <th class="niceLabel" style="padding-left:0px">Company Name</th>
             <th class="niceLabel">Last Name</th>
             <th class="niceLabel">First Name</th>
             <th class="niceLabel">Role</th>
@@ -104,14 +121,14 @@
     </thead>
     <tbody data-bind="foreach: A4ACommitteStaffList().sort(function(l,r) { return l.CompanyName == r.CompanyName ? 0 : (l.CompanyName < r.CompanyName ? -1 : 1)}) ">
         <tr>
-            <td class="element-width"><span class='required niceLabel' data-bind='text: CompanyName'></span></td>
+            <td class="element-width" style="padding-left:0px"><span class='required niceLabel' data-bind='text: CompanyName'></span></td>
             <td class="element-width"><span class='required niceLabel' data-bind='text: FirstName'></span></td>
             <td class="element-width"><span class='required niceLabel' data-bind='text: LastName'></span></td>
             <td class="element-width"><span class='required niceLabel' data-bind='text: Role'></span></td>
             <td class="element-width"><input type="checkbox" name="EmailAdmin" data-bind='value:UserId, checked:CheckStatus' onchange="EmailAdmin(this)" /></td>
             <td>
                 <div id="DivRemoveCommitteePrimAlt">
-                    <a href="#" class='text-danger' data-bind="click: $parents[1].removeCommitteePrimAlt">Delete</a>
+                    <a href="#" class='text-danger' data-bind='click: $parent.removeCommitteeStaffList'>Delete</a>
                 </div>
             </td>
         </tr>
