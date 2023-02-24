@@ -1965,7 +1965,6 @@ var councilCommitteeGGAViewModel = function () {
                         return self.userSelectedId() == item.UserId();
                     });
                 if (!match) {
-                    debugger;
                     if (roleName === "Primary") {
                         var PrimaryExists = false;
                         var k = $.getJSON('/api/checkifcompanyhasrole?GroupId=' + self.gId() + "&CompanyName=" + CompanyName + "&RoleId=" + 1, function (data) {
@@ -2293,14 +2292,12 @@ var councilCommitteeGGAViewModel = function () {
     /***   Council Committe GGA- LOAD Users from UserGroup in the DB     ***/
     ////////////////////////////////////////////////////////////////////
     self.load = function (groupid) {
-        debugger;
         /*if (sessionStorage.getItem("A4ACommitteList")) { setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30); }*/
         $.ajax({
             url: '/api/GetCommitteeStaffDtl/?GROUPID=' + groupid + '&TYPE=1',
             type: 'get',
             contentType: 'application/json',
             success: function (data) {
-                debugger;
                 var table;
                 if ($.fn.dataTable.isDataTable('#A4ACommitteDtl')) {
                     table = $('#A4ACommitteDtl').DataTable();
@@ -2308,6 +2305,7 @@ var councilCommitteeGGAViewModel = function () {
                     table.rows.add(JSON.parse(data)).draw();
                 }
                 else {
+                    $('#DivCommitteeUser').show();
                     table = $("#A4ACommitteDtl").DataTable({
                         "aaData": JSON.parse(data),
                         retrieve: true,
@@ -2361,7 +2359,6 @@ var councilCommitteeGGAViewModel = function () {
             type: 'get',
             contentType: 'application/json',
             success: function (data) {
-                debugger;
                 var table;
                 if ($.fn.dataTable.isDataTable('#A4ACommitteStaffDtl')) {
                     table = $('#A4ACommitteStaffDtl').DataTable();
@@ -2369,6 +2366,7 @@ var councilCommitteeGGAViewModel = function () {
                     table.rows.add(JSON.parse(data)).draw();
                 }
                 else {
+                    $('#DivCommitteeStaffUser').show();
                     table = $("#A4ACommitteStaffDtl").DataTable({
                         "aaData": JSON.parse(data),
                         retrieve: true,
@@ -3092,13 +3090,11 @@ function EmailAdmin(e) {
 }
 
 function CommitteEmailAdmin(e) {
-    debugger;
     $('#hdnSaveEmailAdminValue').val("7");
     SendEmailAdmin.set(e.value, e.checked)
 }
 
 function CommitteStaffEmailAdmin(e) {
-    debugger;
     $('#hdnSaveEmailAdminValue').val("7");
     SendEmailAdmin.set(e.value, e.checked)
 }
@@ -3321,14 +3317,54 @@ function chkTaskGroupRoles(e) {
     chkTaskGroupUser.set(e.value, e.checked)
 }
 
+function saveA4ATaskGroupRoles() {
+    for (var key of chkTaskGroupUser.keys()) {
+        A4AModelTaskGroupUser.push({
+            groupId: self.gId(),
+            UserId: key,
+            value: chkTaskGroupUser.get(key)
+        })
+    }
+
+    $('#DivMsgA4AStaffContainer').hide();
+    $('#DivCompanyMsg').hide();
+    $('#DivCommitteeMsg').hide();
+    $('#DivInformationalContactMsg').hide();
+    $('#DivSaveInformationalContactMsg').hide();
+    $('#DivContactMsg').hide();
+    $('#DivSaveContactMsg').hide();
+    $('#DivTaskGroupMsg').hide();
+    $('#DivSaveTaskGroupMsg').show();
+    let dataobj = JSON.stringify(A4AModelTaskGroupUser)
+    $.ajax({
+        url: '/api/savecontactroles',
+        type: "post",
+        data: dataobj,
+        contentType: 'application/json',
+        dataType: "Json",
+        success: function (result) {
+            if ($('#hdnSaveEmailAdminValue').val() == "6") {
+                $('.spnMessage').html("Task Force changes saved successfully").css("color", "green");
+            }
+            else {
+                $('.spnMessage').html("All users in this list should have at least one email admin checkbox selected. Please choose a email admin checkbox for 'Task Force' before saving").css("color", "red");
+            }
+        },
+        error: function (exception) {
+            $('.spnMessage').text("Error updating the records:" + exception.responseText);
+        }
+    });
+    chkTaskGroupUser = new Map();
+    A4AModelTaskGroupUser = new Array();
+    setTimeout(function () { $('.spnMessage').text(""); }, 10000);
+}
+
 function GetCommitteeGroupDtl(GroupId) {
-    debugger;
     $.ajax({
         url: '/api/GetCommitteeStaffDtl/?GROUPID=' + GroupId + '&TYPE=1',
         type: 'get',
         contentType: 'application/json',
         success: function (data) {
-            debugger;
             var table;
             if ($.fn.dataTable.isDataTable('#A4ACommitteDtl')) {
                 table = $('#A4ACommitteDtl').DataTable();
@@ -3336,6 +3372,7 @@ function GetCommitteeGroupDtl(GroupId) {
                 table.rows.add(JSON.parse(data)).draw();
             }
             else {
+                $('#DivCommitteeUser').show();
                 table = $("#A4ACommitteDtl").DataTable({
                     "aaData": JSON.parse(data),
                     retrieve: true,
@@ -3386,13 +3423,11 @@ function GetCommitteeGroupDtl(GroupId) {
 }
 
 function GetCommitteeStaffGroupDtl(GroupId) {
-    debugger;
     $.ajax({
         url: '/api/GetCommitteeStaffDtl/?GROUPID=' + GroupId + '&TYPE=0',
         type: 'get',
         contentType: 'application/json',
         success: function (data) {
-            debugger;
             var table;
             if ($.fn.dataTable.isDataTable('#A4ACommitteStaffDtl')) {
                 table = $('#A4ACommitteStaffDtl').DataTable();
@@ -3400,6 +3435,7 @@ function GetCommitteeStaffGroupDtl(GroupId) {
                 table.rows.add(JSON.parse(data)).draw();
             }
             else {
+                $('#DivCommitteeStaffUser').show();
                 table = $("#A4ACommitteStaffDtl").DataTable({
                     "aaData": JSON.parse(data),
                     retrieve: true,
@@ -3450,7 +3486,6 @@ function GetCommitteeStaffGroupDtl(GroupId) {
 }
 
 function CommitteDeleteGroup(GroupId, UserId, RoleId) {
-    debugger;
     var URL = "/api/RemoveGrpUsrbyUserId/?UserId=" + UserId + "&GroupId=" + GroupId + "&RoleId=" + RoleId;
     $.ajax({
         url: URL,
@@ -3471,7 +3506,6 @@ function CommitteDeleteGroup(GroupId, UserId, RoleId) {
 }
 
 function CommitteStaffDeleteGroup(GroupId, UserId, RoleId) {
-    debugger;
     $(".preloader").show();
     var URL = "/api/RemoveGrpUsrbyUserId/?UserId=" + UserId + "&GroupId=" + GroupId + "&RoleId=" + RoleId;
     $.ajax({
@@ -3491,149 +3525,3 @@ function CommitteStaffDeleteGroup(GroupId, UserId, RoleId) {
         }
     });
 }
-
-function saveA4ATaskGroupRoles() {
-    for (var key of chkTaskGroupUser.keys()) {
-        A4AModelTaskGroupUser.push({
-            groupId: self.gId(),
-            UserId: key,
-            value: chkTaskGroupUser.get(key)
-        })
-    }
-
-    $('#DivMsgA4AStaffContainer').hide();
-    $('#DivCompanyMsg').hide();
-    $('#DivCommitteeMsg').hide();
-    $('#DivInformationalContactMsg').hide();
-    $('#DivSaveInformationalContactMsg').hide();
-    $('#DivContactMsg').hide();
-    $('#DivSaveContactMsg').hide();
-    $('#DivTaskGroupMsg').hide();
-    $('#DivSaveTaskGroupMsg').show();
-    let dataobj = JSON.stringify(A4AModelTaskGroupUser)
-    $.ajax({
-        url: '/api/savecontactroles',
-        type: "post",
-        data: dataobj,
-        contentType: 'application/json',
-        dataType: "Json",
-        success: function (result) {
-            if ($('#hdnSaveEmailAdminValue').val() == "6") {
-                $('.spnMessage').html("Task Force changes saved successfully").css("color", "green");
-            }
-            else {
-                $('.spnMessage').html("All users in this list should have at least one email admin checkbox selected. Please choose a email admin checkbox for 'Task Force' before saving").css("color", "red");
-            }
-        },
-        error: function (exception) {
-            $('.spnMessage').text("Error updating the records:" + exception.responseText);
-        }
-    });
-    chkTaskGroupUser = new Map();
-    A4AModelTaskGroupUser = new Array();
-    setTimeout(function () { $('.spnMessage').text(""); }, 10000);
-}
-
-//$(document).ready(function () {
-//    debugger;
-//    var gid = parseInt(getGID('gid'));
-//    function getGID(sParam) {
-//        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-//            sURLVariables = sPageURL.split('&'), sParameterName, i;
-//        for (i = 0; i < sURLVariables.length; i++) {
-//            sParameterName = sURLVariables[i].split('=');
-//            if (sParameterName[0] === sParam) {
-//                return sParameterName[1] === undefined ? true : sParameterName[1];
-//            }
-//        }
-//    }
-
-//    $.ajax({
-//        url: '/api/GetCommitteeStaffDtl/?GROUPID=' + gid + '&TYPE=1',
-//        type: 'get',
-//        contentType: 'application/json',
-//        success: function (data) {
-//            debugger;
-//            var table;
-//            if ($.fn.dataTable.isDataTable('#A4ACommitteDtl')) {
-//                table = $('#A4ACommitteDtl').DataTable();
-//                table.clear();
-//                table.rows.add(JSON.parse(data)).draw();
-//            }
-//            else {
-//                table = $("#A4ACommitteDtl").DataTable({
-//                    "aaData": JSON.parse(data),
-//                    retrieve: true,
-//                    "deferRender": true,
-//                    bProcessing: true,
-//                    paging: false,
-//                    bAutoWidth: false,
-//                    "oLanguage": {
-//                        "sEmptyTable": "No Groups found!"
-//                    },
-//                    aoColumns: [
-//                        { mData: "CompanyName" },
-//                        { mData: "LastName" },
-//                        { mData: "FirstName" },
-//                        { mData: "Role" },
-//                    ]
-//                    , "aoColumnDefs": [
-//                        { "bVisible": true, "aTargets": [1, 2, 3, 4, 5] },
-//                        {
-//                            "aTargets": [4],
-//                            "mRender": function (data, type, full) {
-//                                return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" > ';
-//                            }
-//                        },
-//                        {
-//                            "aTargets": [5],
-//                            "mRender": function (data, type, full) {
-//                                return '<a href="#" class="text-danger" onclick="CommitteDelete(' + full.UserId + ', "' + full.Role + '")">Delete</a>';
-//                            }
-//                        }
-//                    ],
-//                    "order": [[3, 'asc']]
-//                });
-//            }
-//        },
-//        error: function (exception) {
-//            alert('Exception in get My Groups:' + exception.responseText);
-//        }
-//    }).done(function (data) {
-//        setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30);
-//        sessionStorage.setItem("A4ACommitteDtl", true);
-//    });
-//});
-
-//$(document).ready(function () {
-//    table = $("#A4ACommitteList").DataTable({
-//        retrieve: true,
-//        "deferRender": true,
-//        bProcessing: true,
-//        paging: false,
-//        bAutoWidth: false,
-//        bFilter: false, bInfo: false,
-//        "aaSorting": [4, "desc"],
-//        aoColumns: [
-//            { mData: "Action" },
-//            { mData: "Details" },
-//            { mData: "modifiedby" },
-//            { mData: "TransactionDate" },
-//            { mData: "TDTimeStamp", "asSorting": ["desc"] },
-//        ],
-//        "aoColumnDefs": [
-//            { "asSorting": ["desc"], "aTargets": [4] },
-//            { "aDataSort": [4], "aTargets": [3] },
-//            {
-//                "aTargets": [4],
-//                "bVisible": false,
-//                "bSearchable": false
-//            },
-//        ],
-//        "bInfo": false,
-//        "bLengthChange": false,
-//        "oLanguage": {
-//            "sEmptyTable": "No Transactions found for the group."
-//        }
-//    });
-//});
