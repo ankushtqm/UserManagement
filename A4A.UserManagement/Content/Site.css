@@ -200,77 +200,76 @@ input[type="checkbox"].input-validation-error {
      height: 400px;
  }
 
- .niceLabel { 
-    position:relative; 
-    font-family:Helvetica,sans-serif;
-    font-size: 12px; 
+.niceLabel {
+    position: relative;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px;
     -webkit-transition: all 0.15s ease-out 0s;
     transition: all 0.15s ease-out 0s;
 }
-  .niceLabel-default { 
-    position:relative; 
-   font-family:Helvetica,sans-serif;
+.niceLabel-default {
+    position: relative;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     -webkit-transition: all 0.15s ease-out 0s;
     transition: all 0.15s ease-out 0s;
 }
-  .niceLabel-bold {  
-      position:relative; 
-    font-family:Helvetica,sans-serif;
-    font-size: 16px;  
+.niceLabel-bold {
+    position: relative;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
     -webkit-transition: all 0.15s ease-out 0s;
     transition: all 0.15s ease-out 0s;
-    font-weight:bold;  
-    text-transform:uppercase;
-
+    font-weight: bold;
+    text-transform: uppercase;
 }
   #Headtitle{
       display:inline-block;
       font-size:18px;
   }
-  .niceLabel-black { 
-    position:relative; 
-    font-family:Helvetica,sans-serif; 
-    font-weight:bold;
+.niceLabel-black {
+    position: relative;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: bold;
     font-size: 12px;
     color: #080101;
-    text-transform:none;
+    text-transform: none;
     pointer-events: none;
     -webkit-transition: all 0.15s ease-out 0s;
-    transition: all 0.15s ease-out 0s; 
+    transition: all 0.15s ease-out 0s;
 }
- .niceLabel-italic-blue { 
-    position:relative;
+.niceLabel-italic-blue {
+    position: relative;
     /*font-family: "Georgia", "Cambria", "Times New Roman", "Times", serif;*/
-    font-family:Helvetica,sans-serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-style: italic;
-    font-weight:bold;
+    font-weight: bold;
     font-size: 12px;
     color: #21ADDF;
     pointer-events: none;
     -webkit-transition: all 0.15s ease-out 0s;
-    transition: all 0.15s ease-out 0s; 
+    transition: all 0.15s ease-out 0s;
 }
- .niceLabel-subheading-blue { 
-    position:relative;
+.niceLabel-subheading-blue {
+    position: relative;
     /*font-family: "Georgia", "Cambria", "Times New Roman", "Times", serif;*/
-    font-family:Helvetica,sans-serif; 
-    font-weight:bold;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: bold;
     font-size: 16px;
     color: #21ADDF;
     pointer-events: none;
     -webkit-transition: all 0.15s ease-out 0s;
-    transition: all 0.15s ease-out 0s; 
+    transition: all 0.15s ease-out 0s;
 }
- .niceLabel-subheading-grey { 
-    position:relative;
+.niceLabel-subheading-grey {
+    position: relative;
     /*font-family: "Georgia", "Cambria", "Times New Roman", "Times", serif;*/
-    font-family:Helvetica,sans-serif; 
-    font-weight:bold;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-weight: bold;
     font-size: 16px;
     color: #666;
     pointer-events: none;
     -webkit-transition: all 0.15s ease-out 0s;
-    transition: all 0.15s ease-out 0s; 
+    transition: all 0.15s ease-out 0s;
 }
  .font-small { 
     font-size: 11px;
@@ -318,14 +317,16 @@ input[type="checkbox"].input-validation-error {
 .breadcrumb > li + li:before {
     content: '>\00a0';
 }
-.heading_droid{ position:relative; /*font-family: "Georgia", "Cambria", "Times New Roman", "Times", serif;*/
-                font-family:Helvetica,sans-serif;
+.heading_droid {
+    position: relative; /*font-family: "Georgia", "Cambria", "Times New Roman", "Times", serif;*/
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 24px;
-    color:dimgrey;
+    color: dimgrey;
     pointer-events: none;
     -webkit-transition: all 0.15s ease-out 0s;
     transition: all 0.15s ease-out 0s;
-    font-weight:bold; }
+    font-weight: bold;
+}
 
 
 h2 { color: #428bca; font-family:Helvetica,sans-serif; font-size: 30px; font-weight: 800; line-height: 36px; margin: 0 0 24px; text-align: center; }

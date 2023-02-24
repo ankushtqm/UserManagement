@@ -438,14 +438,14 @@ html {
   border-bottom: 1px dotted #666;
   cursor: pointer;
 }
-.content blockquote {
-  font-style: italic;
-  font-family: Georgia, Times, "Times New Roman", serif;
-  font-size: 16px;
-  font-size: 1rem;
-  line-height: 28.8px;
-  line-height: 1.8rem;
-}
+    .content blockquote {
+        font-style: italic;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 16px;
+        font-size: 1rem;
+        line-height: 28.8px;
+        line-height: 1.8rem;
+    }
 .content em {
   font-style: italic;
 }
@@ -501,17 +501,17 @@ html {
   -moz-appearance: button;
   appearance: button;
 }
-.content kbd {
-  font-size: 12px;
-  font-size: 0.75rem;
-  line-height: 21.6px;
-  line-height: 1.35rem;
-  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-  padding: 2px 6px;
-  -webkit-box-shadow: 0 0 4px #fff inset, 0 2px 0 #D9D9D9;
-  -moz-box-shadow: 0 0 4px #fff inset, 0 2px 0 #D9D9D9;
-  box-shadow: 0 0 4px #fff inset, 0 2px 0 #D9D9D9;
-}
+    .content kbd {
+        font-size: 12px;
+        font-size: 0.75rem;
+        line-height: 21.6px;
+        line-height: 1.35rem;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        padding: 2px 6px;
+        -webkit-box-shadow: 0 0 4px #fff inset, 0 2px 0 #D9D9D9;
+        -moz-box-shadow: 0 0 4px #fff inset, 0 2px 0 #D9D9D9;
+        box-shadow: 0 0 4px #fff inset, 0 2px 0 #D9D9D9;
+    }
 .content p img {
   vertical-align: middle;
 }

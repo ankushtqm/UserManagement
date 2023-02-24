@@ -72,20 +72,39 @@
 </p>
 <br />
 
-<table id="A4ACommitteDtl">
-    <thead>
-        <tr>
-            <th class="niceLabel" style="padding-left:0px">Company Name</th>
-            <th class="niceLabel">Last Name</th>
-            <th class="niceLabel">First Name</th>
-            <th class="niceLabel">Role</th>
-            <th class="niceLabel">Email Admin</th>
-            <th class="niceLabel">Delete</th>
-        </tr>
-    </thead>
-</table>
+<div>
+    <label>Leadership</label>
+    <table id="A4ACommitteDtl">
+        <thead>
+            <tr>
+                <th class="niceLabel" style="padding-left: 0px; width: 193px; ">Company Name</th>
+                <th class="niceLabel" style="width: 209px">Last Name</th>
+                <th class="niceLabel" style="width: 206px">First Name</th>
+                <th class="niceLabel" style="width: 200px">Role</th>
+                <th class="niceLabel" style="width: 202px">Email Admin</th>
+                <th class="niceLabel">Delete</th>
+            </tr>
+        </thead>
+    </table>
+</div>
 
-<table class="table" data-bind='visible: A4ACommitteList().length > 0'>
+<div style="margin-top: 30px">
+    <label>Primary, Alternates, Informational Contacts</label>
+    <table id="A4ACommitteStaffDtl">
+        <thead>
+            <tr>
+                <th class="niceLabel" style="padding-left: 0px; width: 193px; ">Company Name</th>
+                <th class="niceLabel" style="width: 209px">Last Name</th>
+                <th class="niceLabel" style="width: 206px">First Name</th>
+                <th class="niceLabel" style="width: 200px">Role</th>
+                <th class="niceLabel" style="width: 202px">Email Admin</th>
+                <th class="niceLabel">Delete</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<table class="table" style="display:none">
     <thead>
         <tr>
             <th class="niceLabel" style="padding-left:0px">Company Name</th>
@@ -108,7 +127,7 @@
     </tbody>
 </table>
 
-<table id="A4ACommitteStaffList" class="table" data-bind='visible: A4ACommitteStaffList().length > 0'>
+<table id="A4ACommitteStaffList" class="table" style="display:none">
     <thead>
         <tr>
             <th class="niceLabel" style="padding-left:0px">Company Name</th>
@@ -134,3 +153,17 @@
         </tr>
     </tbody>
 </table>
+
+<style>
+    .dataTables_wrapper .dataTables_filter {
+        display: none;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+        display: none;
+    }
+
+    table.dataTable thead th, table.dataTable thead td {
+        padding: 10px 0px;
+    }
+</style>

@@ -2311,5 +2311,103 @@ namespace A4A.UM.Controllers
             }
             return "Succesfully Updated!";
         }
+
+        [Route("api/GetCommitteeStaffDtl")]
+        public string GetCommitteeStaffDtl(int GroupId = 0, string TYPE = null)
+        {
+            DataTable dt = new DataTable();
+            System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+            Dictionary<string, object> row;
+
+            using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
+            {
+                StringBuilder sql = new StringBuilder();
+                using (SqlCommand cmd = new SqlCommand("p_Get_Committee_UserGroup_Dtl", con))
+                {
+                    con.Open();
+                    if (GroupId > 0)
+                    {
+                        SqlParameter[] spm = new SqlParameter[2];
+                        spm[0] = new SqlParameter("GROUPID", GroupId);
+                        spm[1] = new SqlParameter("TYPE", TYPE);
+                        cmd.Parameters.AddRange(spm);
+                    }
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+                }
+            }
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                row = new Dictionary<string, object>();
+                foreach (DataColumn col in dt.Columns)
+                {
+                    row.Add(col.ColumnName, dr[col]);
+                }
+                rows.Add(row);
+            }
+            return serializer.Serialize(rows);
+        }
+
+        [Route("api/CommitteDeleteGroup")]
+        public HttpResponseMessage CommitteDeleteGroup(int GroupId)
+        {
+            bool sqlDelete = false, sqlDeleteChld = false;
+            bool lyrDelete = false, lyrDeleteChld = false, IsCommittee = false;
+            int success = 0;
+            var message = "";
+            int cnt = 0, chldcnt = 0;
+            ATAGroup grp = new ATAGroup(GroupId);
+            IsCommittee = grp.IsCommittee;
+
+            //First see if you can delete from the SQL (users/dependecies etc) 
+            cnt = grp.GetAllUserCount(GroupId);
+
+            if (IsCommittee)
+            {
+                try
+                {
+                    ATAGroup childgrp = grp.GetCommitteeChildGroup();
+                    sqlDeleteChld = childgrp.Delete();
+                    if (sqlDeleteChld)
+                    {
+                        lyrDeleteChld = this.LyrisManager2.DeleteList(childgrp.LyrisListName);
+                    }
+                    if (sqlDeleteChld && lyrDeleteChld) //If group was successfully deleted
+                    {
+                        Transactions.setTransaction(childgrp.GroupId, DBUtilAPIController.CurrentUser().UserId, "GroupName", childgrp.GroupName, "LyrisListName", childgrp.LyrisShortDescription, TransactionType.GroupDeleted);
+                        success++;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //todo
+                }
+            }
+            sqlDelete = grp.Delete();
+            if (sqlDelete)
+            {
+                lyrDelete = this.LyrisManager2.DeleteList(grp.LyrisListName);
+
+            }
+            if (sqlDelete && lyrDelete) //If group was successfully deleted
+            {
+                Transactions.setTransaction(grp.GroupId, DBUtilAPIController.CurrentUser().UserId, "GroupName", grp.GroupName, "LyrisListName", grp.LyrisShortDescription, TransactionType.GroupDeleted);
+                success++;
+            }
+            if ((success == 1 && !IsCommittee) || (success == 2 && IsCommittee))
+                return Request.CreateResponse(HttpStatusCode.OK);
+            else
+            {
+                if (IsCommittee)
+                    message = string.Format("Error in deleting the Group. Maken sure the deleted group has atleast one and only one child group. Contact IT if problem persists!");
+                else
+                    message = string.Format("Error in deleting the Group. Contact IT if problem persists!");
+                HttpError err = new HttpError(message);
+                return Request.CreateResponse(HttpStatusCode.NotFound, err);
+            }
+        }
     }
 }
