@@ -2323,22 +2323,43 @@ var councilCommitteeGGAViewModel = function () {
                             { mData: "Role" },
                         ]
                         , "aoColumnDefs": [
-                            { "bVisible": true, "aTargets": [1, 2, 3, 4, 5] },
+                            { "bVisible": true, "aTargets": [1, 2, 3, 4, 5, 6] },
                             {
                                 "aTargets": [4],
                                 "mRender": function (data, type, full) {
-                                    if (full.CheckStatus == true) {
-                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" checked>';
+                                    if ($("#hdnCommiteeEditValue").val() == "") {
+                                        if (full.CheckStatus == true) {
+                                            return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" checked disabled>';
+                                        }
+                                        else {
+                                            return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" disabled>';
+                                        }
                                     }
                                     else {
-                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)">';
+                                        if (full.CheckStatus == true) {
+                                            return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" checked>';
+                                        }
+                                        else {
+                                            return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)">';
+                                        }
                                     }
                                 }
                             },
                             {
                                 "aTargets": [5],
                                 "mRender": function (data, type, full) {
-                                    return '<a href="#" class="text-danger" onclick="CommitteDeleteGroup(' + full.GroupId + ', ' + full.UserId + ', ' + full.RoleId + ')">Delete</a>';
+                                    return '<div class="chklist"><label class="chklistcontainer"><input type="checkbox" checked disabled><span class="checkmark"></span></label></div>';
+                                }
+                            },
+                            {
+                                "aTargets": [6],
+                                "mRender": function (data, type, full) {
+                                    if ($("#hdnCommiteeEditValue").val() == "") {
+                                        return '<a href="#" class="text-danger" onclick="CommitteDeleteGroup(' + full.GroupId + ', ' + full.UserId + ', ' + full.RoleId + ')" style="display:none">Delete</a>';
+                                    }
+                                    else {
+                                        return '<a href="#" class="text-danger" onclick="CommitteDeleteGroup(' + full.GroupId + ', ' + full.UserId + ', ' + full.RoleId + ')">Delete</a>';
+                                    }
                                 }
                             }
                         ],
@@ -2383,22 +2404,43 @@ var councilCommitteeGGAViewModel = function () {
                             { mData: "Role" },
                         ]
                         , "aoColumnDefs": [
-                            { "bVisible": true, "aTargets": [1, 2, 3, 4, 5] },
+                            { "bVisible": true, "aTargets": [1, 2, 3, 4, 5, 6] },
                             {
                                 "aTargets": [4],
                                 "mRender": function (data, type, full) {
-                                    if (full.CheckStatus == true) {
-                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteStaffEmailAdmin(this)" checked>';
+                                    if ($("#hdnCommiteeEditValue").val() == "") {
+                                        if (full.CheckStatus == true) {
+                                            return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteStaffEmailAdmin(this)" checked disabled>';
+                                        }
+                                        else {
+                                            return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteStaffEmailAdmin(this)" disabled>';
+                                        }
                                     }
                                     else {
-                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteStaffEmailAdmin(this)">';
+                                        if (full.CheckStatus == true) {
+                                            return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteStaffEmailAdmin(this)" checked>';
+                                        }
+                                        else {
+                                            return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteStaffEmailAdmin(this)">';
+                                        }
                                     }
                                 }
                             },
                             {
                                 "aTargets": [5],
                                 "mRender": function (data, type, full) {
-                                    return '<a href="#" class="text-danger" onclick="CommitteStaffDeleteGroup(' + full.GroupId + ', ' + full.UserId + ', ' + full.RoleId + ')">Delete</a>';
+                                    return '<div class="chklist"><label class="chklistcontainer"><input type="checkbox" checked disabled><span class="checkmark"></span></label></div>';
+                                }
+                            },
+                            {
+                                "aTargets": [6],
+                                "mRender": function (data, type, full) {
+                                    if ($("#hdnCommiteeEditValue").val() == "") {
+                                        return '<a href="#" class="text-danger" onclick="CommitteStaffDeleteGroup(' + full.GroupId + ', ' + full.UserId + ', ' + full.RoleId + ')" style="display:none">Delete</a>';
+                                    }
+                                    else {
+                                        return '<a href="#" class="text-danger" onclick="CommitteStaffDeleteGroup(' + full.GroupId + ', ' + full.UserId + ', ' + full.RoleId + ')">Delete</a>';
+                                    }
                                 }
                             }
                         ],
@@ -3388,22 +3430,43 @@ function GetCommitteeGroupDtl(GroupId) {
                         { mData: "Role" },
                     ]
                     , "aoColumnDefs": [
-                        { "bVisible": true, "aTargets": [1, 2, 3, 4, 5] },
+                        { "bVisible": true, "aTargets": [1, 2, 3, 4, 5, 6] },
                         {
                             "aTargets": [4],
                             "mRender": function (data, type, full) {
-                                if (full.CheckStatus == true) {
-                                    return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" checked> ';
+                                if ($("#hdnCommiteeEditValue").val() == "") {
+                                    if (full.CheckStatus == true) {
+                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" checked disabled>';
+                                    }
+                                    else {
+                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" disabled>';
+                                    }
                                 }
                                 else {
-                                    return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)">';
+                                    if (full.CheckStatus == true) {
+                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" checked>';
+                                    }
+                                    else {
+                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)">';
+                                    }
                                 }
                             }
                         },
                         {
                             "aTargets": [5],
                             "mRender": function (data, type, full) {
-                                return '<a href="#" class="text-danger" onclick="CommitteDeleteGroup(' + full.GroupId + ', ' + full.UserId + ', ' + full.RoleId + ')">Delete</a>';
+                                return '<div class="chklist"><label class="chklistcontainer"><input type="checkbox" checked disabled><span class="checkmark"></span></label></div>';
+                            }
+                        },
+                        {
+                            "aTargets": [6],
+                            "mRender": function (data, type, full) {
+                                if ($("#hdnCommiteeEditValue").val() == "") {
+                                    return '<a href="#" class="text-danger" onclick="CommitteDeleteGroup(' + full.GroupId + ', ' + full.UserId + ', ' + full.RoleId + ')" style="display:none">Delete</a>';
+                                }
+                                else {
+                                    return '<a href="#" class="text-danger" onclick="CommitteDeleteGroup(' + full.GroupId + ', ' + full.UserId + ', ' + full.RoleId + ')">Delete</a>';
+                                }
                             }
                         }
                     ],
@@ -3450,22 +3513,43 @@ function GetCommitteeStaffGroupDtl(GroupId) {
                         { mData: "Role" },
                     ]
                     , "aoColumnDefs": [
-                        { "bVisible": true, "aTargets": [1, 2, 3, 4, 5] },
+                        { "bVisible": true, "aTargets": [1, 2, 3, 4, 5, 6] },
                         {
                             "aTargets": [4],
                             "mRender": function (data, type, full) {
-                                if (full.CheckStatus == true) {
-                                    return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" checked>';
+                                if ($("#hdnCommiteeEditValue").val() == "") {
+                                    if (full.CheckStatus == true) {
+                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteStaffEmailAdmin(this)" checked disabled>';
+                                    }
+                                    else {
+                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteStaffEmailAdmin(this)" disabled>';
+                                    }
                                 }
                                 else {
-                                    return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)">';
+                                    if (full.CheckStatus == true) {
+                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteStaffEmailAdmin(this)" checked>';
+                                    }
+                                    else {
+                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteStaffEmailAdmin(this)">';
+                                    }
                                 }
                             }
                         },
                         {
                             "aTargets": [5],
                             "mRender": function (data, type, full) {
-                                return '<a href="#" class="text-danger" onclick="CommitteStaffDeleteGroup(' + full.GroupId + ', ' + full.UserId + ', ' + full.RoleId + ')">Delete</a>';
+                                return '<div class="chklist"><label class="chklistcontainer"><input type="checkbox" checked disabled><span class="checkmark"></span></label></div>';
+                            }
+                        },
+                        {
+                            "aTargets": [6],
+                            "mRender": function (data, type, full) {
+                                if ($("#hdnCommiteeEditValue").val() == "") {
+                                    return '<a href="#" class="text-danger" onclick="CommitteStaffDeleteGroup(' + full.GroupId + ', ' + full.UserId + ', ' + full.RoleId + ')" style="display:none">Delete</a>';
+                                }
+                                else {
+                                    return '<a href="#" class="text-danger" onclick="CommitteStaffDeleteGroup(' + full.GroupId + ', ' + full.UserId + ', ' + full.RoleId + ')">Delete</a>';
+                                }
                             }
                         }
                     ],

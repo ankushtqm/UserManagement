@@ -42,6 +42,65 @@
     .committelbl {
         font-weight: 100;
     }
+
+    .chklist .chklistcontainer {
+        display: block;
+        position: relative;
+        margin-bottom: 6px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        cursor: not-allowed;
+    }
+
+        .chklist .chklistcontainer input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+    .chklist .checkmark {
+        position: absolute;
+        height: 13px;
+        width: 13px;
+        border-radius: 2px;
+        background-color: #777 !important;
+    }
+
+    .chklist .chklistcontainer:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+
+    .chklist .chklistcontainer input:checked ~ .checkmark {
+        background-color: #2196F3;
+    }
+
+    .chklist .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    .chklist .chklistcontainer input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    .chklist .chklistcontainer .checkmark:after {
+        left: 5px;
+        top: 1px;
+        width: 4px;
+        height: 8.5px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(40deg);
+    }
 </style>
 
 @section heading{<h4 class="niceLabel-bold" id="Headtitle">Create/Edit Group</h4>}
@@ -108,6 +167,7 @@
                 <input type="hidden" id="hdnSaveGroupValue" />
                 <input type="hidden" id="hdnSaveEmailAdminValue" />
                 <input type="hidden" id="hdnCommiteeSaveValue" />
+                <input type="hidden" id="hdnCommiteeEditValue" />
             </div>
         </div>
         <!-- TAB 1 -->
@@ -250,6 +310,8 @@
                 <hr />
                 @Html.Partial("_GroupTransaction")
             </div>
+
+            <a style="display:none"></a>
         </div>
     </div>
 </div>
@@ -258,6 +320,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             function disabledField(gtype) {
+                debugger;
                 $("input, submit, textarea, select, #a4astaffchosen").prop("disabled", true);
                 $("a4astaffchosen").prop("disabled", true);
                 $('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('a').hide();
@@ -293,6 +356,7 @@
             }
 
             $("#btnEdit").click(() => {
+                debugger;
                 $("input, submit, button, textarea, select").prop("disabled", false);
                 $("#btnEdit").hide();
                 $("a4astaffchosen").prop("disabled", false);
@@ -302,6 +366,7 @@
                 $('#DivSaveCommitteeRoles').show();
                 $('#DivMsgA4AStaffContainer').show();
                 $('#DivSaveA4AStaffContainer').show();
+                $("#hdnCommiteeEditValue").val("1");
 
                 if ($('#hdnGroupId').val() > 0 && $('#hdnGroupId').val() != null) {
                     if ($('#hdnchkRadioId').val() != "1") {

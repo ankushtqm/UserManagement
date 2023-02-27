@@ -20,6 +20,7 @@
                 <th style="width: 144px; padding-left: 0px; font-size: 12px;">Company Name</th>
                 <th style="width: 302px; font-size: 12px;">Name</th>
                 <th style="width: 156px; font-size: 12px;">Email Admin</th>
+                <th style="width: 156px; font-size: 12px;">Subscribe</th>
                 <th style="font-size: 12px;">Delete</th>
             </tr>
         </thead>
@@ -28,6 +29,7 @@
                 <td style="padding-left: 0px;"><span data-bind='text: CompanyName'></span></td>
                 <td><span data-bind="text: Name"></span></td>
                 <td><input type='checkbox' name='EmailAdmin' data-bind="value:UserId, checked:CheckStatus" onchange="chkInformationalRoles(this)" /></td>
+                <td><div class="chklist"><label class="chklistcontainer"><input type="checkbox" checked disabled><span class="checkmark"></span></label></div></td>
                 <td><a href='#' style="font-size: 12px;" data-bind='click: $parent.removeUMInfoContacts'>Delete</a></td>
                 <td></td>
                 <td></td>
