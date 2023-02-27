@@ -2328,10 +2328,10 @@ var councilCommitteeGGAViewModel = function () {
                                 "aTargets": [4],
                                 "mRender": function (data, type, full) {
                                     if (full.CheckStatus == true) {
-                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" checked> ';
+                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" checked>';
                                     }
                                     else {
-                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" > ';
+                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)">';
                                     }
                                 }
                             },
@@ -2342,7 +2342,6 @@ var councilCommitteeGGAViewModel = function () {
                                 }
                             }
                         ],
-                        "order": [[0, 'asc'], [3, 'asc'], [1, 'asc']]
                     });
                 }
             },
@@ -2389,10 +2388,10 @@ var councilCommitteeGGAViewModel = function () {
                                 "aTargets": [4],
                                 "mRender": function (data, type, full) {
                                     if (full.CheckStatus == true) {
-                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteStaffEmailAdmin(this)" checked> ';
+                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteStaffEmailAdmin(this)" checked>';
                                     }
                                     else {
-                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteStaffEmailAdmin(this)" > ';
+                                        return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteStaffEmailAdmin(this)">';
                                     }
                                 }
                             },
@@ -2403,7 +2402,6 @@ var councilCommitteeGGAViewModel = function () {
                                 }
                             }
                         ],
-                        "order": [[0, 'asc'], [3, 'asc'], [1, 'asc']]
                     });
                 }
             },
@@ -3398,7 +3396,7 @@ function GetCommitteeGroupDtl(GroupId) {
                                     return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" checked> ';
                                 }
                                 else {
-                                    return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" > ';
+                                    return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)">';
                                 }
                             }
                         },
@@ -3409,7 +3407,6 @@ function GetCommitteeGroupDtl(GroupId) {
                             }
                         }
                     ],
-                    "order": [[0, 'asc'], [3, 'asc'], [1, 'asc']]
                 });
             }
         },
@@ -3458,10 +3455,10 @@ function GetCommitteeStaffGroupDtl(GroupId) {
                             "aTargets": [4],
                             "mRender": function (data, type, full) {
                                 if (full.CheckStatus == true) {
-                                    return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" checked> ';
+                                    return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" checked>';
                                 }
                                 else {
-                                    return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)" > ';
+                                    return '<input type="checkbox" name="EmailAdmin" value=' + full.UserId + ' onchange = "CommitteEmailAdmin(this)">';
                                 }
                             }
                         },
@@ -3472,7 +3469,6 @@ function GetCommitteeStaffGroupDtl(GroupId) {
                             }
                         }
                     ],
-                    "order": [[0, 'asc'], [3, 'asc'], [1, 'asc']]
                 });
             }
         },
