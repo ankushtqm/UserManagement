@@ -2409,5 +2409,79 @@ namespace A4A.UM.Controllers
                 return Request.CreateResponse(HttpStatusCode.NotFound, err);
             }
         }
+
+        [Route("api/gettransactionsdtl")]
+        public string GetTransactionsDtl(int? count = 0)
+        {
+            string username = GetUserName();
+            DataTable dt = new DataTable();
+            System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+            Dictionary<string, object> row;
+
+            using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
+            {
+                StringBuilder sql = new StringBuilder();
+                using (SqlCommand cmd = new SqlCommand("p_Get_Transaction_Dtl", con))
+                {
+                    con.Open();
+                    SqlParameter[] spm = new SqlParameter[2];
+                    spm[0] = new SqlParameter("UserName", username);
+                    spm[1] = new SqlParameter("Count", count);
+                    cmd.Parameters.AddRange(spm);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        row = new Dictionary<string, object>();
+                        foreach (DataColumn col in dt.Columns)
+                        {
+                            row.Add(col.ColumnName, dr[col]);
+                        }
+                        rows.Add(row);
+                    }
+                }
+            }
+            return serializer.Serialize(rows);
+        }
+
+        [Route("api/getalltransactionsdtl")]
+        public string GetAllTransactionsDtl(int? count = 0)
+        {
+            string username = string.Empty;
+            DataTable dt = new DataTable();
+            System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+            Dictionary<string, object> row;
+
+            using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
+            {
+                StringBuilder sql = new StringBuilder();
+                using (SqlCommand cmd = new SqlCommand("p_Get_Transaction_Dtl", con))
+                {
+                    con.Open();
+                    SqlParameter[] spm = new SqlParameter[2];
+                    spm[0] = new SqlParameter("UserName", username);
+                    spm[1] = new SqlParameter("Count", count);
+                    cmd.Parameters.AddRange(spm);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        row = new Dictionary<string, object>();
+                        foreach (DataColumn col in dt.Columns)
+                        {
+                            row.Add(col.ColumnName, dr[col]);
+                        }
+                        rows.Add(row);
+                    }
+                }
+            }
+            return serializer.Serialize(rows);
+        }
     }
 }

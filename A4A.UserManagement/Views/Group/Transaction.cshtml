@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "Transactions";
+}
+
+<style>
+    .preloader {
+        background: rgba(255,255,255,0.9);
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9998;
+        opacity: 1;
+        transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        -webkit-transition: all 0.5s ease-in-out;
+    }
+
+        .preloader img {
+            position: fixed;
+            z-index: 9999;
+            top: 40%;
+            left: 45%;
+        }
+
+    .option-header {
+        display: flex;
+        justify-content: center;
+    }
+
+        .option-header > div:last-of-type {
+            margin-left: 5rem;
+        }
+</style>
+
+<h2>Transactions</h2>
+
+@section heading{
+}
+<div class="preloader">
+    <div><img src="~/images/Preloader-2.gif" /></div>
+</div>
+
+<div class="row">
+    <div class="option-header">
+        <div>
+            <input id="MyTransactionbtn" type="radio" name="TransactionSelection" value="1" checked="checked" /><span class="niceLabel-bold" style="padding-left:5px">My Transactions</span>
+        </div>
+        <div>
+            <input id="AllTransactionbtn" type="radio" name="TransactionSelection" value="0" /><span class="niceLabel-bold" style="padding-left:5px">All Transactions</span>
+        </div>
+    </div>
+
+    <div id="DivMyTransaction">
+        <table id="tblMyTransaction" class="niceLabel-default">
+            <thead>
+                <tr>
+                    <th style="width: 131px; padding-left: 0px; font-size: 12px;">Action</th>
+                    <th style="width: 287px; padding-left: 0px; font-size: 12px;">Details</th>
+                    <th style="width: 137px; padding-left: 0px; font-size: 12px;">Modified By</th>
+                    <th style="padding-left: 0px; font-size: 12px;">Modified Date</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <br />
+</div>
+
+<script>
+    $(document).ready(function () {
+        var query = "/api/gettransactionsdtl/?count=" + 20;
+        TransactionSelectionDtl(query);
+    });
+
+    $('input:radio[name="TransactionSelection"]').change(
+        function () {
+            var query = "";
+            if ($(this).is(':checked') && $(this).val() == '1') {
+                query = "/api/gettransactionsdtl/?count=" + 20;
+                TransactionSelectionDtl(query);
+            }
+            else {
+                query = "/api/getalltransactionsdtl/";
+                TransactionSelectionDtl(query);
+            }
+        });
+
+    function TransactionSelectionDtl(query) {
+        $(".preloader").show();
+        $.ajax({
+            url: query,
+            type: "GET",
+            datatype: "json",
+            processData: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                var table;
+                if ($.fn.dataTable.isDataTable('#tblMyTransaction')) {
+                    table = $('#tblMyTransaction').DataTable();
+                    table.clear();
+                    table.rows.add(JSON.parse(result)).draw();
+                }
+                else {
+                    table = $("#tblMyTransaction").DataTable({
+                        "aaData": JSON.parse(result),
+                        retrieve: true,
+                        "deferRender": true,
+                        bProcessing: true,
+                        paging: false,
+                        bAutoWidth: false,
+                        bFilter: false, bInfo: false,
+                        "aaSorting": [4, "desc"],
+                        aoColumns: [
+                            { mData: "Action" },
+                            { mData: "Details" },
+                            { mData: "modifiedby" },
+                            { mData: "TransactionDate" },
+                            { mData: "TDTimeStamp", "asSorting": ["desc"] },
+                        ],
+                        "aoColumnDefs": [
+                            { "asSorting": ["desc"], "aTargets": [4] },
+                            { "aDataSort": [4], "aTargets": [3] },
+                            {
+                                "aTargets": [4],
+                                "bVisible": false,
+                                "bSearchable": false
+                            },
+                        ],
+                        "bInfo": false,
+                        "bLengthChange": false,
+                        "oLanguage": {
+                            "sEmptyTable": "No Transactions found for the group."
+                        }
+                    });
+                }
+            }
+        }).done(function (data) {
+            setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30);
+        });
+    }
+</script>

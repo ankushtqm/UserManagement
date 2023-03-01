@@ -272,7 +272,7 @@ input[type="checkbox"].input-validation-error {
     transition: all 0.15s ease-out 0s;
 }
  .font-small { 
-    font-size: 11px;
+    font-size: 12px;
 }
 .font-medium {
     font-weight:bold;

@@ -788,6 +788,7 @@
     <Content Include="Views\User\_TransactionHistory.cshtml" />
     <Content Include="Views\Group\_GroupTransaction.cshtml" />
     <Content Include="Views\Group\_MemberSubscribeContacts.cshtml" />
+    <Content Include="Views\Group\Transaction.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Project_Readme.html" />

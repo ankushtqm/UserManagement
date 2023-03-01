@@ -21,5 +21,11 @@ namespace A4A.UM.Controllers
 
             return View();
         }
+
+        public ActionResult Transaction()
+        {
+            ViewBag.Message = "Transactions";
+            return View();
+        }
     }
 }
