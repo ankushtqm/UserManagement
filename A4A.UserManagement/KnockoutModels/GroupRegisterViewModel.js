@@ -843,6 +843,7 @@ var AutoCompleteExample;
                     data: dataObject,
                     contentType: 'application/json',
                     success: function (data) {
+                        $('#DivCommitteeSubscribe').show();
                         $('.spnMessage').html(ui.item.label + "has been successfully saved as Chair!!").css("color", "green");
                         setTimeout(function () { $('.spnMessage').html(""); }, 6000);
                         ViewModel.prototype.DisablePrimBox();
@@ -930,6 +931,7 @@ var AutoCompleteExample;
                     data: dataObject,
                     contentType: 'application/json',
                     success: function (data) {
+                        $('#DivCommitteeStaffSubscribe').show();
                         $('.spnMessage').html(ui.item.label + "has been successfully saved as Vice Chair!!").css("color", "green");
                         setTimeout(function () { $('.spnMessage').html(""); }, 6000);
                         ViewModel.prototype.DisablePrimBox();
@@ -1591,7 +1593,9 @@ function councilCommitteeViewModel(params) {
     self.PrimUserValue = ko.observable(t1);
     self.AltUserValue = ko.observable(t2);
     self.PrimaryID = ko.observable("Prim" + params.Company.replace(/\s/g, ''));
+    self.DivPrimaryID = ko.observable("DivPrim" + params.Company.replace(/\s/g, ''));
     self.AlternateID = ko.observable("Alt" + params.Company.replace(/\s/g, ''));
+    self.DivAlternateID = ko.observable("DivAlt" + params.Company.replace(/\s/g, ''));
     var CheckStatusPrimary = GetCompanyNamePrimary.get("Prim" + params.Company.replace(/\s/g, ''));
     var CheckStatusAlternate = GetCompanyNameAlternate.get("Alt" + params.Company.replace(/\s/g, ''));
     self.CheckStatusPrimary = ko.observable(CheckStatusPrimary);
@@ -1684,6 +1688,7 @@ function councilCommitteeViewModel(params) {
                     if (undefined !== $('#hdnViceChairComp').val() && $('#hdnViceChairComp').val().replace(/\s/g, '').length > 0 && params.Company === $('#hdnViceChairComp').val()) {
                         $("#Alt" + $('#hdnViceChairComp').val().replace(/\s/g, '')).attr("disabled", "disabled");
                     }
+                    $('#DivPrim' + params.Company.replace(/\s/g, '')).show();
                 },
                 error: function (xhr, status, error) {
                     var err = eval("(" + xhr.responseText + ")");
@@ -1706,6 +1711,8 @@ function councilCommitteeViewModel(params) {
         }
         $(".overlay").hide();
     };
+
+
 
     self.removePrimGroupUser = function (item, event) {
         $(".overlay").show();
@@ -1832,6 +1839,8 @@ function councilCommitteeViewModel(params) {
                     if (undefined !== $('#hdnViceChairComp').val() && $('#hdnViceChairComp').val().replace(/\s/g, '').length > 0 && params.Company === $('#hdnViceChairComp').val()) {
                         $("#Prim" + $('#hdnViceChairComp').val().replace(/\s/g, '')).attr("disabled", "disabled");
                     }
+
+                    $('#DivAlt' + params.Company.replace(/\s/g, '')).show();
                 },
                 error: function (xhr, status, error) {
                     var err = eval("(" + xhr.responseText + ")");
@@ -2771,6 +2780,20 @@ function DisablePrimary() {
     }
 }
 
+function ItemModelPrimary() {
+    var t1 = sessionStorage.getItem(self.PrimaryID().replace(/\s/g, ''));
+    if (t1 != "" && t1 != null) {
+        return 1;
+    }
+}
+
+function ItemModelAlternate() {
+    var t2 = sessionStorage.getItem(self.AlternateID().replace(/\s/g, ''));
+    if (t2 != "" && t2 != null) {
+        return 1;
+    }
+}
+
 /////////////////////////////////////////////////////////////////////
 /*******Global KO binding Object********/
 /////////////////////////////////////////////////////////////////////
@@ -2789,9 +2812,11 @@ $(document).ready(function () {
             "<div class='col-sm-1'><span class='niceLabel' data-bind='text: Company'></span></div>" +
             "<div class='col-sm-2'><input type='text' class='P1 chosen form-control' style='width:300px;' data-bind='value:PrimUserValue,attr: { id:PrimaryID()},ko_autocomplete: { source: getCompanyUsers, select: selectPrimary ,minLength: 3,close: closeSelect }' /></div>" +
             "<div class='col-sm-1'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkPrimaryID()}, event:{ change: selectCompanyNamePrimary}, checked:CheckStatusPrimary' /></div>" +
+            "<div class='col-sm-1'><div data-bind='attr: { id:DivPrimaryID()}, visible: ItemModelPrimary()' class='chklist' style='display:none'><label class='chklistcontainer'><input type='checkbox' checked disabled><span class='checkmark'></span></label></div></div>" +
             "<div class='col-sm-1'><a href='#' class='text-danger btndelete' style='font-size: 12px;' data-bind='click: $data.removePrimGroupUser'>Delete</a></div>" +
             "<div class='col-sm-2' style='padding-left:50px'><input type='text' class='A1 chosen form-control' style='width:300px;' data-bind='value:AltUserValue,attr: { id:AlternateID() },ko_autocomplete: { source: getCompanyUsers, select: selectAlternate ,minLength:3,close: closeSelect }' /></div>" +
             "<div class='col-sm-1' style='padding-left:50px'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkAlternateID()}, event:{ change: selectCompanyNameAlternate}, checked:CheckStatusAlternate' /></div>" +
+            "<div class='col-sm-1'><div data-bind='attr: { id:DivAlternateID()}, visible: ItemModelAlternate()' class='chklist' style='display:none'><label class='chklistcontainer'><input type='checkbox' checked disabled><span class='checkmark'></span></label></div></div>" +
             "<div class='col-sm-1'><a href='#' class='text-danger btndelete' style='font-size: 12px;' data-bind='click: removeAltGroupUser'>Delete</a></div></div>"
     });
 
@@ -2818,6 +2843,19 @@ $(document).ready(function () {
                     try {
                         var Name = result[i].UserName;
                         var t = result[i].CompanyName.replace(/\s/g, '');
+
+                        if (result[i].RoleId === 1) {
+                            /*$('#DivSubscribePrimary').show();*/
+                        }
+                        else if (result[i].RoleId === 2) {
+                            $('#DivSubscribeAlternate').show();
+                        }
+                        else if (result[i].RoleId === 3) {
+                            $('#DivCommitteeSubscribe').show();
+                        }
+                        else if (result[i].RoleId === 4) {
+                            $('#DivCommitteeStaffSubscribe').show();
+                        }
 
                         if (result[i].RoleId === 1) {
                             sessionStorage.setItem("Prim" + t, Name);
@@ -2855,6 +2893,13 @@ $(document).ready(function () {
                     catch (err) {
                         console.log("error in setting primary/Alternate" + err);
                     }
+                }
+
+                if (result.length <= 0) {
+                    $('#DivCommitteeSubscribe').hide();
+                    $('#DivCommitteeStaffSubscribe').hide();
+                    /*$('#DivSubscribePrimary').hide();*/
+                    $('#DivSubscribeAlternate').hide();
                 }
             },
             error: function (exception) {

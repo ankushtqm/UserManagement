@@ -21,6 +21,10 @@
     </div>
 
     <div class="control-label col-sm-1">
+        <label class="control-label niceLabel"> Subscribe</label>
+    </div>
+
+    <div class="control-label col-sm-1">
         <label class="control-label niceLabel"> Delete</label>
     </div>
 </div>
@@ -34,6 +38,11 @@
     </div>
     <div class='col-sm-1'>
         <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkStaff}, checked:CheckStatusStaff' />
+    </div>
+    <div class="col-sm-1">
+        <div id="DivCommitteeSubscribe" class="chklist" style="display:none">
+            <label class="chklistcontainer"><input type="checkbox" checked disabled><span class="checkmark"></span></label>
+        </div>
     </div>
     <div class='col-sm-1'>
         <a href='#' class='text-danger btndelete' style='padding-left: 1px; font-size: 12px;' data-bind='click: $data.removeChairGroupUser'>Delete</a>
@@ -49,6 +58,11 @@
     </div>
     <div class='col-sm-1'>
         <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkGroupUser}, checked:CheckStatusGroupUser' />
+    </div>
+    <div class="col-sm-1">
+        <div id="DivCommitteeStaffSubscribe" class="chklist" style="display:none">
+            <label class="chklistcontainer"><input type="checkbox" checked disabled><span class="checkmark"></span></label>
+        </div>
     </div>
     <div class='col-sm-1'>
         <a href='#' class='text-danger btndelete' style='padding-left: 1px; font-size: 12px;' data-bind='click: $data.removeViceChairGroupUser'>Delete</a>
@@ -75,6 +89,10 @@
     </div>
 
     <div class="control-label col-sm-1">
+        <label class="niceLabel"> Subscribe</label>
+    </div>
+
+    <div class="control-label col-sm-1">
         <label class="niceLabel"> Delete</label>
     </div>
 
@@ -84,6 +102,10 @@
 
     <div class="control-label col-sm-1" style="padding-left:50px">
         <label class="niceLabel"> Email Admin</label>
+    </div>
+
+    <div class="control-label col-sm-1">
+        <label class="niceLabel"> Subscribe</label>
     </div>
 
     <div class="control-label col-sm-1">

@@ -320,7 +320,6 @@
     <script type="text/javascript">
         $(document).ready(function () {
             function disabledField(gtype) {
-                debugger;
                 $("input, submit, textarea, select, #a4astaffchosen").prop("disabled", true);
                 $("a4astaffchosen").prop("disabled", true);
                 $('#z-tab2, #z-tab3, #z-tab4, #z-tab5, #z-tab6, #z-tab7').find('a').hide();
@@ -356,7 +355,6 @@
             }
 
             $("#btnEdit").click(() => {
-                debugger;
                 $("input, submit, button, textarea, select").prop("disabled", false);
                 $("#btnEdit").hide();
                 $("a4astaffchosen").prop("disabled", false);
