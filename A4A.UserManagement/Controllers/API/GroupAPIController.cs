@@ -2411,9 +2411,13 @@ namespace A4A.UM.Controllers
         }
 
         [Route("api/gettransactionsdtl")]
-        public string GetTransactionsDtl(int? count = 0)
+        public string GetTransactionsDtl(int? count = 0, string groupname = null)
         {
             string username = GetUserName();
+            if (groupname == null)
+            {
+                groupname = string.Empty;
+            }
             DataTable dt = new DataTable();
             System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
@@ -2425,9 +2429,10 @@ namespace A4A.UM.Controllers
                 using (SqlCommand cmd = new SqlCommand("p_Get_Transaction_Dtl", con))
                 {
                     con.Open();
-                    SqlParameter[] spm = new SqlParameter[2];
+                    SqlParameter[] spm = new SqlParameter[3];
                     spm[0] = new SqlParameter("UserName", username);
-                    spm[1] = new SqlParameter("Count", count);
+                    spm[1] = new SqlParameter("GroupName", groupname);
+                    spm[2] = new SqlParameter("Count", count);
                     cmd.Parameters.AddRange(spm);
                     cmd.CommandType = CommandType.StoredProcedure;
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -2448,9 +2453,13 @@ namespace A4A.UM.Controllers
         }
 
         [Route("api/getalltransactionsdtl")]
-        public string GetAllTransactionsDtl(int? count = 0)
+        public string GetAllTransactionsDtl(int? count = 0, string groupname = null)
         {
             string username = string.Empty;
+            if (groupname == null)
+            {
+                groupname = string.Empty;
+            }
             DataTable dt = new DataTable();
             System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
@@ -2462,10 +2471,84 @@ namespace A4A.UM.Controllers
                 using (SqlCommand cmd = new SqlCommand("p_Get_Transaction_Dtl", con))
                 {
                     con.Open();
-                    SqlParameter[] spm = new SqlParameter[2];
+                    SqlParameter[] spm = new SqlParameter[3];
                     spm[0] = new SqlParameter("UserName", username);
-                    spm[1] = new SqlParameter("Count", count);
+                    spm[1] = new SqlParameter("GroupName", groupname);
+                    spm[2] = new SqlParameter("Count", count);
                     cmd.Parameters.AddRange(spm);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        row = new Dictionary<string, object>();
+                        foreach (DataColumn col in dt.Columns)
+                        {
+                            row.Add(col.ColumnName, dr[col]);
+                        }
+                        rows.Add(row);
+                    }
+                }
+            }
+            return serializer.Serialize(rows);
+        }
+
+        [Route("api/gettransactionssearchuserdtl")]
+        public string GetTransactionsSearchUserDtl(int? count = 0, string groupname = null, string username = null)
+        {
+            DataTable dt = new DataTable();
+            if (groupname == null)
+            {
+                groupname = string.Empty;
+            }
+            System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+            Dictionary<string, object> row;
+
+            using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
+            {
+                StringBuilder sql = new StringBuilder();
+                using (SqlCommand cmd = new SqlCommand("p_Get_Transaction_Dtl", con))
+                {
+                    con.Open();
+                    SqlParameter[] spm = new SqlParameter[3];
+                    spm[0] = new SqlParameter("UserName", username);
+                    spm[1] = new SqlParameter("GroupName", groupname);
+                    spm[2] = new SqlParameter("Count", count);
+                    cmd.Parameters.AddRange(spm);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        row = new Dictionary<string, object>();
+                        foreach (DataColumn col in dt.Columns)
+                        {
+                            row.Add(col.ColumnName, dr[col]);
+                        }
+                        rows.Add(row);
+                    }
+                }
+            }
+            return serializer.Serialize(rows);
+        }
+
+        [Route("api/geta4astaffdtl")]
+        public string GetA4AStaffDtl()
+        {
+            DataTable dt = new DataTable();
+            System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+            Dictionary<string, object> row;
+
+            using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
+            {
+                StringBuilder sql = new StringBuilder();
+                using (SqlCommand cmd = new SqlCommand("p_Get_User_AllATAStaffUsers_Dtl", con))
+                {
+                    con.Open();
                     cmd.CommandType = CommandType.StoredProcedure;
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     da.Fill(dt);

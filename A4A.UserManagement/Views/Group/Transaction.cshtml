@@ -35,8 +35,6 @@
         }
 </style>
 
-<h2>Transactions</h2>
-
 @section heading{
 }
 <div class="preloader">
@@ -44,7 +42,7 @@
 </div>
 
 <div class="row">
-    <div class="option-header">
+    <div class="col-sm-12 option-header">
         <div>
             <input id="MyTransactionbtn" type="radio" name="TransactionSelection" value="1" checked="checked" /><span class="niceLabel-bold" style="padding-left:5px">My Transactions</span>
         </div>
@@ -53,14 +51,22 @@
         </div>
     </div>
 
-    <div id="DivMyTransaction">
+    <br />
+
+    <div class="col-sm-12">
+        <input id="SearchGroupName" class="form-control searchgoupname" name="GroupName" type="text" placeholder="Search By GroupName" />
+        <input id="inpGroupName" class="form-control" type="text" placeholder="Search By Contacts" />
+        <select id="inpA4AUsers" class="form-control"></select>
+    </div>
+
+    <div class="col-sm-12" id="DivMyTransaction">
         <table id="tblMyTransaction" class="niceLabel-default">
             <thead>
                 <tr>
-                    <th>Action</th>
-                    <th>Details</th>
-                    <th>Modified By</th>
-                    <th>Modified Date</th>
+                    <th style="padding-left: 10px">Action</th>
+                    <th style="padding-left: 10px">Details</th>
+                    <th style="padding-left: 10px">Modified By</th>
+                    <th style="padding-left: 10px">Modified Date</th>
                 </tr>
             </thead>
         </table>
@@ -70,22 +76,49 @@
 
 <script>
     $(document).ready(function () {
+        var getAllA4AStaff = function () {
+            $.ajax({
+                url: '/api/GetA4AStaff',
+                type: 'get',
+                contentType: 'application/json',
+                success: function (data) {
+                    var optionList = '<option></option>';
+                    for (let user in data) {
+                        optionList += `<option value=${data[user].Username}>${data[user].PreferredName} </option>`
+                    }
+                    $('#inpA4AUsers').html(optionList);
+                },
+                error: function (xhr, status, error) {
+                    $(".preloader").hide();
+                    return false;
+                }
+            });
+        }
+
+        getAllA4AStaff();
+
         var query = "/api/gettransactionsdtl/?count=" + 20;
         TransactionSelectionDtl(query);
     });
 
-    $('input:radio[name="TransactionSelection"]').change(
-        function () {
-            var query = "";
-            if ($(this).is(':checked') && $(this).val() == '1') {
-                query = "/api/gettransactionsdtl/?count=" + 20;
-                TransactionSelectionDtl(query);
-            }
-            else {
-                query = "/api/getalltransactionsdtl/";
-                TransactionSelectionDtl(query);
-            }
-        });
+    $('input:radio[name="TransactionSelection"]').change(function () {
+        var query = "";
+        if ($(this).is(':checked') && $(this).val() == '1') {
+            query = "/api/gettransactionsdtl/?count=" + 20;
+            TransactionSelectionDtl(query);
+        }
+        else {
+            query = "/api/getalltransactionsdtl/";
+            TransactionSelectionDtl(query);
+        }
+    });
+
+    $('.searchgoupname').on('input', function () {
+        debugger;
+        var searchString = $("#SearchGroupName").val();
+        var query = "/api/getalltransactionsdtl/?groupname=" + searchString;
+        TransactionSelectionDtl(query);
+    });
 
     function TransactionSelectionDtl(query) {
         $(".preloader").show();
@@ -110,7 +143,71 @@
                         bProcessing: true,
                         paging: false,
                         bAutoWidth: false,
-                        bFilter: false, bInfo: false,
+                        bFilter: true,
+                        bInfo: true,
+                        "aaSorting": [4, "desc"],
+                        aoColumns: [
+                            { mData: "Action" },
+                            { mData: "Details" },
+                            { mData: "modifiedby" },
+                            { mData: "TransactionDate" },
+                            { mData: "TDTimeStamp", "asSorting": ["desc"] },
+                        ],
+                        "aoColumnDefs": [
+                            { "asSorting": ["desc"], "aTargets": [4] },
+                            { "aDataSort": [4], "aTargets": [3] },
+                            {
+                                "aTargets": [4],
+                                "bVisible": false,
+                                "bSearchable": false
+                            },
+                        ],
+                        "bInfo": false,
+                        "bLengthChange": false,
+                        "oLanguage": {
+                            "sEmptyTable": "No Transactions found for the group."
+                        }
+                    });
+                }
+            }
+        }).done(function (data) {
+            setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30);
+        });
+    }
+
+    $('#inpA4AUsers').change(function () {
+        debugger;
+        var selectBox = document.getElementById("inpA4AUsers");
+        var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+        var query = "/api/gettransactionssearchuserdtl/?username=" + selectedValue;
+        A4AUsersTransactionDtl(query);
+    });
+
+    function A4AUsersTransactionDtl(query) {
+        $(".preloader").show();
+        $.ajax({
+            url: query,
+            type: "GET",
+            datatype: "json",
+            processData: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                var table;
+                if ($.fn.dataTable.isDataTable('#tblMyTransaction')) {
+                    table = $('#tblMyTransaction').DataTable();
+                    table.clear();
+                    table.rows.add(JSON.parse(result)).draw();
+                }
+                else {
+                    table = $("#tblMyTransaction").DataTable({
+                        "aaData": JSON.parse(result),
+                        retrieve: true,
+                        "deferRender": true,
+                        bProcessing: true,
+                        paging: false,
+                        bAutoWidth: false,
+                        bFilter: true,
+                        bInfo: true,
                         "aaSorting": [4, "desc"],
                         aoColumns: [
                             { mData: "Action" },

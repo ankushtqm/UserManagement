@@ -15,6 +15,7 @@ body {
     background-attachment: fixed;
     background-size: 100% 100%;
     Color: #333333;
+    font-size:12px;
 }
 
 html, body {
@@ -230,11 +231,11 @@ header nav {
     }
 
         header nav ul li a {
-            font-size: 18px;
+            font-size: 16px;
             color: #fff;
             height: 50px;
             text-decoration: none;
-            font-family: 'Verdana Airal';
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             font-style: italic;
             width: 121px;
             text-align: center;
@@ -1003,7 +1004,7 @@ footer {
 }
 
 .link_black {
-    color: black !important;
+    color: #333333 !important;
 }
 /*======================================================================*/
 /* Speech bubble with a shadow */
@@ -1039,12 +1040,62 @@ footer {
         top: 2px;
     }
 
-@media (max-width: 800px) {
+/*@media (max-width: 800px) {*/
     /* CSS that should be displayed if width is equal to or less than 800px goes here */
-}
+/*}
 
-@media screen and (min-width: 1300px) {
+@media screen and (min-width: 1300px) {*/
     /*header nav {
         margin-right: 30%;
     }*/
+/*}*/
+
+@media(max-width:1130px) {
+
+    header {
+        height: 140px;
+    }
+
+    .nav-container {
+        height: 133px;
+    }
+
+    header nav {
+        left: auto;
+        right: calc(50% - 300px);
+        width: auto;
+    }
+
+    .nav-container ul.primary {
+        display: block;
+        width: 363px;
+        float: unset;
+    }
+}
+
+
+@media(max-width:991px) {
+    .nav-container {
+        height: auto;
+    }
+        .nav-container ul.primary {
+            display: block;
+            margin: auto;
+            float: unset;
+        }
+    header nav {
+        left: auto;
+        right: 50px;
+        width: 100%;
+        position: unset;
+        float: unset;
+        height: min-content;
+        display: inline-block;
+        padding: 0;
+        margin: auto;
+        text-align: center;
+    }
+    header {
+        height: 235px;
+    }
 }

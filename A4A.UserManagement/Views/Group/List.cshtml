@@ -153,6 +153,7 @@
                     }
                 }
             };
+
             //api/GetA4AStaff
             var getAllA4AStaff = function () {
                 $.ajax({
@@ -173,6 +174,7 @@
                     }
                 });
             }
+
             getAllA4AStaff();
 
             $('.groupdelete').click(function () {
@@ -444,6 +446,7 @@
             //////MY GROUPS/////////////////////
             //////////////////////////////
             function BindMyGroup(username = null) {
+                debugger;
                 $(".preloader").show();
                 $('#ByGroupType').hide();
                 $('#ByGroupType_wrapper').hide();
@@ -774,7 +777,7 @@
         </div>
     </div>
     <div id="impersonate" style="display:flex;justify-content:flex-end;margin-bottom:2rem">
-        <p style="color:#666666;font-weight:700">Impersonate: </p>
+        <p style="color: #333333; font-weight: 700">Impersonate: </p>
         <select id="impersonateA4AUsers" style="width:163px">
         </select>
     </div>
