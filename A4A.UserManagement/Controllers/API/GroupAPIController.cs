@@ -19,6 +19,8 @@ using ATA.CodeLibrary;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System.Web.Security;
+using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace A4A.UM.Controllers
 {
@@ -1010,7 +1012,7 @@ namespace A4A.UM.Controllers
                                                 }
                                             }
 
-                                            Transactions.setUserGroupTransaction(ug.GroupId, TransactionType.UserGroup_UserRemoved, CommitteeRole.Chair, DBUtilAPIController.CurrentUser().UserId);
+                                            Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserRemoved, CommitteeRole.Chair, DBUtilAPIController.CurrentUser().UserId);
                                             if (ug.Type != "7")
                                             {
                                                 UserGroupJsonModel.DeleteGroupUserbyRole(ug.GroupId, 3);
@@ -1035,7 +1037,7 @@ namespace A4A.UM.Controllers
                                                 }
                                             }
 
-                                            Transactions.setUserGroupTransaction(ug.GroupId, TransactionType.UserGroup_UserRemoved, CommitteeRole.ViceChair, DBUtilAPIController.CurrentUser().UserId);
+                                            Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserRemoved, CommitteeRole.ViceChair, DBUtilAPIController.CurrentUser().UserId);
                                             if (ug.Type != "7")
                                             {
                                                 UserGroupJsonModel.DeleteGroupUserbyRole(ug.GroupId, 4);
@@ -1205,22 +1207,7 @@ namespace A4A.UM.Controllers
                                 }
                                 else
                                 {
-                                    if (grp.IsCommittee && !grp.IsChildGroup && ug.Informational)
-                                    {
-                                        try
-                                        {
-                                            ATAGroup childGroup = grp.GetCommitteeChildGroup();
-                                            ug.GroupId = childGroup.GroupId;
-                                            ug.Save();
-                                            Transactions.setUserGroupTransaction(ug, TransactionType.UserGroup_UserAdded, DBUtilAPIController.CurrentUser().UserId, true);
-                                            AddUsertoLyrisGroup(ug);
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            throw new Exception("Error in accessing the child group", ex.InnerException);
-                                        }
-                                    }
-                                    else if (ug.Type == "4" || ug.Type == "5" || ug.Type == "6")
+                                    if (ug.Type == "4" || ug.Type == "5" || ug.Type == "6")
                                     {
                                         try
                                         {
@@ -2411,7 +2398,7 @@ namespace A4A.UM.Controllers
         }
 
         [Route("api/gettransactionsdtl")]
-        public string GetTransactionsDtl(int? count = 0, string groupname = null)
+        public string GetTransactionsDtl(string groupname = null, int ? count = 0)
         {
             string username = GetUserName();
             if (groupname == null)
@@ -2453,7 +2440,7 @@ namespace A4A.UM.Controllers
         }
 
         [Route("api/getalltransactionsdtl")]
-        public string GetAllTransactionsDtl(int? count = 0, string groupname = null)
+        public string GetAllTransactionsDtl(string groupname = null)
         {
             string username = string.Empty;
             if (groupname == null)
@@ -2468,13 +2455,11 @@ namespace A4A.UM.Controllers
             using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
             {
                 StringBuilder sql = new StringBuilder();
-                using (SqlCommand cmd = new SqlCommand("p_Get_Transaction_Dtl", con))
+                using (SqlCommand cmd = new SqlCommand("p_Get_AllTransaction_Dtl", con))
                 {
                     con.Open();
-                    SqlParameter[] spm = new SqlParameter[3];
-                    spm[0] = new SqlParameter("UserName", username);
-                    spm[1] = new SqlParameter("GroupName", groupname);
-                    spm[2] = new SqlParameter("Count", count);
+                    SqlParameter[] spm = new SqlParameter[1];
+                    spm[0] = new SqlParameter("GroupName", groupname);
                     cmd.Parameters.AddRange(spm);
                     cmd.CommandType = CommandType.StoredProcedure;
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -2495,12 +2480,12 @@ namespace A4A.UM.Controllers
         }
 
         [Route("api/gettransactionssearchuserdtl")]
-        public string GetTransactionsSearchUserDtl(int? count = 0, string groupname = null, string username = null)
+        public string GetTransactionsSearchUserDtl(string username = null)
         {
             DataTable dt = new DataTable();
-            if (groupname == null)
+            if (username == null)
             {
-                groupname = string.Empty;
+                username = string.Empty;
             }
             System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
             List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
@@ -2509,13 +2494,11 @@ namespace A4A.UM.Controllers
             using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
             {
                 StringBuilder sql = new StringBuilder();
-                using (SqlCommand cmd = new SqlCommand("p_Get_Transaction_Dtl", con))
+                using (SqlCommand cmd = new SqlCommand("p_Get_Transaction_Users_Dtl", con))
                 {
                     con.Open();
-                    SqlParameter[] spm = new SqlParameter[3];
+                    SqlParameter[] spm = new SqlParameter[1];
                     spm[0] = new SqlParameter("UserName", username);
-                    spm[1] = new SqlParameter("GroupName", groupname);
-                    spm[2] = new SqlParameter("Count", count);
                     cmd.Parameters.AddRange(spm);
                     cmd.CommandType = CommandType.StoredProcedure;
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -2547,6 +2530,70 @@ namespace A4A.UM.Controllers
             {
                 StringBuilder sql = new StringBuilder();
                 using (SqlCommand cmd = new SqlCommand("p_Get_User_AllATAStaffUsers_Dtl", con))
+                {
+                    con.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        row = new Dictionary<string, object>();
+                        foreach (DataColumn col in dt.Columns)
+                        {
+                            row.Add(col.ColumnName, dr[col]);
+                        }
+                        rows.Add(row);
+                    }
+                }
+            }
+            return serializer.Serialize(rows);
+        }
+
+        [Route("api/getgroupuserdtl")]
+        public string GetGroupUserDtl()
+        {
+            DataTable dt = new DataTable();
+            System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+            Dictionary<string, object> row;
+
+            using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
+            {
+                StringBuilder sql = new StringBuilder();
+                using (SqlCommand cmd = new SqlCommand("p_Get_User_GroupUsers_Dtl", con))
+                {
+                    con.Open();
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        row = new Dictionary<string, object>();
+                        foreach (DataColumn col in dt.Columns)
+                        {
+                            row.Add(col.ColumnName, dr[col]);
+                        }
+                        rows.Add(row);
+                    }
+                }
+            }
+            return serializer.Serialize(rows);
+        }
+
+        [Route("api/getcontactsdtl")]
+        public string GetContactsDtl()
+        {
+            DataTable dt = new DataTable();
+            System.Web.Script.Serialization.JavaScriptSerializer serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+            List<Dictionary<string, object>> rows = new List<Dictionary<string, object>>();
+            Dictionary<string, object> row;
+
+            using (SqlConnection con = new SqlConnection(Conf.ConnectionString))
+            {
+                StringBuilder sql = new StringBuilder();
+                using (SqlCommand cmd = new SqlCommand("p_Get_User_Contacts_Dtl", con))
                 {
                     con.Open();
                     cmd.CommandType = CommandType.StoredProcedure;

@@ -15,7 +15,7 @@ body {
     background-attachment: fixed;
     background-size: 100% 100%;
     Color: #333333;
-    font-size:12px;
+    font-size: 12px;
 }
 
 html, body {
@@ -219,7 +219,7 @@ h3 {
 header nav {
     float: right;
     top: 0%;
-    left: 30%;
+    left: calc(50% - 363px);
     display: block;
     position: absolute;
     width: 726px;
@@ -1041,61 +1041,44 @@ footer {
     }
 
 /*@media (max-width: 800px) {*/
-    /* CSS that should be displayed if width is equal to or less than 800px goes here */
+/* CSS that should be displayed if width is equal to or less than 800px goes here */
 /*}
 
 @media screen and (min-width: 1300px) {*/
-    /*header nav {
+/*header nav {
         margin-right: 30%;
     }*/
 /*}*/
 
-@media(max-width:1130px) {
+.nav-container {
+    margin-left: 0;
+}
 
-    header {
-        height: 140px;
-    }
-
+@media(max-width:1280px) {
     .nav-container {
-        height: 133px;
+        text-align: center;
     }
 
     header nav {
-        left: auto;
-        right: calc(50% - 300px);
-        width: auto;
+        float: unset;
+        top: 0%;
+        position: unset;
+        margin: 0 auto;
     }
 
-    .nav-container ul.primary {
-        display: block;
-        width: 363px;
-        float: unset;
+    header {
+        height: 170px;
     }
 }
 
-
 @media(max-width:991px) {
-    .nav-container {
-        height: auto;
-    }
-        .nav-container ul.primary {
-            display: block;
-            margin: auto;
-            float: unset;
-        }
     header nav {
-        left: auto;
-        right: 50px;
-        width: 100%;
-        position: unset;
-        float: unset;
-        height: min-content;
-        display: inline-block;
-        padding: 0;
-        margin: auto;
-        text-align: center;
+        padding-top: 0px !important;
+        left: calc(50% - 363px);
+        width: 363px;
     }
+
     header {
-        height: 235px;
+        height: 240px;
     }
 }

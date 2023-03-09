@@ -569,6 +569,12 @@ namespace ATA.ObjectModel
             sqlParams[0] = new SqlParameter("@SelectingUserId", -1);
             return new DataObjectList<LookupUser>(sqlParams, SELECT_ATA_STAFF_USERS_PROC);
         }
+        public static DataObjectList<LookupUser> GetAllGroupUser()
+        {
+            SqlParameter[] sqlParams = new SqlParameter[1];
+            sqlParams[0] = new SqlParameter("@SelectingUserId", -1);
+            return new DataObjectList<LookupUser>(sqlParams, "p_Get_User_GroupUsers_Dtl");
+        }
         public static DataObjectList<LookupUser> GetAllContacts()
         {
             SqlParameter[] sqlParams = new SqlParameter[1];

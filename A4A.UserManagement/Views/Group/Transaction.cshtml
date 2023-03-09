@@ -41,6 +41,8 @@
     <div><img src="~/images/Preloader-2.gif" /></div>
 </div>
 
+<input type="hidden" id="hdnTransactionType" />
+
 <div class="row">
     <div class="col-sm-12 option-header">
         <div>
@@ -54,9 +56,11 @@
     <br />
 
     <div class="col-sm-12">
-        <input id="SearchGroupName" class="form-control searchgoupname" name="GroupName" type="text" placeholder="Search By GroupName" />
-        <input id="inpGroupName" class="form-control" type="text" placeholder="Search By Contacts" />
-        <select id="inpA4AUsers" class="form-control"></select>
+        <select id="inpContacts" class="form-control"></select>
+        <select id="inpGroupName" class="form-control"></select>
+        <span id="DivA4AUsers" style="display:none">
+            <select id="inpA4AUsers" class="form-control"></select>
+        </span>
     </div>
 
     <div class="col-sm-12" id="DivMyTransaction">
@@ -64,9 +68,10 @@
             <thead>
                 <tr>
                     <th style="padding-left: 10px">Action</th>
+                    <th style="padding-left: 10px">Contacts</th>
                     <th style="padding-left: 10px">Details</th>
                     <th style="padding-left: 10px">Modified By</th>
-                    <th style="padding-left: 10px">Modified Date</th>
+                    <th>Modified Date</th>
                 </tr>
             </thead>
         </table>
@@ -76,49 +81,159 @@
 
 <script>
     $(document).ready(function () {
-        var getAllA4AStaff = function () {
-            $.ajax({
-                url: '/api/GetA4AStaff',
-                type: 'get',
-                contentType: 'application/json',
-                success: function (data) {
-                    var optionList = '<option></option>';
-                    for (let user in data) {
-                        optionList += `<option value=${data[user].Username}>${data[user].PreferredName} </option>`
-                    }
-                    $('#inpA4AUsers').html(optionList);
-                },
-                error: function (xhr, status, error) {
-                    $(".preloader").hide();
-                    return false;
-                }
-            });
-        }
-
+        getAllContacts();
+        getAllGroupUser();
         getAllA4AStaff();
-
+        $("#hdnTransactionType").val("0");
         var query = "/api/gettransactionsdtl/?count=" + 20;
         TransactionSelectionDtl(query);
     });
 
+    function getAllContacts() {
+        $(".preloader").show();
+        $.ajax({
+            url: '/api/getcontactsdtl',
+            type: 'get',
+            contentType: 'application/json',
+            success: function (data) {
+                val = $.parseJSON(data);
+                var optionList = '<option>Select Contacts</option>';
+                for (let user in val) {
+                    optionList += `<option value=${val[user].Username}>${val[user].Contacts} </option>`
+                }
+                $('#inpContacts').html(optionList);
+            },
+            error: function (xhr, status, error) {
+                $(".preloader").hide();
+                return false;
+            }
+        }).done(function (data) {
+            setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30);
+        });
+    }
+
+    function getAllGroupUser() {
+        $(".preloader").show();
+        $.ajax({
+            url: '/api/getgroupuserdtl',
+            type: 'get',
+            contentType: 'application/json',
+            success: function (data) {
+                val = $.parseJSON(data);
+                var optionList = '<option>Select GroupName</option>';
+                for (let user in val) {
+                    optionList += `<option value=${val[user].GroupId}>${val[user].GroupName} </option>`
+                }
+                $('#inpGroupName').html(optionList);
+            },
+            error: function (xhr, status, error) {
+                $(".preloader").hide();
+                return false;
+            }
+        }).done(function (data) {
+            setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30);
+        });
+    }
+
+    function getAllA4AStaff() {
+        $(".preloader").show();
+        $.ajax({
+            url: '/api/GetA4AStaff',
+            type: 'get',
+            contentType: 'application/json',
+            success: function (data) {
+                var optionList = '<option>Select A4AStaff</option>';
+                for (let user in data) {
+                    optionList += `<option value=${data[user].Username}>${data[user].PreferredName} </option>`
+                }
+                $('#inpA4AUsers').html(optionList);
+            },
+            error: function (xhr, status, error) {
+                $(".preloader").hide();
+                return false;
+            }
+        }).done(function (data) {
+            setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30);
+        });
+    }
+
     $('input:radio[name="TransactionSelection"]').change(function () {
         var query = "";
+        //getAllContactsSearchDtl();
+        //getAllGroupUserSearchDtl();
+        //getAllA4AStaffSearchDtl();
         if ($(this).is(':checked') && $(this).val() == '1') {
             query = "/api/gettransactionsdtl/?count=" + 20;
             TransactionSelectionDtl(query);
+            $("#hdnTransactionType").val("0");
+            $("#DivA4AUsers").hide();
         }
         else {
             query = "/api/getalltransactionsdtl/";
             TransactionSelectionDtl(query);
+            $("#hdnTransactionType").val("1");
+            $("#DivA4AUsers").show();
         }
     });
 
-    $('.searchgoupname').on('input', function () {
-        debugger;
-        var searchString = $("#SearchGroupName").val();
-        var query = "/api/getalltransactionsdtl/?groupname=" + searchString;
-        TransactionSelectionDtl(query);
-    });
+    function getAllContactsSearchDtl() {
+        $.ajax({
+            url: '/api/getcontactsdtl',
+            type: 'get',
+            contentType: 'application/json',
+            success: function (data) {
+                val = $.parseJSON(data);
+                var optionList = '<option>Select Contacts</option>';
+                for (let user in val) {
+                    optionList += `<option value=${val[user].Username}>${val[user].Contacts} </option>`
+                }
+                $('#inpContacts').html(optionList);
+            },
+            error: function (xhr, status, error) {
+                $(".preloader").hide();
+                return false;
+            }
+        });
+    }
+
+    function getAllGroupUserSearchDtl() {
+        $.ajax({
+            url: '/api/getgroupuserdtl',
+            type: 'get',
+            contentType: 'application/json',
+            success: function (data) {
+                val = $.parseJSON(data);
+                var optionList = '<option>Select GroupName</option>';
+                for (let user in val) {
+                    optionList += `<option value=${val[user].GroupId}>${val[user].GroupName} </option>`
+                }
+                $('#inpGroupName').html(optionList);
+            },
+            error: function (xhr, status, error) {
+                $(".preloader").hide();
+                return false;
+            }
+        });
+    }
+
+    function getAllA4AStaffSearchDtl() {
+        $.ajax({
+            url: '/api/GetA4AStaff',
+            type: 'get',
+            contentType: 'application/json',
+            success: function (data) {
+                var optionList = '<option>Select A4AStaff</option>';
+                for (let user in data) {
+                    optionList += `<option value=${data[user].Username}>${data[user].PreferredName} </option>`
+                }
+                $('#inpA4AUsers').html(optionList);
+            },
+            error: function (xhr, status, error) {
+                $(".preloader").hide();
+                return false;
+            }
+        });
+    }
 
     function TransactionSelectionDtl(query) {
         $(".preloader").show();
@@ -141,13 +256,14 @@
                         retrieve: true,
                         "deferRender": true,
                         bProcessing: true,
-                        paging: false,
                         bAutoWidth: false,
                         bFilter: true,
                         bInfo: true,
-                        "aaSorting": [4, "desc"],
+                        pageLength: 50,
+                        lengthMenu: [[10, 25, 50, 100, 100000], [10, 25, 50, 100, "All"]],
                         aoColumns: [
                             { mData: "Action" },
+                            { mData: "Contacts" },
                             { mData: "Details" },
                             { mData: "modifiedby" },
                             { mData: "TransactionDate" },
@@ -175,12 +291,86 @@
         });
     }
 
+    function TransactionSelectionSearchDtl(query) {
+        $.ajax({
+            url: query,
+            type: "GET",
+            datatype: "json",
+            processData: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                var table;
+                if ($.fn.dataTable.isDataTable('#tblMyTransaction')) {
+                    table = $('#tblMyTransaction').DataTable();
+                    table.clear();
+                    table.rows.add(JSON.parse(result)).draw();
+                }
+                else {
+                    table = $("#tblMyTransaction").DataTable({
+                        "aaData": JSON.parse(result),
+                        retrieve: true,
+                        "deferRender": true,
+                        bProcessing: true,
+                        bAutoWidth: false,
+                        bFilter: true,
+                        bInfo: true,
+                        pageLength: 50,
+                        lengthMenu: [[10, 25, 50, 100, 100000], [10, 25, 50, 100, "All"]],
+                        aoColumns: [
+                            { mData: "Action" },
+                            { mData: "Contacts" },
+                            { mData: "Details" },
+                            { mData: "modifiedby" },
+                            { mData: "TransactionDate" },
+                        ],
+                        "bInfo": false,
+                        "bLengthChange": false,
+                        "oLanguage": {
+                            "sEmptyTable": "No Transactions found for the group."
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    $('#inpContacts').change(function () {
+        var selectBox = document.getElementById("inpContacts");
+        var searchString = selectBox.options[selectBox.selectedIndex].text;
+        var query = "";
+        if ($("#hdnTransactionType").val() == "0") {
+            query = "/api/gettransactionsdtl/?groupname=" + searchString + "&count=" + 20;
+        }
+        else {
+            query = "/api/getalltransactionsdtl/?groupname=" + searchString;
+        }
+        TransactionSelectionSearchDtl(query);
+        getAllGroupUserSearchDtl();
+        getAllA4AStaffSearchDtl();
+    });
+
+    $('#inpGroupName').change(function () {
+        var selectBox = document.getElementById("inpGroupName");
+        var searchString = selectBox.options[selectBox.selectedIndex].text;
+        var query = "";
+        if ($("#hdnTransactionType").val() == "0") {
+            query = "/api/gettransactionsdtl/?groupname=" + searchString + "&count=" + 20;
+        }
+        else {
+            query = "/api/getalltransactionsdtl/?groupname=" + searchString;
+        }
+        TransactionSelectionSearchDtl(query);
+        getAllContactsSearchDtl();
+        getAllA4AStaffSearchDtl();
+    });
+
     $('#inpA4AUsers').change(function () {
-        debugger;
         var selectBox = document.getElementById("inpA4AUsers");
         var selectedValue = selectBox.options[selectBox.selectedIndex].value;
         var query = "/api/gettransactionssearchuserdtl/?username=" + selectedValue;
         A4AUsersTransactionDtl(query);
+        getAllContactsSearchDtl();
+        getAllGroupUserSearchDtl();
     });
 
     function A4AUsersTransactionDtl(query) {
@@ -204,26 +394,17 @@
                         retrieve: true,
                         "deferRender": true,
                         bProcessing: true,
-                        paging: false,
                         bAutoWidth: false,
                         bFilter: true,
                         bInfo: true,
-                        "aaSorting": [4, "desc"],
+                        pageLength: 50,
+                        lengthMenu: [[10, 25, 50, 100, 100000], [10, 25, 50, 100, "All"]],
                         aoColumns: [
                             { mData: "Action" },
+                            { mData: "Contacts" },
                             { mData: "Details" },
                             { mData: "modifiedby" },
                             { mData: "TransactionDate" },
-                            { mData: "TDTimeStamp", "asSorting": ["desc"] },
-                        ],
-                        "aoColumnDefs": [
-                            { "asSorting": ["desc"], "aTargets": [4] },
-                            { "aDataSort": [4], "aTargets": [3] },
-                            {
-                                "aTargets": [4],
-                                "bVisible": false,
-                                "bSearchable": false
-                            },
                         ],
                         "bInfo": false,
                         "bLengthChange": false,

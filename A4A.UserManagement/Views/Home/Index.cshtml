@@ -178,6 +178,7 @@
             res.innerHTML = '';
             let list = '';
 
+            debugger;
             for (var k = 0; k < map.length; k++) {
                 if (map[k].isActive) {
                     list += '<li style="text-align:left"><a  class="link_black niceLabel bold active"  href="/user/index/?uid=' + map[k].key + '" title="View Contact"> ' + map[k].value + '</a></li > ';

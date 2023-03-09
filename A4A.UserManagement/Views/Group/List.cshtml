@@ -192,7 +192,6 @@
                 $('#ByGroupType').show();
                 $('#ByGroupType_wrapper').show();
                 if (sessionStorage.getItem("ByGroupType")) { setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30); }
-
                 $.ajax({
                     url: '/api/getgrouplist/?type=1',
                     type: 'get',
@@ -208,10 +207,9 @@
                             aoColumns: [
                                 { mData: "GroupName", sWidth: "20%" },
                                 { mData: "GroupType" },
-                                //{ mData: "ParentGroupId"},
-                                { mData: "GroupEmail" },
                                 { mData: "Liaison", sWidth: "100px" },
-                                { mData: "DepartmentDetail", sWidth: "100px" },
+                                { mData: "GroupEmail", sWidth: "100px" },
+                                { mData: "GroupEmail", sWidth: "100px" },
                                 { mData: "MemberCount", sWidth: "90px" },
                                 { mData: "SendPermissions", sWidth: "115px" },
                                 { mData: "ManageGroup", sWidth: "30px" },
@@ -222,15 +220,13 @@
 
                             ]
                             , "aoColumnDefs": [
-                                { "bVisible": false, "aTargets": [1, 2] },
-                                //{ "bVisible": false, "aTargets": [2] },
+                                { "bVisible": false, "aTargets": [1, 4] },
                                 {
                                     "aTargets": [0],
                                     "mRender": function (data, type, full) {
                                         if (!((full.GroupTypeId === 1 || full.GroupTypeId === 2 || full.GroupTypeId === 7 || full.GroupTypeId === 8 || full.GroupTypeId === 9 || full.GroupTypeId === 10) && full.IsChildGroup == 1 && full.IsCommittee === 0)) {  /*!full.GroupName.match("Info$")*/
                                             return '<a  href="/group/index/?gid=' + full.GroupId + '" title="editgroup" target=”_blank”>' + full.GroupName + '</a>';
                                         } else {
-                                            //return '';
                                             return '<a  href="/group/index/?gid=' + full.ParentGroupId + '#6" title="editgroup" target=”_blank”>' + full.GroupName + '</a>';
                                         }
                                     }
@@ -397,10 +393,12 @@
                         // Setup - add a text input to each footer cell
                         $('#ByGroupType thead th').each(function () {
                             var title = $('#ByGroupType thead th').eq($(this).index()).text();
-                            if (title.toLowerCase().indexOf("modified") < 0 && title.toLowerCase().indexOf("permissions") < 0 && title.toLowerCase().indexOf("subscriber") < 0 && title.toLowerCase().indexOf("view") < 0 && title.toLowerCase().indexOf("edit") < 0 && title.toLowerCase().indexOf("delete") < 0 && title.toLowerCase().indexOf("total subscriber") < 0 && title.toLowerCase().indexOf("manage group") < 0 && title.toLowerCase().indexOf("email admin(sender)") < 0 && title.toLowerCase().indexOf("bounce report") < 0) {
-                                $(this).html('<input class=" form-control" type="text" placeholder="Search ' + title + '" />');
-                                $('#AllGroupbtn').prop('checked', true)
-                                $('#MyGroupbtn').prop('checked', false)
+                            if (title != "Group Email") {
+                                if (title.toLowerCase().indexOf("modified") < 0 && title.toLowerCase().indexOf("permissions") < 0 && title.toLowerCase().indexOf("subscriber") < 0 && title.toLowerCase().indexOf("view") < 0 && title.toLowerCase().indexOf("edit") < 0 && title.toLowerCase().indexOf("delete") < 0 && title.toLowerCase().indexOf("total subscriber") < 0 && title.toLowerCase().indexOf("manage group") < 0 && title.toLowerCase().indexOf("email admin(sender)") < 0 && title.toLowerCase().indexOf("bounce report") < 0) {
+                                    $(this).html('<input class=" form-control" type="text" placeholder="Search ' + title + '" />');
+                                    $('#AllGroupbtn').prop('checked', true)
+                                    $('#MyGroupbtn').prop('checked', false)
+                                }
                             }
                         });
                         // Apply the search
@@ -446,7 +444,6 @@
             //////MY GROUPS/////////////////////
             //////////////////////////////
             function BindMyGroup(username = null) {
-                debugger;
                 $(".preloader").show();
                 $('#ByGroupType').hide();
                 $('#ByGroupType_wrapper').hide();
@@ -478,9 +475,8 @@
                                 aoColumns: [
                                     { mData: "GroupName", sWidth: "20%" },
                                     { mData: "GroupType" },
-                                    //{ mData: "ParentGroupId", sWidth: "30px" },
-                                    { mData: "GroupEmail" },
                                     { mData: "Liaison", sWidth: "100px" },
+                                    { mData: "GroupEmail", sWidth: "100px" },
                                     { mData: "DepartmentDetail", sWidth: "100px" },
                                     { mData: "MemberCount", sWidth: "30px" },
                                     { mData: "SendPermissions", sWidth: "100px" },
@@ -490,7 +486,7 @@
                                     { mData: "Subscribe", sWidth: "30px" },
                                 ]
                                 , "aoColumnDefs": [
-                                    { "bVisible": false, "aTargets": [1, 2] },
+                                    { "bVisible": false, "aTargets": [1, 4] },
                                     {
                                         "aTargets": [0],
                                         "mRender": function (data, type, full) {
@@ -585,11 +581,14 @@
                         //// Setup - add a text input to each footer cell
                         $('#MyGroup thead th').each(function () {
                             var title = $('#MyGroup thead th').eq($(this).index()).text();
-                            if (title.toLowerCase().indexOf("modified") < 0 && title.toLowerCase().indexOf("permissions") < 0 && title.toLowerCase().indexOf("count") < 0 && title.toLowerCase().indexOf("view") < 0 && title.toLowerCase().indexOf("edit") < 0 && title.toLowerCase().indexOf("delete") < 0 && title.toLowerCase().indexOf("total subscriber") < 0 && title.toLowerCase().indexOf("manage group") < 0 && title.toLowerCase().indexOf("email admin(sender)") < 0 && title.toLowerCase().indexOf("bounce report") < 0 && title.toLowerCase().indexOf("subscriber") < 0) {
-                                $(this).html('<input class=" form-control" type="text" placeholder="Search ' + title + '" />');
-                                $('#AllGroupbtn').prop('checked', false)
-                                $('#MyGroupbtn').prop('checked', true)
+                            if (title != "Group Email") {
+                                if (title.toLowerCase().indexOf("modified") < 0 && title.toLowerCase().indexOf("permissions") < 0 && title.toLowerCase().indexOf("count") < 0 && title.toLowerCase().indexOf("view") < 0 && title.toLowerCase().indexOf("edit") < 0 && title.toLowerCase().indexOf("delete") < 0 && title.toLowerCase().indexOf("total subscriber") < 0 && title.toLowerCase().indexOf("manage group") < 0 && title.toLowerCase().indexOf("email admin(sender)") < 0 && title.toLowerCase().indexOf("bounce report") < 0 && title.toLowerCase().indexOf("subscriber") < 0) {
+                                    $(this).html('<input class=" form-control" type="text" placeholder="Search ' + title + '" />');
+                                    $('#AllGroupbtn').prop('checked', false)
+                                    $('#MyGroupbtn').prop('checked', true)
+                                }
                             }
+
                         });
                         //// Apply the search
                         table.columns().every(function () {
@@ -790,8 +789,8 @@
             <tr>
                 <th>GroupName</th>
                 <th>GroupType</th>
-                <th>Group Email</th>
                 <th>Liaison</th>
+                <th>Group Email</th>
                 <th>Department</th>
                 <th>Total Subscribers</th>
                 <th>List Email Permissions</th>
@@ -807,8 +806,8 @@
             <tr>
                 <th>GroupName</th>
                 <th>GroupType</th>
-                <th>Group Email</th>
                 <th>Liaison</th>
+                <th>Group Email</th>
                 <th>Department</th>
                 <th>Total Subscribers</th>
                 <th>List Email Permissions</th>
