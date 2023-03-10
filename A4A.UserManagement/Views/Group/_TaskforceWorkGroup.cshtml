@@ -1,0 +1,32 @@
+﻿<div class="TaskForceSubscriber" id="TaskForceSubscriber">
+    <p>You have selected <span data-bind='text: $data.selectedTskForUser().length'>&nbsp;</span> Subscribers</p>
+    <label for="tskGrpUser">Contact: </label>
+    <p>
+        <select id="inpGroupRole" class="form-control" data-bind="options: Roles, optionsText: 'name', optionsValue: 'id', value:role,optionsCaption: 'Choose Role'"></select>
+        <input type="text" class="chosen form-control" style="width:300px;" placeholder="Search Contacts" id="tskGrpUser" data-bind="ko_autocomplete: { source: GetAllUsers, select: selectTskFrGroupUser ,minLength: 3 }" />
+        <a href='#' class='text-danger' data-bind="click: clearTaskGroupUser">Delete</a>
+    </p>
+    <table class="table" data-bind='visible: $data.selectedTskForUser().length > 0'>
+        <thead>
+            <tr>
+                <th class="control-label">Company Name</th>
+                <th class="control-label">Name</th>
+                <th class="control-label">Email Admin</th>
+                <th class="control-label">Subscribe</th>
+                <th class="control-label">Role</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: $data.selectedTskForUser().sort(function(l,r) { return l.Name == r.Name ? 0 : (l.Name < r.Name ? -1 : 1)}) ">
+            <tr>
+                <td class="element-width"><span data-bind='text: CompanyName'></span></td>
+                <td class="element-width"><span data-bind='text: Name'></span> </td>
+                <td class="element-width"><input type='checkbox' name='EmailAdmin' data-bind="value:UserId, checked:CheckStatus" onchange="chkTaskGroupRoles(this)" /></td>
+                <td class="element-width"><div class="chklist"><label class="chklistcontainer"><input type="checkbox" checked disabled><span class="checkmark"></span></label></div></td>
+                <td class="element-width"><span data-bind='text: role'></span></td>
+                <td class="element-width"><a href='#' style="font-size: 12px;" data-bind='click: $parent.removeUMTaskForceContacts'>Delete</a></td>
+                <td class="element-width"></td>
+                <td class="element-width"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

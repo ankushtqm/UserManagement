@@ -1,0 +1,651 @@
+﻿@{
+    ViewBag.Title = "View Contact Details";
+}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+@*<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>*@
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
+<style type="text/css">
+      /*John wanted the text color to be black*/
+    .content {
+        color:#000 !important;
+    } 
+    /*Subscribers table padding*/
+    table.dataTable tbody th, table.dataTable tbody td {
+        padding: 4px 5px;
+    } 
+    .grid-divider {
+        position: relative;
+        padding: 0;
+    }
+
+       .grid-divider > [class*='col-'] {
+            position: static;
+        }
+
+     .grid-divider > [class*='col-']:nth-child(n+2):before {
+         content: "";
+         border-left: 1px solid #ccc !important;
+         position: absolute;
+         top: 0;
+         bottom: 0;
+    } 
+    .col-padding {
+        padding: 0 15px;
+    } 
+    table.dataTable thead th, table.dataTable thead td {
+        padding: 4px 5px !important;
+        border-bottom: none !important;
+   }
+
+    table.dataTable.no-footer {
+        border-bottom: none !important;
+    }
+
+    .dataTables_wrapper.no-footer .dataTables_scrollBody {
+        border-bottom: none !important;
+    }
+    
+     #divLinks a{
+         color: white !important;
+         text-decoration:underline;
+         font-weight:bold;
+         font-size:1.2em;
+     }
+     #divLinks{
+         margin-left:20px;
+     }
+       .ContactDisplay {
+    font-size: 1.1em !important;
+    font-weight: 700 !important; 
+   }
+    .toplabel {
+        padding-left:10px;margin-top:5px;font-size:1.1em;font-weight:bold;
+    }
+</style>
+<style type="text/css" media="print">
+    @@media print {
+        @@page {
+            size: landscape;
+            margin: 0;
+        }
+    }
+
+    input[type="search"] {
+        display: none;
+    }
+
+    .dataTables_filter {
+        display: none;
+    }
+
+    .landScape {
+        width: 100%;
+        height: 100%;
+        margin: 0% 0% 0% 0%;
+        filter: prouid:DXImageTransform.Microsoft.BasicImage(Rotation=3);
+    } 
+  
+    div.dt-buttons {
+        margin-top: -40px !important;
+    }
+   .UserContactCard
+    {
+        padding-left:40px !important;
+    } 
+
+    .ContactDisplay {
+    font-size: 1.1em !important;
+    font-weight: 700 !important; 
+    
+    }
+    .toplabel {
+        padding-left:10px;margin-top:5px;font-size:1em;font-weight:bold;
+    }
+
+</style>
+<div class="content landScape">
+    @section heading{
+        <span id="Headtitle">Contact Details<br /><span class="niceLabel text-success" id="SubTitle"></span></span>}
+ 
+    <div id="errorMessage" class="text-danger font-large"></div>
+    <div class="sub-container ">
+        <div class="row  " style="border-bottom:1px solid black;"></div>
+            <div class="row grid-divider dark-info paddingbot-10" style="line-height: 1.1;">  
+                <div class="col-md-6"> 
+                    <span id="txtFirstName" class="niceLabel-bold  text-primary color-white fleft" style="margin-right:4px;"></span>
+                    <span id="txtLastName" class="niceLabel-bold  text-primary color-white fleft"></span>
+                    <link media="print" rel="Alternate" href="print.pdf" class="fleft"> 
+                    <div id="divLinks" class="nopadding hidden-print fleft bold color-white">
+                    </div>
+                </div>
+                <div class="col-md-1 nopadding ">
+                    <div  class="toplabel color-white">
+                        <span><b>Active:</b></span>
+                        <span id="txtIsActive" ></span>
+                    </div> 
+                </div>
+                <div class="col-md-1 nopadding">
+                    <div class="toplabel color-white nowrap"> 
+                        <span><b># of Groups:</b></span>
+                        <span id="txtNoofGroups"></span>
+                    </div>
+                </div>
+                <div class="col-md-1 nopadding">
+                    <div   class="toplabel color-white text-nowrap"> 
+                        <span><b>Fuels:</b></span>
+                        <span id="txtIsActiveFF" ></span>
+                    </div>
+                </div>
+                <div class="col-md-1 nopadding">
+                    <div   class="toplabel color-white nowrap">
+                        <span><b>ACH:</b></span>
+                        <span id="txtIsActiveACH" ></span>
+                    </div>
+                </div> 
+                <div class="col-md-2 nopadding">
+                    <div class="toplabel color-white text-nowrap">
+                        
+                        <span><b>Members:</b></span>
+                        <span id="txtIsActiveMB"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row grid-divider  info aligncenter" >   
+                <div class="col-md-4 niceLabel-subheading-grey ">Contact Details
+                </div>
+                <div class="col-md-4 niceLabel-subheading-grey ">
+                    Account Details
+                </div>
+                <div class="col-md-4 niceLabel-subheading-grey">
+                    History
+                </div>
+             </div>
+             <div class="row grid-divider" style="margin-top:3px;height:320px;overflow-y:auto;overflow-x:visible;">
+                        <div class="niceLabel-default col-sm-4">
+                            <div> 
+                                <!----Start table html--->
+                                <div class="row UserContactCard">
+                                    <div class="ContactDisplay">
+                                        <div class="col-xs-12  ">
+                                            <span id="txtPrefix"></span>
+                                            <span id="txtFirstName1"></span>&nbsp;<span id="txtLastName1"></span>
+                                        </div>
+                                        <div class="col-xs-12 "> <span id="txtJobTitle"></span></div>
+                                        <div class="col-xs-12 "> <span id="txtCompanyName1"></span></div>
+                                        <div class="col-xs-12 " id="divAddress"></div> 
+                                                                        
+                                    </div>
+                                    <br clear="all" ><br />
+                                    
+                                    <div class="col-xs-12  margin-top5"><b>Office:</b>&nbsp;<span id="txtOfficePhone"></span> &nbsp;Ext:<span id="txtOfficePhoneExtension"></span></div>
+                                    <div class="col-xs-12  margin-top5"><b>Mobile:</b>&nbsp;<span id="txtMobilePhone"></span></div>
+                                    <div class="col-xs-12  margin-top5"><b>Fax:</b>&nbsp;<span id="txtPrimaryFax"></span></div>
+                                    <div class="col-xs-12  margin-top5"><b>Home:</b>&nbsp;<span id="txtHomePhone"></span></div>
+                                    <div class="col-xs-12  margin-top5"><b>Email:</b>&nbsp;<span id="txtEmail"></span></div>
+                              
+                                    <!--Start table html-->
+                                    <div class="col-xs-12  margin-top5">
+                                        <b>WebPage:</b>&nbsp;<span id="txtWebPage"></span>
+                                    </div>
+                                    <div class="col-xs-12 margin-top5">
+                                        <b>Twitter:</b>&nbsp;<span id="txtTwitter"></span>
+                                    </div>
+                                    <div class="col-xs-12 margin-top5">
+                                        <b>Facebook:</b>&nbsp; <span id="txtFacebook"></span>
+                                    </div>
+                                    <div class="col-xs-12 margin-top5">
+                                        <b> LinkedIn:</b>&nbsp; <span id="txtLinkedIn"></span></div>
+                                    <div class="col-xs-12 margin-top5">
+                                        <b> GooglePlus:</b>&nbsp; <span id="txtGooglePlus"></span></div>
+                                    <div class="col-xs-12 margin-top5">
+                                        <b> Pinterest:</b>&nbsp; <span id="txtPinterest"></span></div> 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="col-padding"> 
+                                <div>
+                                  
+                                    @*<div id="password" class="row" style="display:none;">
+                                        <label for="inpassword" class="col-xs-6">Password:</label>
+                                        <span id="txtPassword" class="niceLabel "></span>
+                                    </div>*@
+                                    <div class="row">
+                                        <label for="inpUserName" class="col-xs-6">Created By:</label>
+                                        <span id="txtcreatedbyUser" class="niceLabel"></span>
+                                    </div>
+                                    <div class="row">
+                                        <label for="inpCreateDate" class="col-xs-6">Created:</label>
+                                        <span id="txtCreateDate" ></span>
+                                    </div>
+                                    <div class="row">
+                                        <label for="inpLastUpdatedDate" class="col-xs-6">Last Updated By:</label>
+                                        <span id="txtLastUpdatedUser"></span>
+                                    </div>
+                                    <div class="row">
+                                        <label for="inpLastUpdatedUser" class="col-xs-6">Last Updated:</label>
+                                          <span id="txtLastUpdatedDate"></span>
+                                    </div>
+                                  
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="col-padding"> 
+                                <div id="">
+                                    <table id="tblGrpTransactions" class="niceLabel-default">
+                                        <thead>
+                                            <tr>
+                                                <th>Action</th>
+                                                <th>Details</th>
+                                                <th>Modified By</th>
+                                                <th>Modified Date</th>
+                                                <th>TimeStamp</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+ 
+        <br />
+        <div class="row grid-divider">
+            <div class="sub-container col-padding  col-xs-12">
+                <div class="col-padding">
+                    <div class="row  " style="border-bottom:1px solid black;"></div>
+                    <div class="row grid-divider info" style="line-height: 1.2;">
+                        <span class="niceLabel-subheading-grey aligncenter">Groups</span> <br /><br />
+                    </div>
+                    <table id="tblSubscribers" class="niceLabel-default  display" width="100%">
+                        <thead>
+                            <tr>
+                                <th>GroupName</th>
+                                <th>GroupTypeName</th>
+                                <th>Roles</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    @*</div>*@
+    @section scripts {
+        <script type="text/javascript">
+            var getUrlParameter = function getUrlParameter(sParam) {
+                var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                    sURLVariables = sPageURL.split('&'), sParameterName, i;
+                for (i = 0; i < sURLVariables.length; i++) {
+                    sParameterName = sURLVariables[i].split('=');
+                    if (sParameterName[0] === sParam) {
+                        return sParameterName[1] === undefined ? true : sParameterName[1];
+                    }
+                }
+            };
+            var uid = parseInt(getUrlParameter('uid'));
+            var tab = parseInt(getUrlParameter('tab'));
+            if (uid > 0) {
+                // Declaring variable at the top.
+                var Username, Prefix, FirstName, MiddleName, LastName, Suffix, PreferredName, Email, Email2, HomePhone, OfficePhone, OfficePhoneExtension, MobilePhone;
+                var PrimaryFax, Noofgroups, createdbyUser, CreateDate, LastUpdatedDate, LastUpdatedUser, LastLoginDate, LastMyProfileUpdate, Responsibilities;
+                var Twitter, Facebook, LinkedIn, GooglePlus, Pinterest, IsActiveMB, IsActiveFF, IsActiveACH, IsActiveContact, CompanyName, Password, WebPage;
+
+                //Update properties
+                var group = $.getJSON('/api/GetIsUserExisting/?userId=' + uid, function (data) {
+                    $("#breadcrumb").hide();
+                    if (data.length > 2) {
+                        //console.log(data);
+                        var dat = JSON.parse(data);
+                        Username = dat[0]["Username"];
+                        Prefix = dat[0]["Prefix"];
+                        FirstName = dat[0]["FirstName"];
+                        if (FirstName.length > 0)
+                            FirstName = FirstName.charAt(0).toUpperCase() + FirstName.slice(1);
+                        MiddleName = dat[0]["MiddleName"];
+                        LastName = dat[0]["LastName"];
+                        if (LastName.length > 0)
+                            LastName = LastName.charAt(0).toUpperCase() + LastName.slice(1);
+                        Suffix = dat[0]["Suffix"] === null ? '' : dat[0]["Suffix"];
+                        PreferredName = dat[0]["PreferredName"] === null ? '' : dat[0]["PreferredName"];
+                        Email = dat[0]["Email"] === null ? '' : dat[0]["Email"];
+                        Email2 = dat[0]["Email2"] === null ? '' : dat[0]["Email2"];
+                        HomePhone = dat[0]["HomePhone"] === null ? '' : dat[0]["HomePhone"];
+                        OfficePhone = dat[0]["OfficePhone"] === null ? '' : dat[0]["OfficePhone"];
+                        OfficePhoneExtension = dat[0]["OfficePhoneExtension"] === null ? '' : dat[0]["OfficePhoneExtension"];
+                        MobilePhone = dat[0]["MobilePhone"] === null ? '' : dat[0]["MobilePhone"];
+                        PrimaryFax = dat[0]["PrimaryFax"] === null ? '' : dat[0]["PrimaryFax"];
+                        Noofgroups = dat[0]["Noofgroups"] === null ? '' : dat[0]["Noofgroups"];
+
+                        createdbyUser = dat[0]["createdbyUser"] === null ? '' : dat[0]["createdbyUser"];
+                        CreateDate = dat[0]["CreateDate"] === null ? '' : (new Date(parseInt(dat[0]["CreateDate"].substr(6)))).toDateString();
+                        LastUpdatedDate = dat[0]["LastUpdatedDate"] === null ? '' : (new Date(parseInt(dat[0]["LastUpdatedDate"].substr(6)))).toDateString();
+                        LastUpdatedUser = dat[0]["LastUpdatedUser"] === null ? '' : dat[0]["LastUpdatedUser"];
+                        LastLoginDate = dat[0]["LastLoginDate"] === null ? '' : (new Date(parseInt(dat[0]["LastLoginDate"].substr(6)))).toDateString();
+                        LastMyProfileUpdate = dat[0]["LastMyProfileUpdate"] === null ? '' : (new Date(parseInt(dat[0]["LastMyProfileUpdate"].substr(6)))).toDateString();
+                        JobTitle = dat[0]["JobTitle"];
+                        Responsibilities = dat[0]["Responsibilities"];
+
+                        if (!(dat[0]["Responsibilities"].length > 0))
+                            Responsibilities = "N/A";
+                        Twitter = dat[0]["Twitter"] === null ? '' : dat[0]["Twitter"];
+                        Facebook = dat[0]["Facebook"] === null ? '' : dat[0]["Facebook"];
+                        LinkedIn = dat[0]["LinkedIn"] === null ? '' : dat[0]["LinkedIn"];
+                        GooglePlus = dat[0]["GooglePlus"] === null ? '' : dat[0]["GooglePlus"];
+                        Pinterest = dat[0]["Pinterest"] === null ? '' : dat[0]["Pinterest"];
+                        WebPage = dat[0]["WebPage"] === null ? '' : dat[0]["WebPage"];
+
+                        IsActiveMB = dat[0]["IsActiveMB"];
+                        IsActiveFF = dat[0]["IsActiveFF"];
+                        IsActiveACH = dat[0]["IsActiveACH"];
+                        IsActiveContact = dat[0]["IsActiveContact"];
+                        CompanyName = dat[0]["CompanyNameOnly"];
+                        Password = dat[0]["Password"];
+                        
+                        $("#txtUserName").text(Username);
+                        //$("#txtPassword").text(Password);  //Commented by NA on 9/1/2018 because JD/SM want the password hidden
+                        $("#txtPrefix").text(Prefix);
+                        $("#txtFirstName").html(FirstName);
+                        $("#txtFirstName1").html(FirstName);
+                        if (MiddleName.length > 0)
+                            $("#txtMiddleName").text(" " + MiddleName);
+                        $("#txtLastName").html(LastName);
+                        $("#txtLastName1").html(LastName);
+                        $("#txtSuffix").text(Suffix);
+                        $("#txtPreferredName").html(PreferredName);
+                        $("#txtEmail").text(Email);
+                        $("#txtEmail2").html(Email2);
+                        $("#txtHomePhone").text(HomePhone);
+                        $("#txtOfficePhone").html(OfficePhone);
+                        $("#txtOfficePhoneExtension").text(OfficePhoneExtension);
+                        $("#txtMobilePhone").text(MobilePhone);
+                        $("#txtPrimaryFax").text(PrimaryFax);
+                        $('#txtCompanyName').text(CompanyName);
+                        $('#txtCompanyName1').text(CompanyName);
+                        $("#txtJobTitle").text(JobTitle);
+
+                        $("#txtcreatedbyUser").text(createdbyUser);
+                        $("#txtCreateDate").text(CreateDate);
+                        $("#txtLastUpdatedDate").html(LastUpdatedDate);
+                        $("#txtLastUpdatedUser").html(LastUpdatedUser);
+                        $("#txtLastLoginDate").text(LastLoginDate);
+                        $("#txtLastMyProfileUpdate").html(LastMyProfileUpdate);
+                        $("#txtLastLoginDate").html(LastLoginDate);
+
+                        $("#txtTwitter").html(Twitter);
+                        $("#txtFacebook").text(Facebook);
+                        $("#txtLinkedIn").html(LinkedIn);
+                        $("#txtGooglePlus").text(GooglePlus);
+                        $("#txtPinterest").html(Pinterest);
+
+                        $("#txtPinterest").html(Pinterest);
+                        $("#txtResponsibilities").html(Responsibilities);
+                        $("#txtWebPage").html(WebPage);
+                        if (IsActiveContact)
+                            $("#txtIsActive").html("Yes");
+                        else
+                            $("#txtIsActive").html("No");
+                        /**************************************/
+                        if (IsActiveFF) {
+                            $("#txtIsActiveFF").text("Yes");
+                        }
+                        else
+                            $("#txtIsActiveFF").text("No");
+                        /**************************************/
+                        if (IsActiveMB) {
+                            $("#txtIsActiveMB").text("Yes");
+                        }
+                        else {
+                            $("#txtIsActiveMB").text("No");
+                        }
+                        /**************************************/
+                        if (IsActiveACH) {
+                            $("#txtIsActiveACH").text("Yes");
+                        }
+                        else
+                            $("#txtIsActiveACH").text("No");
+
+                        $("#txtNoofGroups").text(Noofgroups);
+                    }
+                    else {
+                        $("#errorMessage").text("This is a A4A User, please contact IT for more information!!");
+                    }
+
+                });
+                //Updates Address
+                var query = "/api/getuseraddress/?UserId=" + uid;
+                $.ajax({
+                    url: query,
+                    type: "GET",
+                    datatype: "json",
+                    processData: false,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (result) {
+                        var add = JSON.parse(result);
+                        var str = "";
+                        var i = 0;
+                        if (result.length > 2) {
+                            $("#divAddress").append("<div>" +
+                                          "<span>" + add[i].Address1 + "</span> " +
+                                          "<span>" + add[i].Address2 + "</span> " +
+                                          "<div><span>" + add[i].City + "</span>,&nbsp;<span>" + add[i].State + "</span>,&nbsp;<span>" + add[i].Province + "</span> &nbsp;<span>" + add[i].ZipCode + "</span></div><div> <span>" + add[i].Country + "</span></div>" +
+                                          "</div>");
+                        }
+
+                    },
+                    error: function (exception) { $("errorMessage").text('Exception in loading addresses:' + exception.responseText); }
+                });
+
+                //Update Group Transactions
+                var query = "/api/getTransactions/?userId=" + uid;
+                $.ajax({
+                    url: query,
+                    type: "GET",
+                    datatype: "json",
+                    processData: false,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (result) {
+                        var table = $("#tblGrpTransactions").DataTable({
+                            "aaData": JSON.parse(result),
+                            retrieve: true,
+                            "deferRender": true,
+                            bProcessing: true,
+                            bAutoWidth: false,
+                            bFilter: false, bInfo: false,
+                            "aaSorting": [4, "desc"],
+                            aoColumns: [
+                              { mData: "Action" },
+                              { mData: "Details" },
+                              { mData: "modifiedby" },
+                              { mData: "TransactionDate" },
+                               { mData: "TDTimeStamp", "asSorting": ["desc"] },
+                            ],
+                            "aoColumnDefs": [
+                                     { "asSorting": ["desc"], "aTargets": [4] },
+                                     { "aDataSort": [4], "aTargets": [3] },
+                                     {
+                                         "aTargets": [4],
+                                         "bVisible": false,
+                                         "bSearchable": false
+                                     },
+                            ],
+                            "bInfo": false,
+                            "bLengthChange": false,
+                            "oLanguage": {
+                                "sEmptyTable": "No Transactions found for the group."
+                            }
+                        });
+                    },
+                    error: function (exception) { self.InfoMessage('Exception in getting Transactions' + exception.responseText); }
+                });
+
+                //Update Member/nonmember Subscribers
+                var query = "/api/getgroupuserlist/?userid=" + uid;
+                $.ajax({
+                    url: query,
+                    type: "GET",
+                    datatype: "json",
+                    processData: false,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (result) {
+                        var table = $("#tblSubscribers").DataTable({
+                            "aaData": JSON.parse(result),
+                            retrieve: true,
+                            "deferRender": true,
+                            bAutoWidth: false,
+                            dom: 'Bfrtip',
+                            buttons: [
+                                //{
+                                //    extend: 'copyHtml5',
+                                //    exportOptions: {
+                                //        columns: ':contains("Office")'
+                                //    }
+                                //},
+                                'excelHtml5'
+                                //,'csvHtml5'
+                                //, 'pdfHtml5'
+
+                            ],
+                            aoColumns: [
+                              { mData: "GroupName", "sClass": "nowrap" },
+                              { mData: "GroupTypeName" },
+                              { mData: "Roles" }
+                            ], "aoColumnDefs": [
+                             {
+                                 "aTargets": [-3],
+                                 "mRender": function (data, type, full) {
+                                     return '<a  href="/group/show/?gid=' + full.groupid + '" title="View"> ' + full.GroupName + '</a>';
+                                 }
+                             },
+                            ],
+                            "bInfo": false,
+                            "oLanguage": {
+                                "sEmptyTable": "No Subscribers found for the group."
+                            }
+                        });
+                    },
+                    error: function (exception) { $("#errorMessage").text('Exception in getting A4A Groups:' + exception.responseText); }
+                }).done(function () {
+                    $(".preloader").hide();
+                });
+
+              
+
+                //*********************************************************/
+                /** Binding Table activities
+                /**********************************************************/
+                var query = "/api/GetUserActivities/?userid=" + uid;
+                $.ajax({
+                    url: query,
+                    type: "GET",
+                    datatype: "json",
+                    processData: false,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (result) {
+                        $(".preloader").show();
+                        var table = $("#tblActivities").DataTable({
+                            "aaData": JSON.parse(result),
+                            retrieve: true,
+                            "deferRender": true,
+                            bAutoWidth: false,
+                            dom: 'Bfrtip',
+                            buttons: [
+                                {
+                                    extend: 'copyHtml5',
+                                    exportOptions: {
+                                        columns: ':contains("Office")'
+                                    }
+                                },
+                                'excelHtml5',
+                                'csvHtml5',
+                                'pdfHtml5'
+                            ],
+                            aoColumns: [
+                             { mData: "CreatedDate", "sClass": "nowrap" },
+                              { mData: "ActivitySubject" },
+                              { mData: "ActivityType" },
+                              { mData: "ActivityTopic" },
+                              { mData: "Createdby" }
+                            ], "aoColumnDefs": [
+                             {
+                                 "aTargets": [-4],
+                                 "mRender": function (data, type, full) {
+                                     return '<a  href="/activity/view/?aid=' + full.ActivityId + '"  title="view activity">' + full.ActivitySubject + '</a>';
+                                 }
+                             },
+                            ],
+                            "bInfo": false,
+                            "oLanguage": {
+                                "sEmptyTable": "No Activities found for the group."
+                            }
+                        });
+                    },
+                    error: function (exception) { $("#errorMessage").text('Exception in getting A4A Groups:' + exception.responseText); }
+                }).done(function () {
+                    $(".preloader").hide();
+                });
+
+
+                var str1 = '<a href="/user/index/#1">Add</a> ';
+                var str2 = '<a href="/user/index/?uid=' + uid + '">Edit</a> ';
+                var str3 = '<a href="#" onclick="window.print();return false;">Print</a> ';
+
+                //$("#divLinks").html(str1 + '&nbsp;|&nbsp;' + str3 + '&nbsp;|&nbsp;' + str2);
+                $("#divLinks").html(str2); //John wanted Add | Print to be removed - 7/31/2018
+
+                //Check if you can show the password
+                var url = "/api/GetIsCurrentUserAdmin";
+                $.ajax({
+                    url: url,
+                    contentType: 'application/json',
+                    success: function (data) {
+                        if (data) {
+                            $("#password").show();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        //$("#errorMessage").html("Error in confirming edit permissions." + xhr.responseText);
+                        return false;
+                    }
+                });
+            }
+            else {
+                $("#errorMessage").html("No UserId found! Please provide UserId!");
+                $(".preloader").hide();
+            }
+
+            $(function () {
+                $(function () {
+                    $("#dlgMission").dialog({
+                        autoOpen: false,
+                        modal: true,
+                        show: {
+                            effect: "blind",
+                            duration: 1000
+                        },
+                        hide: {
+                            effect: "explode",
+                            duration: 1000
+                        },
+                        buttons: {
+                            Ok: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                    $("#opener").on("click", function () {
+                        $("#dlgMission").dialog("open");
+                    });
+                });
+            });
+
+        </script>
+    }
+

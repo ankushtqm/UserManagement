@@ -1,0 +1,11 @@
+;
+.Set CabinetNameTemplate=ATA.ActiveDirectoryServices.wsp
+.set DiskDirectoryTemplate=CDROM ; All cabinets go in a single directory
+.Set CompressionType=MSZIP;** All files are compressed in cabinet files
+.Set UniqueFiles='ON'
+.Set Cabinet=on
+.Set DiskDirectory1=.
+"\\fsusersv01\mydocs\naamidala\My Documents\Visual Studio 2012\Projects\Member_Fuels\ATA.ActiveDirectoryServices\DLLS\GAC\ATA.ActiveDirectoryServices.dll"	"GAC\ATA.ActiveDirectoryServices.dll"
+"\\fsusersv01\mydocs\naamidala\My Documents\Visual Studio 2012\Projects\Member_Fuels\ATA.ActiveDirectoryServices\DLLS\SafeControls\Sample.Namespace.dll.xml"	"SafeControls\Sample.Namespace.dll.xml"
+"\\fsusersv01\MyDocs\naamidala\My Documents\Visual Studio 2012\Projects\Member_Fuels\ATA.ActiveDirectoryServices\manifest.xml"	"manifest.xml"
+;*** <the end>

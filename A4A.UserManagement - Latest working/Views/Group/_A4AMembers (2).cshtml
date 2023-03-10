@@ -1,0 +1,98 @@
+﻿<form role="form" class="form-horizontal">
+ 
+    <div class="form-group">
+        <label for="inpGroupAdmins" class="control-label">Group Managers:</label> 
+    </div>
+<div class="col-sm-5 form-group">
+    
+    <select name="from[]"  class="form-control" size="20" multiple="multiple" 
+            id="inpGroupAdmin">
+        @*data-bind="options: GroupAdmins, selectedOptions:highlightedGroupAdmins, optionsText: 'name', optionsValue: 'value'"*@
+    </select>
+</div>
+
+<div class="col-sm-2">
+    <button type="button" id="search_rightAll"><i class="glyphicon glyphicon-forward"></i></button>
+    <br /><br />
+    <button type="button" id="search_rightSelected"><i class="glyphicon glyphicon-chevron-right"></i></button>
+    <br /><br />
+    <button type="button" id="search_leftSelected"><i class="glyphicon glyphicon-chevron-left"></i></button>
+    <br /><br />
+    <button type="button" id="search_leftAll"><i class="glyphicon glyphicon-backward"></i></button>
+</div>
+
+  
+
+<div class="col-sm-5">
+    <select name="to[]" id="inpGroupAdmin_to" class="form-control" size="20" multiple="multiple">        
+    </select>
+    @*data-bind="options:SelectedGroupAdmins, selectedOptions:highlightedSelectedGroupAdmins, optionsText:'name', optionsValue: 'value'"*@
+</div>
+ 
+
+ </form>
+<input type="button" id="btnMoveRight" class="btn btn-primary" value="Move Right" data-bind="click: moveRight" />
+<input type="button" id="btnMoveRight" class="btn btn-primary" value="Move Left" data-bind="click: moveLeft" />
+
+
+<script type="text/javascript">
+//<![CDATA[
+
+//ATAUser Manager registration view view model
+//function UMContactsList() {
+//    var self = this;
+//    // observable arrays are update binding elements upon array changes
+//    self.GroupAdmins = ko.observableArray();
+//    self.SelectedGroupAdmins = ko.observableArray();
+//    self.highlightedGroupAdmins = ko.observableArray();
+//    self.highlightedSelectedGroupAdmins = ko.observableArray();
+
+//    self.moveRight = function () {
+//        var sel = self.highlightedGroupAdmins();
+//        alert("In moveRight" + sel);
+//        //for (var i = 0; i < sel.length; i++) {
+//        //    var selCat = sel[i];
+//        //    alert(selCat.text + "value:" + selCat.value);
+//        //}
+//    };
+//    self.moveLeft = function () {
+//        var sel = self.SelectedGroupAdmins();
+//        alert("In moveleft" + sel);
+//        //for (var i = 0; i < sel.length; i++) {
+//        //    var selCat = sel[i];
+//        //    alert(selCat.text + "value:" + selCat.value);
+//        //}
+//    };
+//    //self.multipleSelectedOptionValuesDisplay = ko.computed(function () {
+//    //    return ko.utils.arrayMap(self.highlightedGroupAdmins(), function (val) {
+//    //        alert(val);
+//    //        return val.value + ". " + val.name;
+//    //    });
+//    //}, self);
+//    self.GetGroupAdmins = function () {
+//        $.ajax({
+//            url: '/api/GetA4AStaffwTitle',
+//            type: "GET",
+//            datatype: "json",
+//            processData: false,
+//            contentType: "application/json; charset=utf-8",
+//            success: function (result) {
+//                for (key in result) {
+//                    var item = {
+//                        value: key,// Push the key on the array
+//                        name: result[key] // Push the value of the key on the array
+//                    };
+//                    self.GroupAdmins.push(item);
+//                }
+//            },
+//            error: function (exception)
+//            {
+//                alert('Exeption in  UM Contacts:' + exception.responseText);
+//            }
+//        });
+//    };
+//}
+//addUMContactsViewModel = new UMContactsList()
+//ko.applyBindings(addA4AStaffViewModel);
+//]]>
+</script> 

@@ -1,0 +1,396 @@
+﻿@{
+    ViewBag.Title = "List";
+}
+<style>
+    .preloader {
+        background: rgba(255,255,255,0.9);
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9998;
+        opacity: 1;
+        transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        -webkit-transition: all 0.5s ease-in-out;
+    } 
+    .preloader img {
+            position: fixed;
+            z-index: 9999;
+            top: 40%;
+            left: 45%;
+        }
+</style>
+@section scripts 
+ {
+    <script type="text/javascript"> 
+
+        function deleteGroup(groupid) {
+            $(".preloader").show();
+          $.ajax({
+              url: '/api/RemoveGroup/?GroupId=' + groupid,
+              type: 'post',
+              //data: dataObject,
+              contentType: 'application/json',
+              success: function (data) {
+                  alert("Group deleted successfully!");
+                  window.location.reload(false);
+                  $(".preloader").hide();
+              },
+              error: function (xhr, status, error) {
+                  var err = eval("(" + xhr.responseText + ")");
+                  alert("Could not delete the Group! " + xhr.responseText);
+                  $(".preloader").hide();
+                  return false;
+              }
+          });
+      }
+         
+      $(document).ready(function () {
+          var getUrlParameter = function getUrlParameter(sParam) {
+          var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                  sURLVariables = sPageURL.split('&'), sParameterName, i;
+          for (i = 0; i < sURLVariables.length; i++) {
+              sParameterName = sURLVariables[i].split('=');
+             if (sParameterName[0] === sParam) {
+                  return sParameterName[1] === undefined ? true : sParameterName[1];
+             }
+          }
+      };
+
+ 
+      $('.groupdelete').click(function () { 
+                var grpid = $(this).attr('id'); 
+                return false;
+            });
+
+            var isAdmin = false;
+
+            //By All Groups
+            var BindGroupType = function () { 
+                $(".preloader").show();
+                $('#MyGroup').hide();
+                $('#MyGroup_wrapper').hide();  
+                $('#ByGroupType').show();
+                $('#ByGroupType_wrapper').show();
+                if (sessionStorage.getItem("ByGroupType"))
+                { setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30); }
+
+                $.ajax({
+                    url: '/api/getgrouplist/?type=1',
+                    type: 'get',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        var temp = JSON.parse(data);
+                        var table = $("#ByGroupType").DataTable({
+                            "aaData": JSON.parse(data),
+                            retrieve: true,
+                            "deferRender": true,
+                            bProcessing: true,
+                            bAutoWidth: false,
+                            aoColumns: [
+                              { mData: "GroupName", sWidth: "300px" },
+                              { mData: "GroupType" }, 
+                              { mData: "GroupEmail" },
+                              { mData: "Liaison" }, 
+                              { mData: "MemberCount", sWidth: "30px" },
+                              { mData: "SendPermissions", sWidth: "80px" },
+                              { mData: "LastModified", sWidth: "100px" },
+                              { mData: "Edit", sWidth: "30px" },
+                              { mData: "View", sWidth: "30px" },
+                              { mData: "Delete", sWidth: "30px" },
+                            ]
+                            , "aoColumnDefs": [
+                                 { "bVisible": false, "aTargets": [1] },
+                                 {
+                                     "aTargets": [-3],
+                                     "mRender": function (data, type, full) {
+                                         return '<a  href="/group/index/?gid=' + full.GroupId + '" title="editgroup"><img alt="Edit"  src="/images/edit-25.png" border="0" /></a>';
+                                     }
+                                 },
+                                 {
+                                     "aTargets": [-2],
+                                     "mRender": function (data, type, full) {
+                                         return '<a  href="/group/show/?gid=' + full.GroupId + '&tab=2" title="View"><img alt="View" height="15px" src="/images/view_20.png" border="0" /></a>';
+                                     }
+                                 },
+                                 {
+                                     "aTargets": [-1],
+                                     "mRender": function (data, type, full) {
+                                         //return '<a  id="delete_' + full.GroupId + '"  href="#"  class="groupdelete" title="Delete"><img alt="View" height="15px" src="/images/icon-delete.png" border="0" /></a>';
+                                         return '<img  onclick="deleteGroup(' + full.GroupId + ')"   class="groupdelete"  alt="View" height="15px"   id="delete_' + full.GroupId + '"    src="/images/icon-delete.png" border="0" />';
+                                     }
+                                 }
+                            ,{
+                                "aTargets": [0],
+                                "sWidth": "200px"
+                            }
+                            ],
+                            "order": [[1, 'asc']],
+                            "displayLength": 25,
+                            "drawCallback": function (settings) {
+                                var api = this.api();
+                                var rows = api.rows({ page: 'current' }).nodes();
+                                var last = null;
+
+                                api.column(1, { page: 'current' }).data().each(function (group, i) {
+                                    if (last !== group) {
+                                        $(rows).eq(i).before(
+                                            '<tr class="group niceLabel info"><td colspan="9"><b>' + group + '</b></td></tr>'
+                                        ); 
+                                        last = group;
+                                    }
+                                });
+                            }
+                        });
+                          
+                        if (!isAdmin) { 
+                            // Get the column API object for delete button
+                            var column1 = table.column(-1);
+                            // Toggle the visibility  
+                            column1.visible(false);
+                            // Get the column API object for edit button
+                            var column2 = table.column(-3);
+                            // Toggle the visibility  
+                            column2.visible(false);
+                        }
+
+                        // Setup - add a text input to each footer cell
+                        $('#ByGroupType thead th').each(function () { 
+                            var title = $('#ByGroupType thead th').eq($(this).index()).text();
+                            if (title.toLowerCase().indexOf("modified") < 0 && title.toLowerCase().indexOf("permissions") < 0 && title.toLowerCase().indexOf("subscriber") < 0 && title.toLowerCase().indexOf("view") < 0 && title.toLowerCase().indexOf("edit") < 0 && title.toLowerCase().indexOf("delete") < 0 && title.toLowerCase().indexOf("subscriber")) {
+                                $(this).html('<input class=" form-control" type="text" placeholder="Search ' + title + '" />');
+                            }
+                        });
+                        // Apply the search
+                        table.columns().every(function () {
+                            var that = this;
+                            $('input', this.header()).on('keyup change', function () {
+                                if (that.search() !== this.value) {
+                                    that
+                                        .search(this.value)
+                                        .draw();
+                                }
+                            });
+                        });
+                        table.columns().eq(0).each(function (colIdx) { 
+                            $('input, select', table.column(colIdx).header()).on('click', function (e) {
+                                e.stopPropagation();
+                            });
+                        });
+                    },
+                    error: function (exception) {
+                        alert('Exception in get ByGroupType:' + exception.responseText);
+                    }
+                }).done(function (data) {
+                    setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30);
+                    sessionStorage.setItem("ByGroupType", true);
+                });
+            }  
+            $('#btnGroupbyGroupMyGroup').click(function () {
+                BindMyGroup();
+                $(this).removeClass("btn-info").addClass("btn-primary");
+                $('#btnGroupbyGroupType').addClass("btn-info"); 
+                $('#pagetitle').html("My Groups");
+            }); 
+            $('#btnGroupbyGroupType').click(function () {
+                BindGroupType();
+                $('ByGroupType').removeClass("hidden").addClass("display");
+                $(this).removeClass("btn-info").addClass("btn-primary");
+                $('#btnGroupbyGroupMyGroup').addClass("btn-info"); 
+                $('#pagetitle').html(" All Groups");
+            }); 
+            
+            ///////////////////////////////////
+            //////MY GROUPS/////////////////////
+            //////////////////////////////
+            var BindMyGroup = function () { 
+                $(".preloader").show();
+                $('#ByGroupType').hide();
+                $('#ByGroupType_wrapper').hide();
+                $('#MyGroup').show();
+                $('#MyGroup_wrapper').show();
+                if (sessionStorage.getItem("MyGroup"))
+                { setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30); }
+                $.ajax({
+                    url: '/api/getgrouplist/?type=4',
+                    type: 'get',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        var table = $("#MyGroup").DataTable({
+                            "aaData": JSON.parse(data),
+                            retrieve: true,
+                            "deferRender": true,
+                            bProcessing: true,
+                            bAutoWidth: false,
+                            "oLanguage": {
+                                "sEmptyTable": "No Groups found!"
+                            },
+                            aoColumns: [
+                              { mData: "GroupName", sWidth: "25%" }, 
+                              { mData: "GroupType" },
+                              { mData: "GroupEmail" },
+                              { mData: "Liaison" }, 
+                              { mData: "MemberCount", sWidth: "30px" },
+                              { mData: "SendPermissions", sWidth: "80px" },
+                              { mData: "LastModified", sWidth: "100px" },
+                              { mData: "Edit", sWidth: "30px" },
+                              { mData: "View", sWidth: "30px" },
+                            ]
+                            , "aoColumnDefs": [
+                                { "bVisible": false, "aTargets": [1] },
+                                {
+                                    "aTargets": [-2],
+                                    "mRender": function (data, type, full) {
+                                        return '<a  href="/group/index/?gid=' + full.GroupId + '" title="editgroup"><img alt="Edit"  src="/images/edit-25.png" border="0" /></a>';
+                                    }
+                                },
+                                {
+                                    "aTargets": [-1],
+                                    "mRender": function (data, type, full) {
+                                        return '<a  href="/group/show/?gid='  + full.GroupId + '"  title="View"><img alt="View"  src="/images/view_20.png" border="0" /></a>';
+                                    }
+                                }, 
+                            ],
+                            "order": [[1, 'asc']],
+                            "displayLength": 25,
+                            "drawCallback": function (settings) {
+
+                                var api = this.api();
+                                var rows = api.rows({ page: 'current' }).nodes();
+                                var last = null;
+
+                                api.column(1, { page: 'current' }).data().each(function (group, i) {
+                                    if (last !== group) {
+                                        $(rows).eq(i).before(
+                                            '<tr class="group niceLabel info"><td colspan="9"><b>' + group + '</b></td></tr>'
+                                        );
+                                        last = group;
+                                    }
+                                });
+                            }
+                        }); 
+                        //// Setup - add a text input to each footer cell
+                        $('#MyGroup thead th').each(function () { 
+                            var title = $('#MyGroup thead th').eq($(this).index()).text();
+                            if (title.toLowerCase().indexOf("modified") < 0 && title.toLowerCase().indexOf("permissions") < 0 && title.toLowerCase().indexOf("count") < 0 && title.toLowerCase().indexOf("view") < 0 && title.toLowerCase().indexOf("edit") < 0 && title.toLowerCase().indexOf("delete") < 0 && title.toLowerCase().indexOf("subscriber") < 0) {
+                                $(this).html('<input class=" form-control" type="text" placeholder="Search ' + title + '" />');
+                            } 
+                        }); 
+                        //// Apply the search
+                        table.columns().every(function () {
+                            var that = this;
+                            $('input', this.header()).on('keyup change', function () {
+                                if (that.search() !== this.value) {
+                                    that
+                                        .search(this.value)
+                                        .draw();
+                                }
+                            });
+                        }); 
+                        table.columns().eq(0).each(function (colIdx) { 
+                            $('input, select', table.column(colIdx).header()).on('click', function (e) {
+                                e.stopPropagation();
+                            });
+                        });
+                    },
+                    error: function (exception) {
+                        alert('Exception in get My Groups:' + exception.responseText);
+                    }
+                }).done(function (data) {
+                    setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30);
+                    sessionStorage.setItem("MyGroup", true);
+                });
+            } 
+          
+            //Do the intital binding
+            var type = parseInt(getUrlParameter('type'));
+            if (type == 1) {
+                    BindMyGroup();
+                } else if (type == 2) {
+                    var group = $.getJSON('/api/GetIsCurrentUserAdmin', function (data) {
+                        isAdmin = data;
+                    }).done(function () {
+                        BindGroupType();
+                    });
+                    $('#pagetitle').html("All Groups");
+                }
+                else {
+                    sessionStorage.clear();
+                    BindMyGroup();
+                } 
+         }); 
+    </script>
+}
+<div class="content">
+    @section heading{
+        @*<span id="Headtitle">Group List View   <br />*@<span class="niceLabel-bold" id="pagetitle">My Groups</span>@*</span>*@}
+    <div class="overlay">
+        <div id="loading-img"></div>
+    </div>
+    <div class="preloader">
+        <div><img src="~/images/Preloader-2.gif" /></div>
+    </div>
+  
+<table id="MyGroup"  style="display:none;"  width="100%">
+    <thead>
+        <tr>
+            <th>GroupName</th> 
+            <th>GroupType</th>
+            <th>Group Email</th>
+            <th>Liaison</th> 
+            <th>Subscribers</th>
+            <th>Send Permissions</th>
+            <th>Last Modified</th>
+            <th>Edit</th>
+            <th>View</th>
+        </tr>
+    </thead>
+    @*<tfoot>
+        <tr>
+            <th>GroupName</th> 
+            <th>GroupType</th>
+            <th>Group Email</th>
+            <th>Liaison</th> 
+            <th>Subscribers</th>
+            <th>Send Permissions</th>
+            <th>Last Modified</th>
+            <th>Edit</th>
+            <th>View</th>
+        </tr>
+    </tfoot>*@
+</table> 
+<table id="ByGroupType" class="display" cellspacing="0"   style="display:none;">
+    <thead>
+        <tr>
+            <th>GroupName</th>
+            <th>GroupType</th> 
+            <th>Group Email</th>
+            <th>Liaison</th> 
+            <th>Subscribers</th>
+            <th>Send Permissions</th>
+            <th>Last Modified</th> 
+            <th>Edit</th>
+            <th>View</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    @*<tfoot>
+        <tr>
+            <th>GroupName</th>
+            <th>GroupType</th> 
+            <th>Group Email</th>
+            <th>Liaison</th> 
+            <th>Subscribers</th>
+            <th>Send Permissions</th>
+            <th>Last Modified</th> 
+            <th>Edit</th>
+            <th>View</th>
+            <th>Delete</th>
+        </tr>
+    </tfoot>*@
+</table> 
+</div>
+

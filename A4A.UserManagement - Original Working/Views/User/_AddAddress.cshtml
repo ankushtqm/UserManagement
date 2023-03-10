@@ -1,0 +1,73 @@
+﻿<br /><br />
+<div class="fleft">
+    <input type="button" id="btnAddAddressTop" class="btn btn-primary" value="Save User Address" data-bind="click: addUserAddress" />
+</div>
+<br /> 
+<form id="A4AUserAddress" role="form" class="form-horizontal">
+    <div class="overlay">
+        <div id="loading-img"></div>
+    </div>
+    <div class="text-danger niceLabel margin-topbot10  bold" data-bind="visible: ShowErr, text: 'Please fix all errors before submitting!'"></div><br />
+    <span class="text-danger niceLabel margin-topbot10  bold" data-bind="text: ErrorMessage"></span>
+    <span class="text-success niceLabel margin-topbot10 bold" data-bind="text: InfoMessage"></span>
+    <br />
+    <div class="row">
+        <fieldset>
+            <legend class="niceLabel text-warning" >Business</legend>
+            <div class="col-lg-8"> 
+                <div class="form-group">
+                    <label for="inpAddress1" class="niceLabel col-sm-3">Address 1:<span class="text-danger">*</span></label>
+                    <input id="inpAddress1" class="form-control" type="text" data-bind="value: Address1,valueUpdate: 'afterkeydown'" /> 
+                    <span class="validation-error" data-bind="validationMessage:  $data.Address1 "></span>
+                </div>
+                <div class="form-group">
+                    <label for="inpAddress2" class="niceLabel col-sm-3">Address 2:</label>
+                    <input id="inpAddress2" class="form-control" type="text" data-rel="none" data-bind="value: Address2" />
+                    <span class="validation-error" data-bind="validationMessage:  $data.Address2 "></span>
+                </div>
+                <div class="form-group">
+                    <label for="inpCity" class="niceLabel col-sm-3">City:</label>
+                    <input id="inpCity" type="text" data-rel="none" class="form-control" data-bind="value:City , valueUpdate: 'afterkeydown'" />
+                    <span class="validation-error" data-bind="validationMessage:  $data.City "></span>
+                </div> 
+                <div class="form-group">
+                    <label for="inpState" class="niceLabel col-sm-3">State:</label>
+                    <input id="inpState" type="text" data-rel="none" class="form-control" data-bind="value:State, valueUpdate: 'afterkeydown'" />
+                    <span class="validation-error" data-bind="validationMessage:  $data.State "></span>
+                </div>
+                <div class="form-group">
+                    <label for="inpZipCode" class="niceLabel col-sm-3">ZipCode:</label>
+                    <input id="inpZipCode" type="text" data-rel="none" class="form-control" data-bind="value:ZipCode, valueUpdate: 'afterkeydown'" />
+                    <span class="validation-error" data-bind="validationMessage:  $data.ZipCode "></span>
+                </div>
+                <div class="form-group">
+                    <label for="inpProvince" class="niceLabel col-sm-3">Province:</label>
+                    <input id="inpProvince" type="text" data-rel="none" class="form-control" data-bind="value:Province" />
+                    <span class="validation-error" data-bind="validationMessage:  $data.Province "></span>
+                </div> 
+                <div class="form-group">
+                    <label for="inpCountry" class="niceLabel col-sm-3">Country:</label>
+                    <input id="inpCountry" type="text" data-rel="none" class="form-control" data-bind="value:Country" />
+                    <span class="validation-error" data-bind="validationMessage:  $data.Country "></span>
+                </div>
+            </div>
+            <div class="col-sm-4"> 
+                    <span class="niceLabel text-warning">Address</span>
+                    <div data-bind="foreach: Addresses()">
+                        <div>
+                            <span data-bind='text: Address1'></span> 
+                            <span data-bind='text: Address2'></span> 
+                            <div><span data-bind='text: City'></span>, <span data-bind='text: State'></span> &nbsp;&nbsp;<span data-bind='text: ZipCode'></span></div>
+                            <div><span data-bind='text: Country'></span></div>
+                            <a href='#' data-bind='click: $parent.removeAddress'>Delete</a>
+                        </div>
+                        <hr />
+                        <br/>
+                    </div>
+           </div>  
+           </fieldset>
+</div>
+</form>
+<div class="fleft">
+    <input type="button" id="btnAddAddressTop" class="btn btn-primary" value="Save User Address" data-bind="click: addUserAddress" />
+</div>

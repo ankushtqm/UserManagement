@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Feature xmlns="http://schemas.microsoft.com/sharepoint/"
+         Id="EBE2E4E5-619A-4439-BF31-0026A80D5075"
+         Title="ATA Authentication Provider"
+         Description="Adds entries to the web.config file to enable some authentication provider functionality."
+         Scope="Site" 
+         Version="1.0.0.0"
+         ReceiverAssembly="ATA.Authentication, Version=1.0.0.0, Culture=neutral, PublicKeyToken=65b988712bd31de0"
+        ReceiverClass="ATA.Authentication.FeatureReceiver">
+  <Properties>
+    <Property Key="ASHAMembershipConnectionStringName" Value="ASHA_MembershipConnection" />
+  </Properties>
+	<ElementManifests />
+</Feature>

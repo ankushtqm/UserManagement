@@ -1,0 +1,24 @@
+﻿<style>
+    .rleft {
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
+<div id="SendEmailGroupEmail" class="row">
+    <span class="niceLabel-bold" style="color: #666;">Send Email Confirmation</span>
+    <span class="text-danger niceLabel  bold " data-bind="text: MessageSM"></span><br />
+    <div class="text-success niceLabel bold" data-bind="html: InfoMessageEmail"></div><br />
+    @*<input type="button" id="btnSendEmail" class="btn btn-primary" value="Send Email" data-bind="click: SendEmail" />*@
+    @*<br />*@
+    <select id="inpGroupMembershipList" class="form-control margin-bot20 margin-topbot10" data-bind="options: MembershipList,value:membership ,optionsCaption: 'Choose Membership', event:{ change: getEmailContent}"></select>
+
+    <div class="GroupMembership" id="UserGroupMembership">
+        @*<div class="editable" id="divEmailContent"></div>*@
+        <div class="editable" id="divEmailContent" data-bind="html: EmailContent" disabled></div>
+        @*<textarea class="editable" id="divEmailContent" data-bind="textInput: EmailContent" rows="30" cols="100"></textarea>*@
+    </div>
+    <br />
+    <div class="rleft" style="width:120rem">
+        <input type="button" id="btnSendEmail" class="btn btn-primary" value="Send Email" data-bind="click: SendEmail" />
+    </div>
+</div>

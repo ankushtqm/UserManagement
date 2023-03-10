@@ -1,0 +1,40 @@
+﻿<div>
+    <p>You have selected <span data-bind='text: $data.selectedValues().length'>&nbsp;</span> Subscribers</p>
+</div>
+
+<div class="GroupSubscriber" id="GroupSubscriberContainer">
+    <div class="row">
+        <div class="control-label col-sm-1">
+            <label class="niceLabel"> Contact</label>
+        </div>
+
+        <div class="control-label col-sm-2">
+            <input type="text" class="acSubInfoUser chosen form-control" style="width:300px;" placeholder="Search Contacts" id="acSubInfoUser" data-bind="ko_autocomplete: {source: getLanguages, select: selectLanguage ,minLength: 3 }" />
+            <a href='#' class='text-danger btndelete' style="font-size: 12px;" data-bind="click: clearSubscribertxt">Delete</a>
+        </div>
+    </div>
+
+    <table class="table" data-bind='visible: $data.selectedValues().length > 0'>
+        <thead>
+            <tr>
+                <th style="width: 144px; padding-left: 0px; font-size: 12px;">Company Name</th>
+                <th style="width: 298px; font-size: 12px; ">Name</th>
+                <th style="width: 154px; font-size: 12px;">Email Admin</th>
+                <th style="width: 154px; font-size: 12px;">Subscribe</th>
+                <th style="font-size: 12px;">Delete</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: $data.selectedValues().sort(function(l,r) { return l.Name == r.Name ? 0 : (l.Name < r.Name ? -1 : 1)}) ">
+            <tr>
+                <td style="padding-left: 0px;"><span data-bind='text: CompanyName'></span></td>
+                <td><span data-bind="text: Name"></span></td>
+                <td><input type='checkbox' name='EmailAdmin' data-bind="value:UserId, checked:CheckStatus" onchange="chkInformationalRoles(this)" /></td>
+                <td><div class="chklist"><label class="chklistcontainer"><input type="checkbox" checked disabled><span class="checkmark"></span></label></div></td>
+                <td><a href='#' style="font-size: 12px;" data-bind='click: $parent.removeUMInfoContacts'>Delete</a></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

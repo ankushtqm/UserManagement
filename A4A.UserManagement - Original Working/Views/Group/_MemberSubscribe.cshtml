@@ -1,0 +1,25 @@
+﻿<div class="GroupSubscriber" id="GroupSubscriberContainer">
+    <p>You have selected <span data-bind='text: $data.selectedValues().length'>&nbsp;</span> Subscribers</p>
+  
+    <span class="text-danger niceLabel margin-topbot10  bold" data-bind="text: errorMessage"></span>
+    <span class="text-success niceLabel margin-topbot10 bold" data-bind="text: InfoMessage"></span>
+    <br/>
+    @*<span class="text-danger niceLabel bold" data-bind='text: $data.errorMessage()'></span>*@ 
+    <label for="name-search">Contact: </label>
+    <p>
+        <input type="text" class="chosen form-control" style="width:300px;" id="acSubInfoUser" data-bind="ko_autocomplete: { source: getLanguages, select: selectLanguage ,minLength: 3 }" />
+    </p> 
+    <table class="table" data-bind='visible: $data.selectedValues().length > 0'>
+        <thead>
+            <tr>
+                <th class="control-label">Name</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: $data.selectedValues().sort(function(l,r) { return l.Name == r.Name ? 0 : (l.Name < r.Name ? -1 : 1)}) ">
+            <tr>
+                <td><span data-bind="text: Name"></span> <span data-bind='text: CompanyName'></span></td> 
+                <td><a href='#' data-bind='click: $parent.removeUMContacts'>Delete</a></td>
+            </tr>
+        </tbody>
+    </table> 
+    </div>

@@ -1,0 +1,77 @@
+﻿REATE PROCEDURE [dbo].[P_ATA_GetListNamesByMemberEmail] 
+@UserNameLC varchar(100),
+@DomainLC varchar(200)
+AS
+BEGIN
+	SELECT  members_.List_  FROM members_ 
+	WHERE  UserNameLC_ = @UserNameLC AND Domain_ = @DomainLC 
+END
+GO 
+
+
+CREATE PROCEDURE [dbo].[P_ATA_DeleteMemberByEmailAndListName] 
+@UserNameLC varchar(100),
+@DomainLC varchar(200),
+@listName varchar(60) 
+AS
+BEGIN
+	DELETE FROM members_ 
+	WHERE  UserNameLC_ = @UserNameLC AND  Domain_ = @DomainLC AND List_ = @listName  
+END
+GO
+
+CREATE PROCEDURE [dbo].[P_ATA_DeleteMemberFromAllLists] 
+@UserNameLC varchar(100),
+@DomainLC varchar(200) 
+AS
+BEGIN
+	DELETE FROM members_ 
+	WHERE  UserNameLC_ = @UserNameLC AND  Domain_ = @DomainLC 
+END
+GO 
+
+
+ALTER PROCEDURE [dbo].[P_ATA_UpdateListAdmin] 
+@UserNameLC varchar(100),
+@DomainLC varchar(200),  
+@listName varchar(60),
+@RcvAdmMail char(1),
+@IsListAdm char(1),
+@NotifySubm char(1),
+@NoMail bit
+AS
+BEGIN 
+update members_  set RcvAdmMail_ = @RcvAdmMail, IsListAdm_ = @IsListAdm, NotifySubm_ = @NotifySubm,
+SubType_ = CASE WHEN @NoMail = 1 THEN 'nomail' ELSE 'mail' END
+WHERE  UserNameLC_ = @UserNameLC AND  Domain_ = @DomainLC AND List_ = @listName  
+END
+GO
+
+
+CREATE PROCEDURE [dbo].[P_ATA_AddMemberToList] 
+@UserNameLC varchar(100),
+@DomainLC varchar(200),  
+@listName varchar(60),
+@UserEmail varchar(100),
+@FullName varchar(100)
+AS
+BEGIN 
+insert into members_ ( EmailAddr_, UserNameLC_, Domain_, List_, FullName_, MemberType_, DateJoined_ ) 
+values (@UserEmail, @UserNameLC, @DomainLC, @listName, @FullName, 'normal', getDate() )	  
+END
+GO 
+
+ALTER PROCEDURE [dbo].[P_ATA_GetMembersByListName_EmailOptional]
+	@UserNameLC varchar(100) = NULL,
+	@DomainLC varchar(200) = NULL, 
+	@listName varchar(60)
+AS
+BEGIN  
+	SELECT  EmailAddr_, IsListAdm_, RcvAdmMail_, NotifySubm_,
+			CASE WHEN SubType_ = 'nomail' THEN 1  ELSE 0 END as NoMail
+	FROM members_ 
+	WHERE List_ = @listName  
+	AND (@UserNameLC IS NULL OR @UserNameLC = '' OR @UserNameLC = UserNameLC_)  
+	AND  (@DomainLC IS NULL OR @DomainLC = '' OR @DomainLC = Domain_)  
+END  
+GO 

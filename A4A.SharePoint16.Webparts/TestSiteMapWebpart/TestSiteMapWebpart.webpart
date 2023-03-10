@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<webParts>
+  <webPart xmlns="http://schemas.microsoft.com/WebPart/v3">
+    <metaData>
+      <type name="A4A.SharePoint16.Webparts.TestSiteMapWebpart.TestSiteMapWebpart, $SharePoint.Project.AssemblyFullName$" />
+      <importErrorMessage>$Resources:core,ImportErrorMessage;</importErrorMessage>
+    </metaData>
+    <data>
+      <properties>
+        <property name="Title" type="string">Member Portal Site Map</property>
+        <property name="Description" type="string">List of sites for Member Portal</property> 
+        <property name="ChromeType" type="chrometype">TitleOnly</property>
+      </properties>
+    </data>
+  </webPart>
+</webParts>

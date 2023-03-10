@@ -1,0 +1,2240 @@
+﻿--EDit Group Type table
+-----------------------
+GroupTypeLabel	nvarchar(100)	Checked
+GroupShortLabel	nvarchar(100)	Checked
+	/*Cope the below data 	
+1	Council Group	True	False	False	True	Council & Committee Group	Council
+2	Committee Group	True	False	False	True	Council & Committee Group	Committee
+3	Taskforce, Working, Industry, Network	False	True	False	True	Taskforce, Working, Industry, Network	Taskforce
+5	Security Group	False	True	False	True	Security Group	Security 
+6	Distribution Group	False	False	True	True	Distribution Group	Distribution
+7	Council Group - Unlimited Alternates	True	True	False	True	Council & Committee Group	Council - Unlimited
+NULL	NULL	NULL	NULL	NULL	NULL	NULL	NULL */
+--------------------------------------------------------------
+User Table - Add below colums and add foreign key references
+-------------------------
+DepartmentId	int	Checked
+DivisonId	int	Checked
+ATA_Membership_UM.dbo.[User]
+----------------------------------------
+select * into ATA_Membership_UM.dbo.[Division] from 
+A4AStgPlanning.dbo.[Division]
+
+select * into ATA_Membership_UM.dbo.[Department] from 
+A4AStgPlanning.dbo.[Department]
+  
+select * into ATA_Membership_UM.dbo.[A4AUser] from 
+A4AStgPlanning.dbo.[A4AUser]
+
+Create the primary keys and Forgien keys
+--------------------------------------------------
+select u.UserId, u.Email,u.Username,a.loginwithoutdomain from ATA_Membership_UM.dbo.A4AUser a 
+inner join 
+ATA_Membership_UM.dbo.[User] u on a.DisplayName = u.Lastname +', ' + u.firstname
+----------------------------------------------------------------------------------
+--Add to Group Table
+----------------------------------------------------------------------------------
+CreatedDate	    datetime	Checked     (must)
+ModifiedDate	datetime	Checked     (must)
+Liaison1	    nvarchar(50)	Checked (must)                                (Foreigen key to A4AUsers table)
+Liaison1UserId	int	Checked													  (Foreign key to A4AUsers table)
+Liaison2UserId	int	Checked													  (Foreign key to A4AUsers table)
+Liaison2	    nvarchar(50)	Checked                                       (NO Forigen key since not in use now)
+DivisionId  	int	Checked             (must - pulled from Liaison 1)        (Forigen key to Division table)
+DepartmentId	int	Checked				(must)                                (Forigen key to Department table)
+Mission	        nvarchar(MAX)	Checked
+LyrisSendId	    int     	Checked					                          (Forigen key to LyrisSend)
+BounceReports	bit	Checked
+------------------------------------------------------------------------------------
+USE [ATA_Membership_UM]								   s
+GO
+/****** Object:  Table [dbo].[LyrisSend]    Script Date: 10/25/2016 05:39:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[LyrisSend](
+	[Id] [int] NOT NULL,
+	[Value] [nchar](20) NULL,
+ CONSTRAINT [PK_LyrisSend] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+Values
+------
+Id	Value
+1	Admin Only          
+2	List Members        
+3	Anyone              
+-------------------------------------------------------------------------------------------------------------							
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_LookupUser_Load]    Script Date: 11/02/2016 14:32:44 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Patrick Rodgers
+-- Create date: 8/30/2007
+-- Description:	Loads a lookup user object, a simple readonly object for quickly looking up base user properties
+-- =============================================
+ALTER PROCEDURE [dbo].[p_LookupUser_Load]
+@UserId int
+AS
+BEGIN
+ SELECT
+		UserId, Username, Prefix, FirstName, MiddleName, LastName, Suffix, PreferredName, Email, Email2,JobTitle,DivisonId,DepartmentId
+	FROM
+		[User]
+	WHERE
+		UserId = @UserId 
+END 
+------------------------------------------------------------------------------------------------------------------------------------------
+--Edit Database UserGroup Stored procs
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_User_GetUserGroups]    Script Date: 11/07/2016 16:01:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO 
+-- Description:	Gets all the User Groups 
+ALTER PROCEDURE [dbo].[p_User_GetUserGroups]
+@UserId int,
+@AppliesToSiteId int
+AS
+BEGIN 
+
+--create our temp table with both email addresses
+	SELECT
+		ug.GroupId,userid,CommitteeRoleId
+	FROM
+		[UserGroup] ug 
+	JOIN
+		[Group] g ON g.GroupId = ug.GroupId
+	WHERE
+		ug.UserId = @UserId AND
+		g.AppliesToSiteId = @AppliesToSiteId 
+ 
+END
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Date - 1/12/2017 modifying Stored Proc - UserGroup_GetCommitteePrimaryAltRootGroupByComapny - Changed it to take Company Name, or GroupID and CompanyId
+****************************************************************************************************************************************************************************************
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_Group_GetCommitteePrimaryAltRoot]    Script Date: 01/12/2017 10:50:59 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[p_Group_GetCommitteePrimaryAltRoot]
+@CompanyId int = null,
+@CompanyName nvarchar(100) = null,
+@GroupId int = null,
+@CommitteeRole  nvarchar(20) = null
+AS
+BEGIN
+
+DECLARE @SQLQuery AS NVARCHAR(1000) 
+
+SET @SQLQuery = 'SELECT    [User].Email, [User].UserId, [Group].GroupId, [Group].LyrisListName, UserGroup.CommitteeRoleId '+
+                'FROM         UserCompany INNER JOIN'+
+                ' [User] ON UserCompany.UserId = [User].UserId INNER JOIN'+
+                ' UserGroup ON UserCompany.UserId = UserGroup.UserId INNER JOIN'+
+                ' [Group] ON UserGroup.GroupId = [Group].GroupId INNER JOIN '+
+                '[Company] ON [Company].CompanyId = UserCompany.CompanyId ' +
+                ' where [Group].IsCommittee = 1 AND [Group].IsChildGroup = 0   '
+ 
+ 
+ 
+ if @CommitteeRole is not null
+ begin
+ SET @SQLQuery = @SQLQuery +' AND UserGroup.CommitteeRoleId in ('+ @CommitteeRole   +')'
+ end 
+ 
+ 
+ 
+ 
+ if @CompanyId is not null
+ begin
+ SET @SQLQuery = @SQLQuery +' AND UserCompany.CompanyId = '+ CAST(@CompanyId AS NVARCHAR(10))  
+ end 
+ 
+ 
+ if @GroupId is not null
+ begin
+ SET @SQLQuery = @SQLQuery +' AND [Group].GroupId = '+ CAST(@GroupId AS NVARCHAR(10))  
+ end 
+ 
+ if @CompanyName is not null
+ begin
+ SET @SQLQuery = @SQLQuery +' AND Company.CompanyName  LIKE '''+  '%' + @CompanyName + '%' +''''
+ end 
+ 
+ SET @SQLQuery = @SQLQuery +' order by Company.CompanyName , UserGroup.CommitteeRoleId '
+ 
+PRINT @SQLQuery
+EXEC (@SQLQuery) 
+
+END
+
+/*
+ALTER PROCEDURE [dbo].[p_UserGroup_GetCommitteePrimaryAltRootGroupByComapny]
+@CompanyId int,
+@CompanyName nvarchar = null,
+@GroupId int = null
+AS
+BEGIN  
+SELECT    [User].Email, [User].UserId, [Group].GroupId, [Group].LyrisListName
+FROM         UserCompany INNER JOIN
+                      [User] ON UserCompany.UserId = [User].UserId INNER JOIN
+                      UserGroup ON UserCompany.UserId = UserGroup.UserId INNER JOIN
+                      [Group] ON UserGroup.GroupId = [Group].GroupId
+where [Group].IsCommittee = 1 AND [Group].IsChildGroup = 0 AND UserGroup.CommitteeRoleId IN (1, 2, 3, 4) AND UserCompany.CompanyId = @CompanyId 
+
+END
+
+*/
+ 
+ /*****************************************************************************************************************************************/
+ /**Date - 1/12/2017 **/
+ /*****************************************************************************************************************************************/
+
+ USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserGroup_delete]    Script Date: 01/12/2017 10:49:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Description:	Creates a new group 
+ALTER PROCEDURE [dbo].[p_UserGroup_delete] 
+@GroupId int = null,
+@UserId int = null,
+@CompanyName nvarchar(40)=null,
+@CommitteeRoleId int = null
+AS
+BEGIN
+
+	IF (@GroupId IS NOT NULL and @UserId is NOT null )
+	BEGIN
+
+		delete ug from [UserGroup] ug  
+        where ug.UserId = @UserId and ug.GroupId = @GroupId
+	END
+	else
+	if (@CompanyName is not null and @GroupId is not null and @CommitteeRoleId is not null)
+	 
+		delete ug from [UserGroup] ug 
+		left outer join [User] u on u.UserId = ug.UserId  
+        left outer join UserCompany uc on u.UserId = uc.UserId
+        left outer join Company c on uc.CompanyId = c.CompanyId
+        where ug.CommitteeRoleId = @CommitteeRoleId and GroupId = @GroupId and c.CompanyName like   @CompanyName 
+END
+
+/*
+
+delete ug from [UserGroup] ug 
+		left outer join [User] u on u.UserId = ug.UserId  
+        left outer join UserCompany uc on u.UserId = uc.UserId
+        left outer join Company c on uc.CompanyId = c.CompanyId
+        where ug.CommitteeRoleId = 12 and GroupId = 264 and c.CompanyName like   @CompanyName 
+        
+        
+select u.username,ug.userid, c.companyname,ug.committeeroleid from [UserGroup] ug 
+		left outer join [User] u on u.UserId = ug.UserId  
+        Left outer join UserCompany uc on u.UserId = uc.UserId
+        left outer join Company c on uc.CompanyId = c.CompanyId
+        where ug.groupid = 264 order by companyname
+        
+select * from [UserGroup] where groupid = 264
+*/
+/******************************************************************************************************************/
+Date 1/13/2017
+/******************************************************************************************************************/
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_Group_Update]    Script Date: 01/13/2017 09:53:55 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- Description:	Updates a group 
+ALTER PROCEDURE [dbo].[p_Group_Update] 
+@GroupId int,
+@GroupName nvarchar(50),
+@IsOpenEnrollment bit,
+@AppliesToSiteId int,
+@LyrisListName nvarchar(60),
+@LyrisShortDescription nvarchar(200),
+@LyrisListType nvarchar(35),
+@GroupSiteUrl nvarchar(512),
+@IsCommittee bit,
+@IsChildGroup bit,
+@ParentGroupId int = 0,
+@IsSecurityGroup bit,
+@GroupTypeId int,
+@CreatedDate   Datetime = null,
+@ModifiedDate  Datetime= null,
+@Liaison1 nvarchar(200) = null,
+@Liaison2   nvarchar(200) = null,
+@Liaison1UserId  int = null,
+@Liaison2UserId  int = null,
+@DivisionId  int = null,
+@DepartmentId  int = null,
+@Mission  nvarchar(max) = null,
+@LyrisSendId  int = null,
+@BounceReports  nvarchar(max) = null,
+@GAB bit= null
+ 
+AS
+BEGIN
+
+	UPDATE [Group]
+	SET
+		[GroupName] = @GroupName,
+		[IsOpenEnrollment] = @IsOpenEnrollment,
+		[AppliesToSiteId] = @AppliesToSiteId,
+		[LyrisListName] = @LyrisListName,
+		[LyrisShortDescription] = @LyrisShortDescription,
+		[LyrisListType] = @LyrisListType,
+		[GroupSiteUrl] = @GroupSiteUrl,
+		[IsCommittee] = @IsCommittee,
+		[IsChildGroup] = @IsChildGroup,
+		[ParentGroupId] = @ParentGroupId,
+		IsSecurityGroup = @IsSecurityGroup,
+		GroupTypeId = @GroupTypeId,
+		CreatedDate = @CreatedDate,
+		ModifiedDate = @ModifiedDate,
+		Liaison1 = @Liaison1,
+		Liaison2 = @Liaison2,
+		Liaison1UserId = @Liaison1UserId,
+		Liaison2UserId = @Liaison2UserId,
+DivisionId = @DivisionId,
+DepartmentId = @DepartmentId,
+Mission = @Mission,
+LyrisSendId = @LyrisSendId,
+BounceReports = @BounceReports,
+GAB = @GAB
+
+	WHERE
+		GroupId = @GroupId 
+END
+
+
+
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_Group_Create]    Script Date: 11/29/2017 10:15:09 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Description:	Creates a new group 
+ALTER PROCEDURE [dbo].[p_Group_Create] 
+@GroupId int output,
+@GroupName nvarchar(50),
+@IsOpenEnrollment bit,
+@AppliesToSiteId int,
+@LyrisListName nvarchar(60),
+@LyrisShortDescription nvarchar(200),
+@LyrisListType nvarchar(35),
+@GroupSiteUrl nvarchar(512),
+@IsCommittee bit,
+@IsChildGroup bit,
+@ParentGroupId int = 0,
+@IsSecurityGroup bit ,
+@GroupTypeId int ,
+@CreatedDate   Datetime = null,
+@ModifiedDate  Datetime= null,
+@Liaison1 nvarchar(200) = null,
+@Liaison2   nvarchar(200) = null,
+@Liaison1UserId  int = null,
+@Liaison2UserId  int = null,
+@DivisionId  int = null,
+@DepartmentId  int = null,
+@Mission  nvarchar(max) = null,
+@LyrisSendId  int = null,
+@BounceReports  nvarchar(max) = null,
+@GAB bit= null,
+@IsNewGroup bit=false out
+AS
+BEGIN
+	IF(@ParentGroupId IS NULL)
+	BEGIN
+		SET @ParentgroupId = 0
+	END
+	
+	SELECT
+		@GroupId = GroupId
+	FROM
+		[Group]
+	WHERE
+		GroupName = @GroupName
+	
+   DECLARE  @DiviID int   
+   select @DiviID = DivisionId   from Department where DepartmentId = @DepartmentId
+   select @IsSecurityGroup= IsSecurityCategory ,@IsCommittee =  IsCommitteeCategory from GroupType where GroupTypeId = @GroupTypeId
+   IF(@IsChildGroup = 1)
+     Begin
+      set @IsCommittee = 0
+     end
+     
+   
+	IF (@GroupId IS NULL)
+	BEGIN
+		/**AppliestoSiteId is set to members by default change **/
+		INSERT INTO [Group]
+			([GroupName], [IsOpenEnrollment], [AppliesToSiteId], [LyrisListName], 
+			[LyrisShortDescription], [LyrisListType], [GroupSiteUrl], [IsCommittee], 
+			[IsChildGroup], [ParentGroupId], IsSecurityGroup, GroupTypeId,[CreatedDate],
+            [ModifiedDate],[Liaison1],[Liaison1UserId],[Liaison2],[Liaison2UserId],[DivisionId],
+            [DepartmentId],[Mission],[LyrisSendId],[BounceReports],[GAB] )
+		VALUES
+			(@GroupName, @IsOpenEnrollment, 2, @LyrisListName, 
+			 @LyrisShortDescription, @LyrisListType, @GroupSiteUrl, @IsCommittee, 
+			 @IsChildGroup, @ParentGroupId, @IsSecurityGroup, @GroupTypeId,GETDATE(),
+			 @ModifiedDate,@Liaison1,@Liaison1UserId,@Liaison2,@Liaison2UserId,@DiviID,
+			 @DepartmentId,@Mission,@LyrisSendId,@BounceReports,@GAB)
+
+		SET @GroupId = @@IDENTITY 
+		SET @IsNewGroup = 1;
+	END 
+	ElSE 
+	Begin
+		UPDATE [Group] SET
+		[GroupName] = @GroupName,
+		[IsOpenEnrollment] = @IsOpenEnrollment,
+		[AppliesToSiteId] = 2, /*AppliesSiteId is set to Members by default*/
+		[LyrisListName] = @LyrisListName,
+		[LyrisShortDescription] = @LyrisShortDescription,
+		[LyrisListType] = @LyrisListType,
+		[GroupSiteUrl] = @GroupSiteUrl,
+		[IsCommittee] = @IsCommittee,
+		[IsChildGroup] = @IsChildGroup,
+		[ParentGroupId] = @ParentGroupId,
+		IsSecurityGroup = @IsSecurityGroup,
+		GroupTypeId = @GroupTypeId,
+		--CreatedDate = @CreatedDate, shouldn't be edited
+		ModifiedDate = @ModifiedDate,
+		Liaison1 = @Liaison1,
+		Liaison2 = @Liaison2,
+		Liaison1UserId = @Liaison1UserId,
+		Liaison2UserId = @Liaison2UserId,
+		DivisionId = @DiviID,
+		DepartmentId = @DepartmentId,
+		Mission = @Mission,
+		LyrisSendId = @LyrisSendId,
+		BounceReports = @BounceReports,
+		GAB = @GAB 
+
+	WHERE
+		GroupId = @GroupId  
+	END
+	
+END
+  
+--------------------------------------------------------------------------------------
+Date - 1/23/2017
+--------------------------------------------------------------------------------------
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_Group_GetAllNonChildGroups]    Script Date: 01/23/2017 13:46:28 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [dbo].[p_Group_GetAllNonChildGroups]
+@AppliesToSiteId int
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+ IF @AppliesToSiteId =  4
+ begin
+	SELECT
+		*
+	FROM
+		[Group]
+	WHERE  IsChildGroup = 0 
+	ORDER BY
+		GroupName ASC 
+ end
+ ELSE
+ begin
+	SELECT
+		*
+	FROM
+		[Group]
+	WHERE
+		AppliesToSiteId = @AppliesToSiteId AND IsChildGroup = 0 
+	ORDER BY
+		GroupName ASC 
+ end
+		
+END
+
+/*-------------------------------------------------------------------------------------------------------
+-Date 2/1/2013 p_UserGroupJsonModel_Create
+-------------------------------------------------------------------------------------------------------*/
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserGroupJsonModel_Create]    Script Date: 02/01/2017 11:11:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Description:	Creates a new group 
+ALTER PROCEDURE [dbo].[p_UserGroupJsonModel_Create] 
+@GroupId int,
+@UserId int ,
+@Primary  bit,
+@Alternate	bit,
+@Chair	bit,
+@ViceChair	bit,
+@Informational	bit,
+@Spokesperson	bit,
+@GroupLeader	bit,
+@Secretary	bit,
+@ManageGroup	bit,
+@EmailAdmin	bit,
+@BounceReports	bit,
+@Subscribe	bit,
+@Alerts   bit,
+@StaffSubscribe bit,
+@CompanyName nvarchar = null,
+@UserName nvarchar = null
+
+AS
+BEGIN 
+
+	/***Set Primary Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Primary = 1)
+	BEGIN
+
+		INSERT INTO [UserGroup]
+			([GroupId], [UserId], [CommitteeRoleId])
+		VALUES
+			(@GroupId, @UserId, 1) 
+	END 
+	
+	/***Set Alternate Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Alternate = 1)
+	BEGIN
+
+		INSERT INTO [UserGroup]
+			([GroupId], [UserId], [CommitteeRoleId])
+		VALUES
+			(@GroupId, @UserId, 2)
+
+		 
+	END 
+		/***Set Chair Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Chair = 1)
+	BEGIN
+
+		INSERT INTO [UserGroup]
+			([GroupId], [UserId], [CommitteeRoleId])
+		VALUES
+			(@GroupId, @UserId, 3)
+
+		 
+	END 
+	
+	/***Set @ViceChair Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @ViceChair = 1)
+	BEGIN
+
+		INSERT INTO [UserGroup]
+			([GroupId], [UserId], [CommitteeRoleId])
+		VALUES
+			(@GroupId, @UserId, 4)
+
+		 
+	END 
+	
+	/***Set @Informational Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Informational = 1)
+	BEGIN
+
+		INSERT INTO [UserGroup]
+			([GroupId], [UserId], [CommitteeRoleId])
+		VALUES
+			(@GroupId, @UserId, 5)
+
+		 
+	END 
+ 	
+	/***Set @Spokesperson Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Spokesperson = 1)
+	BEGIN
+
+		INSERT INTO [UserGroup]
+			([GroupId], [UserId], [CommitteeRoleId])
+		VALUES
+			(@GroupId, @UserId, 6)
+
+		 
+	END 
+	
+	/***Set @GroupLeader Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @GroupLeader = 1)
+	BEGIN
+
+		INSERT INTO [UserGroup]
+			([GroupId], [UserId], [CommitteeRoleId])
+		VALUES
+			(@GroupId, @UserId, 7)
+
+		 
+	END 
+	
+		/***Set @Secretary Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Secretary = 1)
+	BEGIN
+
+		INSERT INTO [UserGroup]
+			([GroupId], [UserId], [CommitteeRoleId])
+		VALUES
+			(@GroupId, @UserId, 8)
+
+		 
+	END 	
+	/***Set @ManageGroup Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @ManageGroup = 1)
+	BEGIN
+
+		INSERT INTO [UserGroup]
+			([GroupId], [UserId], [CommitteeRoleId])
+		VALUES
+			(@GroupId, @UserId, 9)		 
+	END 	
+	/***Set @EmailAdmin Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @EmailAdmin = 1)
+	BEGIN
+
+		INSERT INTO [UserGroup]
+			([GroupId], [UserId], [CommitteeRoleId])
+		VALUES
+			(@GroupId, @UserId, 10)	 
+	END 	  
+	/***Set @BounceReports Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @BounceReports = 1)
+	BEGIN
+
+		INSERT INTO [UserGroup]
+			([GroupId], [UserId], [CommitteeRoleId])
+		VALUES
+			(@GroupId, @UserId, 11) 
+	END  
+	/***Set @Subscribe Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Subscribe = 1)
+	BEGIN
+
+		INSERT INTO [UserGroup]
+			([GroupId], [UserId], [CommitteeRoleId])
+		VALUES
+			(@GroupId, @UserId, 12) 
+	END 
+	
+		/***Set @Alert Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Alerts = 1)
+	BEGIN
+
+		INSERT INTO [UserGroup]
+			([GroupId], [UserId], [CommitteeRoleId])
+		VALUES
+			(@GroupId, @UserId, 13) 
+	END 
+	
+	/***Set @StaffSubscribe Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @StaffSubscribe = 1)
+	BEGIN
+
+		INSERT INTO [UserGroup]
+			([GroupId], [UserId], [CommitteeRoleId])
+		VALUES
+			(@GroupId, @UserId, 14) 
+	END 	 
+END
+
+/*-------------------------------------------------------------------------------------------------------
+-Date 2/1/2013 p_UserGroupJsonModel_Load
+-------------------------------------------------------------------------------------------------------*/
+p_UserGroupJsonModel_Load
+
+/*-------------------------------------------------------------------------------------------------------
+-Date 2/1/2013 p_UserGroupJsonModel_delete
+-------------------------------------------------------------------------------------------------------*/
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserGroupJsonModel_Delete]    Script Date: 02/01/2017 11:24:20 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Description:	Creates a new group 
+ALTER PROCEDURE [dbo].[p_UserGroupJsonModel_Delete] 
+@GroupId int,
+@UserId int ,
+@Primary  bit,
+@Alternate	bit,
+@Chair	bit,
+@ViceChair	bit,
+@Informational	bit,
+@Spokesperson	bit,
+@GroupLeader	bit,
+@Secretary	bit,
+@ManageGroup	bit,
+@EmailAdmin	bit,
+@BounceReports	bit,
+@Subscribe	bit,
+@Alerts   bit,
+@StaffSubscribe bit
+
+AS
+BEGIN 
+ 
+
+	/***Set Primary Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Primary = 1)
+	BEGIN
+
+		delete from [UserGroup]
+		where UserId = @UserId and GroupId = @GroupId and committeeroleid = 1
+	END 
+	
+	/***Set Alternate Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Alternate = 1)
+	BEGIN 
+		delete from [UserGroup]
+		where UserId = @UserId and GroupId = @GroupId and committeeroleid = 2 
+	END 
+		/***Set Chair Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Chair = 1)
+	BEGIN
+
+		delete from [UserGroup]
+		where UserId = @UserId and GroupId = @GroupId and committeeroleid = 3
+	END 
+	
+	/***Set @ViceChair Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @ViceChair = 1)
+	BEGIN
+        delete from [UserGroup]
+		where UserId = @UserId and GroupId = @GroupId and committeeroleid = 4
+	END 
+	
+	/***Set @Informational Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Informational = 1)
+	BEGIN
+	    delete from [UserGroup]
+		where UserId = @UserId and GroupId = @GroupId and committeeroleid = 5
+	END 
+ 	
+	/***Set @Spokesperson Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Spokesperson = 1)
+	BEGIN
+		delete from [UserGroup]
+		where UserId = @UserId and GroupId = @GroupId and committeeroleid = 6
+	END 
+	
+	/***Set @GroupLeader Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @GroupLeader = 1)
+	BEGIN
+        delete from [UserGroup]
+		where UserId = @UserId and GroupId = @GroupId and committeeroleid = 7
+		 
+	END 
+	
+		/***Set @Secretary Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Secretary = 1)
+	BEGIN
+		delete from [UserGroup]
+		where UserId = @UserId and GroupId = @GroupId and committeeroleid = 8
+	END 
+	
+	/***Set @ManageGroup Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @ManageGroup = 1)
+	BEGIN 
+	    delete from [UserGroup]
+		where UserId = @UserId and GroupId = @GroupId and committeeroleid = 9
+	END 
+	
+	/***Set @EmailAdmin Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @EmailAdmin = 1)
+	BEGIN
+		delete from [UserGroup]
+		where UserId = @UserId and GroupId = @GroupId and committeeroleid = 10
+		 
+	END 
+	  
+	/***Set @BounceReports Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @BounceReports = 1)
+	BEGIN
+       delete from [UserGroup]
+		where UserId = @UserId and GroupId = @GroupId and committeeroleid = 11
+	END 
+	
+	/***Set @Subscribe Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Subscribe = 1)
+	BEGIN
+       delete from [UserGroup]
+		where UserId = @UserId and GroupId = @GroupId and committeeroleid = 12		 
+	END 
+	
+		/***Set @Alert Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @Alerts = 1)
+	BEGIN
+        delete from [UserGroup]
+		where UserId = @UserId and GroupId = @GroupId and committeeroleid = 13
+		 
+	END 
+	
+	/***Set @StaffSubscribe Role **/
+	IF (@GroupId IS not NULL and @UserId is not null and @StaffSubscribe = 1)
+	BEGIN
+
+	delete from [UserGroup]
+		where UserId = @UserId and GroupId = @GroupId and committeeroleid = 14
+	END 	 
+END
+
+/*-------------------------------------------------------------------------------------------------------
+-Date 2/1/2013 p_UserGroup_IsUserinGroup
+-------------------------------------------------------------------------------------------------------*/
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserGroup_IsUserinGroup]    Script Date: 02/01/2017 11:25:21 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Description:	Creates a new group 
+ALTER PROCEDURE [dbo].[p_UserGroup_IsUserinGroup] 
+@GroupId int = null,
+@UserId int = null,
+@CompanyName nvarchar(40)=null,
+@CommitteeRoleId int = null,
+@Count int OUTPUT
+AS
+BEGIN
+
+	IF (@GroupId IS NOT NULL and @UserId is NOT null )
+	BEGIN
+
+		select @Count = COUNT(*) from [UserGroup] ug
+        where ug.UserId = @UserId and ug.GroupId = @GroupId
+	END
+	else
+	if (@CompanyName is not null and @GroupId is not null and @CommitteeRoleId is not null)
+	 
+		delete ug from [UserGroup] ug 
+		left outer join [User] u on u.UserId = ug.UserId  
+        left outer join UserCompany uc on u.UserId = uc.UserId
+        left outer join Company c on uc.CompanyId = c.CompanyId
+        where ug.CommitteeRoleId = @CommitteeRoleId and GroupId = @GroupId and c.CompanyName like   @CompanyName 
+END
+
+/*
+
+delete ug from [UserGroup] ug 
+		left outer join [User] u on u.UserId = ug.UserId  
+        left outer join UserCompany uc on u.UserId = uc.UserId
+        left outer join Company c on uc.CompanyId = c.CompanyId
+        where ug.CommitteeRoleId = 12 and GroupId = 264 and c.CompanyName like   @CompanyName 
+        
+        
+select u.username,ug.userid, c.companyname,ug.committeeroleid from [UserGroup] ug 
+		left outer join [User] u on u.UserId = ug.UserId  
+        Left outer join UserCompany uc on u.UserId = uc.UserId
+        left outer join Company c on uc.CompanyId = c.CompanyId
+        where ug.groupid = 264 order by companyname
+        
+select * from [UserGroup] where groupid = 264
+*/
+//////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserGroup_LoadLI]    Script Date: 03/20/2017 07:55:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Description:	Gets Group Users for taskforce and other tabs in edit group
+ALTER PROCEDURE [dbo].[p_UserGroup_LoadLI] 
+@GroupId int,
+@RoleId nvarchar(40)=null,
+@Company nvarchar(100)=null
+AS
+BEGIN  
+DECLARE @sql nvarchar(max)
+	IF (@Company is not null and @GroupId IS NOT NULL and @RoleId IS NOT NULL)
+	BEGIN
+		Select ug.GroupId, ug.UserId,cr.CommitteeRoleName as Role,cr.CommitteeRoleId as RoleId,
+		u.LastName +', '+ u.FirstName + ' (' + c.CompanyName +')' as UserName from [ATA_Membership_UM].[dbo].[usergroup] ug
+		inner join [user] u on  ug.UserId = u.userid
+		inner join CommitteeRole cr on cr.CommitteeRoleId = ug.CommitteeRoleId
+		inner join [UserCompany] uc on uc.UserId  =u.UserId
+		inner join [Company] c on c.CompanyId = uc.CompanyId 
+		where GroupId = @GroupId and ug.CommitteeRoleId in ( @RoleId ) and c.CompanyName like '%'+@Company+'%'
+		order by cr.CommitteeRoleName,UserName,c.CompanyName
+	END
+	Else 
+	IF (@GroupId IS NOT NULL and @RoleId IS NOT NULL)
+ 
+	BEGIN
+	set @sql = 'Select ug.GroupId, ug.UserId,cr.CommitteeRoleName as Role,cr.CommitteeRoleId as RoleId,
+		u.LastName  + u.FirstName +'' (''+ c.CompanyName + '')''  as UserName,c.CompanyName as CompanyName,c.CompanyId as CompanyId from [ATA_Membership_UM].[dbo].[usergroup] ug
+		inner join [user] u on  ug.UserId = u.userid
+		inner join CommitteeRole cr on cr.CommitteeRoleId = ug.CommitteeRoleId
+		inner join [UserCompany] uc on uc.UserId  =u.UserId
+		inner join [Company] c on c.CompanyId = uc.CompanyId 
+		where GroupId = '+ CAST(@GroupId AS NVARCHAR(10))+'  and ug.CommitteeRoleId  in  ( '+@RoleId+')
+		order by c.CompanyName,UserName,cr.CommitteeRoleName'
+		PRINT @sql
+        EXEC sp_executesql @sql
+        --OLD Query
+		--Select ug.GroupId, ug.UserId,cr.CommitteeRoleName as Role,cr.CommitteeRoleId as RoleId,
+		--u.LastName +', '+ u.FirstName + ' (' + c.CompanyName +')' as UserName from [ATA_Membership_UM].[dbo].[usergroup] ug
+		--inner join [user] u on  ug.UserId = u.userid
+		--inner join CommitteeRole cr on cr.CommitteeRoleId = ug.CommitteeRoleId
+		--inner join [UserCompany] uc on uc.UserId  =u.UserId
+		--inner join [Company] c on c.CompanyId = uc.CompanyId 
+		--where GroupId = @GroupId and ug.CommitteeRoleId  in  ( @RoleId)
+		--order by cr.CommitteeRoleName,UserName
+	END
+	Else 
+	IF (@GroupId IS NOT NULL)
+	 BEGIN
+		  Select ug.GroupId, ug.UserId,cr.CommitteeRoleName as Role,cr.CommitteeRoleId as RoleId,u.LastName +', '+ u.FirstName  as UserName,c.CompanyName from [ATA_Membership_UM].[dbo].[usergroup] ug
+	inner join [user] u on  ug.UserId = u.userid
+	inner join CommitteeRole cr on cr.CommitteeRoleId = ug.CommitteeRoleId
+	inner join [UserCompany] uc on uc.UserId  =u.UserId
+	inner join [Company] c on c.CompanyId = uc.CompanyId 
+	where cr.A4ARole = 0   and GroupId =   @GroupId
+	order by cr.CommitteeRoleName,UserName
+		END
+		 
+END
+
+
+
+/*********************************************************************************
+p_Usergroup_delete
+***********************************************************************************/
+
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserGroup_delete]    Script Date: 02/03/2017 13:15:26 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Description:	Creates a new group 
+ALTER PROCEDURE [dbo].[p_UserGroup_delete] 
+@GroupId int = null,
+@UserId int = null,
+@CompanyName nvarchar(40)=null,
+@CommitteeRoleId int = null
+AS
+BEGIN
+
+	IF (@GroupId IS NOT NULL and @UserId is NOT null )
+	BEGIN
+
+		delete ug from [UserGroup] ug  
+        where ug.UserId = @UserId and ug.GroupId = @GroupId
+	END
+	else
+	if (@CompanyName is not null and @GroupId is not null and @CommitteeRoleId is not null)
+	 
+		delete ug from [UserGroup] ug 
+		left outer join [User] u on u.UserId = ug.UserId  
+        left outer join UserCompany uc on u.UserId = uc.UserId
+        left outer join Company c on uc.CompanyId = c.CompanyId
+        where ug.CommitteeRoleId = @CommitteeRoleId and GroupId = @GroupId and c.CompanyName like   @CompanyName 
+    ELSE
+    IF (@GroupId IS NOT NULL and @CommitteeRoleId is NOT null )
+	BEGIN
+
+		delete ug from [UserGroup] ug  
+        where ug.CommitteeRoleId = @CommitteeRoleId and ug.GroupId = @GroupId
+	END
+        
+END
+
+/*
+
+delete ug from [UserGroup] ug 
+		left outer join [User] u on u.UserId = ug.UserId  
+        left outer join UserCompany uc on u.UserId = uc.UserId
+        left outer join Company c on uc.CompanyId = c.CompanyId
+        where ug.CommitteeRoleId = 12 and GroupId = 264 and c.CompanyName like   @CompanyName 
+        
+        
+select u.username,ug.userid, c.companyname,ug.committeeroleid from [UserGroup] ug 
+		left outer join [User] u on u.UserId = ug.UserId  
+        Left outer join UserCompany uc on u.UserId = uc.UserId
+        left outer join Company c on uc.CompanyId = c.CompanyId
+        where ug.groupid = 264 order by companyname
+        
+select * from [UserGroup] where groupid = 264
+*/
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserGroup_GetList]    Script Date: 05/02/2017 07:34:00 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+/******************************************************************************/
+/******************************************************************************?
+/******************************************************************************/
+-- Description:  Creates a new group 
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserGroup_GetList]    Script Date: 05/04/2017 10:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Description:  Creates a new group 
+ALTER PROCEDURE [dbo].[p_UserGroup_GetList] 
+@GroupId int = NULL,
+@UserId int = NULL,
+@Type int = 0
+AS
+BEGIN
+
+  IF (@GroupId IS NOT NULL)
+    IF (@type = 1)
+    BEGIN
+
+      SELECT
+        MAX(GroupId) AS GroupId, ug.UserId,MAX(Name) AS Name,MAX(Email) AS Email,  Roles =
+        STUFF((SELECT ', ' + CommitteeRoleName FROM v_GroupUsersList ug2
+			   WHERE ug2.userid = ug.userid and ug2.a4arole = 1 AND ug2.groupid = @GroupId
+               FOR xml PATH ('')), 1, 2, '')
+      FROM v_GroupUsersList ug
+      WHERE ug.a4arole = 1
+      AND ug.groupid = @GroupId
+      GROUP BY ug.userid 
+      order by Name,Roles
+    END
+    ELSE
+
+    IF (@type = 2)
+    BEGIN
+      /* company  LastName  FirstName  E-Mail  Office #  Mobile # Last Modified  Is Active  Contact Member Portal  Fuel Portal SAS */
+      SELECT max(c.CompanyName) as CompanyName,MAX(c.CompanyId) as CompanyId,MAX(GroupId) AS GroupId, ug.UserId,MAX(Name) AS Name,MAX(ug.Email) AS Email,  
+       CONVERT(VARCHAR(10), MAX(u.LastLoginDate),111) as LastModified, MAX(u.LastName) AS LastName, MAX(u.FirstName) AS FirstName,
+        MAX(u.OfficePhone) AS OfficePhone, MAX(u.MobilePhone) AS MobilePhone,
+        MAX((case when u.IsActiveContact = 0 then 'false' else 'true' end))  AS IsActiveContact, MAX((case when u.IsActiveFF = 0 then 'false' else 'true' end)) AS IsActiveFF,
+        MAX((case when u.IsActiveMB = 0 then 'false' else 'true' end)) AS IsActiveMB, MAX((case when u.IsActiveSAS = 0 then 'false' else 'true' end)) AS IsActiveSAS,
+        Roles =
+        STUFF((SELECT ', ' + CommitteeRoleName FROM v_GroupUsersList ug2
+			   WHERE ug2.userid = ug.userid and ug2.a4arole = 0 AND ug2.groupid = @GroupId
+               FOR xml PATH ('')), 1, 2, '')
+      FROM v_GroupUsersList ug
+      inner join [User] u on u.userid = ug.userid
+      inner join [UserCompany] uc on uc.UserId = u.UserId
+      inner join [Company] c on c.CompanyId = uc.CompanyId
+      WHERE ug.a4arole =0
+      AND ug.groupid = @GroupId
+      GROUP BY ug.userid
+      order by CompanyName,LastName,FirstName,Roles
+      
+    END
+
+    ELSE
+    BEGIN 
+      SELECT
+        MAX(GroupId) AS GroupId, ug.UserId,MAX(Name) AS Name,MAX(Email) AS Email,  Roles =
+        STUFF((SELECT ', ' + CommitteeRoleName FROM v_GroupUsersList ug2
+			   WHERE ug2.userid = ug.userid  AND ug2.groupid = @GroupId
+               FOR xml PATH ('')), 1, 2, '')
+      FROM v_GroupUsersList ug
+      WHERE  ug.groupid = @GroupId
+      GROUP BY ug.userid
+    END
+    --Added & Edited on 5/1/17
+    ELSE
+    IF(@UserId is NOT NULL)
+    BEGIN
+		--select * from [UserGroup] ug inner join [Group] g on g.GroupId = ug.GroupId
+		--where ug.UserId = @UserId 
+		 SELECT  ug.groupid, MAX(g.LyrisShortDescription) AS GroupName,MAX(gt.GroupTypeName) as GroupTypeName, 
+		 Roles = STUFF((SELECT ', ' + CommitteeRoleName FROM v_GroupUsersList ug2
+		 WHERE ug2.groupid = ug.groupid   AND ug2.UserId = @UserId
+		 FOR xml PATH ('')), 1, 2, '')
+		 FROM [UserGroup] ug
+		 inner join [Group] g on g.GroupId = ug.GroupId 
+		 inner join [GroupType]  gt on gt.GroupTypeId = g.GroupTypeId
+		 WHERE  ug.UserId = @UserId
+		 GROUP BY ug.groupid 
+		 order by GroupName,Roles 
+    END
+   
+END
+ 
+ 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+///////// Group List View Stored Prod
+///////////////////////////////////////////////////////////////////////////////////////////////////
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_Group_GetList]    Script Date: 05/03/2017 09:53:48 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		Nischala Aamidala
+-- Create date: 1/10/2017
+-- Description:	Gets all the groups for the group manager page
+-- =============================================
+ALTER PROCEDURE [dbo].[p_Group_GetList]
+@type int = null,
+@username nvarchar(100) = null,
+@groupid  int = null,
+@term nvarchar(100) = null 
+AS
+BEGIN
+SET NOCOUNT ON; 
+if @term is not null
+begin
+--Added 5/2/2017
+
+SELECT max(g.GroupId) as GroupId,max(g.LyrisShortDescription) as GroupName,
+MAX(u.FirstName +' ' +u.LastName)  as Liaison,
+max(g.LyrisListName)+'@lists.airlines.org' as GroupEmail,  COUNT(distinct(ug1.UserId)) as MemberCount ,
+MAX(gt.GroupTypeName) as GroupType 
+,MAX(dv.DivisionDetail) as DivisionName , MAX(dp.DepartmentDetail) as DepartmentName
+FROM [Group] g
+left outer join [Group] g1 on g1.GroupId = g.ParentGroupId
+left outer join [UserGroup] ug1 on ug1.GroupId = g.GroupId  
+inner join GroupType gt on  gt.groupTypeid = g.GroupTypeId 
+left outer join [User] u on u.UserId = g.Liaison1UserId 
+left outer join [Division] dv on dv.DivisionId = g.DivisionId
+left outer join [Department] dp on dp.DepartmentId = g.DepartmentId
+group by ug1.GroupId, g.Groupid
+having g.GroupId = @groupid
+end
+ELSE
+if @groupid is not null
+begin
+SELECT max(g.GroupId) as GroupId,max(g.LyrisShortDescription) as GroupName,
+MAX(u.FirstName +' ' +u.LastName)  as Liaison,
+max(g.LyrisListName)+'@lists.airlines.org' as GroupEmail,  COUNT(distinct(ug1.UserId)) as MemberCount ,
+MAX(gt.GroupTypeName) as GroupType, isnull(MAX(g1.LyrisShortDescription), 'NONE')  as ParentGroup ,max(g.Mission) as Mission, 
+ MAX((case when g.GAB = 0 then 'false' else 'true' end)) AS GAB,
+ max(CAST(g.BounceReports AS tinyint)) as BounceReports,
+CONVERT(VARCHAR(10),Max(g.ModifiedDate) ,111)  as LastModified,MAX(ls.Value) as LyrSend,
+MAX(dv.DivisionDetail) as DivisionName , MAX(dp.DepartmentDetail) as DepartmentName
+FROM [Group] g
+left outer join [Group] g1 on g1.GroupId = g.ParentGroupId
+left outer join [UserGroup] ug1 on ug1.GroupId = g.GroupId 
+/*and g.IsChildGroup = 0  and ug1.CommitteeRoleId in (select committeeroleid from committeeRole)*/
+left outer join LyrisSend ls on ls.Id = g.LyrisSendId
+inner join GroupType gt on  gt.groupTypeid = g.GroupTypeId
+left outer join [User] u on u.UserId = g.Liaison1UserId 
+left outer join [Division] dv on dv.DivisionId = g.DivisionId
+left outer join [Department] dp on dp.DepartmentId = g.DepartmentId
+group by ug1.GroupId, g.Groupid
+having g.GroupId = @groupid
+end
+ELSE
+if @type = 1
+begin
+SELECT max(g.GroupId) as GroupId,max(g.LyrisShortDescription) as GroupName,
+MAX(u.FirstName +' ' +u.LastName)  as Liaison,
+max(g.LyrisListName)+'@lists.airlines.org' as GroupEmail,  COUNT(distinct(ug1.UserId)) as MemberCount ,
+ MAX(gt.GroupTypeLabel) as GroupType,
+ CONVERT(VARCHAR(10),Max(g.ModifiedDate) ,111)  as LastModified,MAX(ls.Value) as SendPermissions,
+MAX(dv.DivisionDetail) as DivisionName ,0 as admincount
+FROM [Group] g
+left outer join [UserGroup] ug1 on ug1.GroupId = g.GroupId
+and IsChildGroup = 0 and ug1.CommitteeRoleId in (select committeeroleid from committeeRole)
+left outer join LyrisSend ls on ls.Id = g.LyrisSendId
+inner join GroupType gt on  gt.groupTypeid = g.GroupTypeId
+left outer join [User] u on u.UserId = g.Liaison1UserId 
+left outer join [Division] dv on dv.DivisionId = g.DivisionId
+left outer join [Department] dp on dp.DepartmentId = g.DepartmentId
+group by ug1.GroupId, g.LyrisShortDescription
+order by GroupType, LyrisShortDescription
+ end
+ else
+if @type = 2
+begin
+SELECT max(g.GroupId) as GroupId,max(g.LyrisShortDescription) as GroupName,
+MAX(u.FirstName +' ' +u.LastName) as Liaison,COUNT(distinct(ug1.UserId)) as MemberCount , 
+MAX(gt.GroupTypeLabel) as GroupType,max(g.LyrisListName)+'@lists.airlines.org' as GroupEmail,
+CONVERT(VARCHAR(10),Max(g.ModifiedDate) ,111)  as LastModified,MAX(ls.Value) as SendPermissions,
+isnull(MAX(dv.DivisionDetail), '-') as DivisionName,0 as admincount
+FROM [Group] g
+left outer join [UserGroup] ug1 on ug1.GroupId = g.GroupId
+and g.IsChildGroup = 0 and ug1.CommitteeRoleId in  (select committeeroleid from committeeRole) 
+left outer join LyrisSend ls on ls.Id = g.LyrisSendId 
+inner join GroupType gt on  gt.groupTypeid = g.GroupTypeId
+left outer join [User] u on u.UserId = g.Liaison1UserId 
+left outer join [Division] dv on dv.DivisionId = g.DivisionId
+left outer join [Department] dp on dp.DepartmentId = g.DepartmentId
+group by ug1.GroupId, g.LyrisShortDescription
+end 
+if @type = 3
+begin
+SELECT max(g.GroupId) as GroupId,max(g.LyrisShortDescription) as GroupName,
+MAX(u.FirstName +' ' +u.LastName)  as Liaison, 
+COUNT(distinct(ug1.UserId)) as MemberCount ,max(g.LyrisListName)+'@lists.airlines.org' as GroupEmail, 
+MAX(gt.GroupTypeLabel) as GroupType , isnull(MAX(g1.LyrisShortDescription), 'NONE')  as ParentGroup ,
+CONVERT(VARCHAR(10),Max(g.ModifiedDate) ,111)  as LastModified,MAX(ls.Value) as SendPermissions,0 as admincount
+FROM [Group] g
+left outer join [Group] g1 on g1.GroupId = g.ParentGroupId
+left outer join [UserGroup] ug1 on ug1.GroupId = g.GroupId
+and  ug1.CommitteeRoleId in (select committeeroleid from committeeRole)  
+left outer join LyrisSend ls on ls.Id = g.LyrisSendId
+left outer join GroupType gt on  gt.groupTypeid = g.GroupTypeId
+left outer join [User] u on u.UserId = g.Liaison1UserId  
+group by ug1.GroupId, g.LyrisShortDescription
+order by GroupType,g.LyrisShortDescription
+end 
+if @type = 4
+Begin 
+DECLARE @userId int = 0
+select @userId = UserId from [user] where Username like @username and IsATAStaff = 1 
+SELECT max(g.GroupId) as GroupId,max(g.LyrisShortDescription) as GroupName,
+MAX(u.FirstName +' ' +u.LastName) as Liaison,
+max(g.LyrisListName)+'@lists.airlines.org' as GroupEmail,
+COUNT(distinct(ug1.UserId)) as MemberCount ,
+MAX(gt.GroupTypeLabel) as GroupType,
+CONVERT(VARCHAR(10),Max(g.ModifiedDate) ,111)  as LastModified,MAX(ls.Value) as SendPermissions ,0 as admincount
+FROM [Group] g
+left outer join [UserGroup] ug1 on ug1.GroupId = g.GroupId
+and IsChildGroup = 0 and ug1.CommitteeRoleId in (select committeeroleid from committeeRole) 
+left outer join LyrisSend ls on ls.Id = g.LyrisSendId
+left outer join GroupType gt on  gt.groupTypeid = g.GroupTypeId
+left outer join [User] u on u.UserId = g.Liaison1UserId   
+where  g.Liaison1UserId = @userId
+or g.GroupId in (select distinct(GroupId) from [UserGroup] where UserId = @userId and CommitteeRoleId = 9)
+group by ug1.GroupId, g.LyrisShortDescription
+order by GroupType,LyrisShortDescription
+End 
+END
+-------------------------------------------------------------
+--View for getting GGA multiple alternates
+------------------------------------------------------
+create view
+ v_CouncilCommitteeUsers as
+Select ug.GroupId, ug.UserId,c.CompanyName ,cr.CommitteeRoleName as Role,cr.CommitteeRoleId as RoleId,
+u.LastName +', '+ u.FirstName as UserName from [ATA_Membership_UM].[dbo].[usergroup] ug
+inner join [user] u on  ug.UserId = u.userid
+inner join CommitteeRole cr on cr.CommitteeRoleId = ug.CommitteeRoleId
+inner join [UserCompany] uc on uc.UserId  =u.UserId
+inner join [Company] c on c.CompanyId = uc.CompanyId  
+_-------------------------------------------------------------
+/**************************************************************/
+/** Get Company ID and NAme **/
+/**************************************************************/
+
+
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_Company_GetAllUsers]    Script Date: 03/30/2017 17:09:09 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Nischala Aamidala
+-- Create date: 03/30/2017
+-- Description:	Gets all the Company ID and Name  
+-- =============================================
+CREATE PROCEDURE [dbo].p_Company_GetList 
+AS
+BEGIN
+
+	select
+		CompanyName,CompanyId
+	from
+		 Company  
+END
+
+/**********************************************************/
+/** p_Membership_ChangePassword **/
+/**********************************************************/
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_Membership_ChangePassword]    Script Date: 04/05/2017 02:38:58 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[p_Membership_ChangePassword]
+@Username nvarchar(256),
+@OldPassword nvarchar(256) = null,
+@NewPassword nvarchar(256)
+AS
+BEGIN
+
+SET NOCOUNT OFF
+
+--Now update the user we found.
+
+	UPDATE
+		[User]
+	SET
+		[Password] = @NewPassword
+	WHERE
+		UserId = (SELECT
+							Userid
+						FROM
+							[User]
+						WHERE 
+							LOWER(Username)=LOWER(@UserName))-- AND [Password]=@OldPassword)
+
+	select @@rowcount;
+
+END
+/**************************************************************************/
+/** p_User_Load **/
+/**********************************************************/
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_User_Load]    Script Date: 05/02/2017 14:41:28 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- Description:	Creates a new group 
+ALTER PROCEDURE [dbo].[p_User_Load] 
+@Username nvarchar(100) = null,
+@UserId int  = null 
+AS
+BEGIN 
+	IF (@Username IS NOT NULL)
+	BEGIN
+		SELECT u.*,u1.FirstName +' '+ u1.LastName as createdbyUser, c.CompanyId,c.CompanyName,uc.Responsibilities		
+	FROM
+		[User] u
+		inner join [UserCompany] uc on uc.UserId = u.UserId
+		inner join [Company] c on c.CompanyId = uc.CompanyId
+		inner join [User] u1 on u1.UserId = u.CreateUserId
+		where u.Username = @Username
+	END
+	Else
+	IF (@UserId IS NOT NULL)
+		BEGIN
+		SELECT u.*,u1.FirstName +' '+ u1.LastName as createdbyUser, 
+		u2.FirstName +' '+ u2.LastName as LastUpdatedUser,c.CompanyId,c.CompanyName	,uc.Responsibilities
+		, (select COUNT(*) from [UserGroup] where UserId = 	@UserId) as Noofgroups
+	FROM
+		[User] u
+		inner join [UserCompany] uc on uc.UserId = u.UserId
+		inner join [Company] c on c.CompanyId = uc.CompanyId
+		inner join [User] u1 on u1.UserId = u.CreateUserId
+		inner join [User] u2 on u2.UserId = u.LastUpdatedUserId
+		where u.UserId = @UserId
+		END		
+		Else
+	 
+		BEGIN
+		SELECT u.*,u1.FirstName +' '+ u1.LastName as createdbyUser, c.CompanyId,c.CompanyName ,uc.Responsibilities
+	    FROM
+		[User] u
+		inner join [UserCompany] uc on uc.UserId = u.UserId
+		inner join [Company] c on c.CompanyId = uc.CompanyId 
+		inner join [User] u1 on u1.UserId = u.CreateUserId
+		END	 
+END
+ **/
+/*************************************************/
+ USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_User_Load]    Script Date: 05/02/2017 14:41:28 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Description:	Creates a new group 
+ALTER PROCEDURE [dbo].[p_User_Load] 
+@Username nvarchar(100) = null,
+@UserId int  = null,
+@Term nvarchar(100) = null
+AS
+BEGIN 
+
+IF (@Term IS NOT NULL)
+	BEGIN
+		SELECT u.userid,u.Username, u.FirstName, u.LastName,u.IsActiveContact,u.CreateDate, u1.FirstName +' '+ u1.LastName as createdbyUser, c.CompanyId,c.CompanyName,uc.Responsibilities		
+	FROM
+		[User] u
+		inner join [UserCompany] uc on uc.UserId = u.UserId
+		inner join [Company] c on c.CompanyId = uc.CompanyId
+		inner join [User] u1 on u1.UserId = u.CreateUserId
+		where u.Username like '%'+ @Term +'%' or  u.FirstName like '%'+ @Term +'%' or  u.LastName like '%'+ @Term +'%'
+	END
+	ELSE
+	IF (@Username IS NOT NULL)
+	BEGIN
+		SELECT u.*,u1.FirstName +' '+ u1.LastName as createdbyUser, c.CompanyId,c.CompanyName,uc.Responsibilities		
+	FROM
+		[User] u
+		inner join [UserCompany] uc on uc.UserId = u.UserId
+		inner join [Company] c on c.CompanyId = uc.CompanyId
+		inner join [User] u1 on u1.UserId = u.CreateUserId
+		where u.Username = @Username
+	END
+	Else
+	IF (@UserId IS NOT NULL)
+		BEGIN
+		SELECT u.*,u1.FirstName +' '+ u1.LastName as createdbyUser, 
+		u2.FirstName +' '+ u2.LastName as LastUpdatedUser,c.CompanyId,c.CompanyName	,uc.Responsibilities
+		, (select COUNT(*) from [UserGroup] where UserId = 	@UserId) as Noofgroups
+	FROM
+		[User] u
+		inner join [UserCompany] uc on uc.UserId = u.UserId
+		inner join [Company] c on c.CompanyId = uc.CompanyId
+		inner join [User] u1 on u1.UserId = u.CreateUserId
+		inner join [User] u2 on u2.UserId = u.LastUpdatedUserId
+		where u.UserId = @UserId
+		END		
+		Else
+	 
+		BEGIN
+		SELECT u.*,u1.FirstName +' '+ u1.LastName as createdbyUser, c.CompanyId,c.CompanyName ,uc.Responsibilities
+	    FROM
+		[User] u
+		inner join [UserCompany] uc on uc.UserId = u.UserId
+		inner join [Company] c on c.CompanyId = uc.CompanyId 
+		inner join [User] u1 on u1.UserId = u.CreateUserId
+		END	 
+END
+
+
+--UserId	Username	Password	ReportsToId	Prefix	FirstName	MiddleName	LastName	Suffix	PreferredName	Email	Email2	HomePhone	OfficePhone	OfficePhoneExtension	MobilePhone	PrimaryFax	TopicsOfInterest	CreateDate	CreateUserId	ExpirationDate	LastUpdatedDate	LastUpdatedUserId	IsActiveMB	IsActiveFF	IsATAStaff	IsAcceptedLicense	IsPrivate	RequiresPasswordChange	LastLoginDate	LastMyProfileUpdate	JobTitle	WebPage	IsActiveContact	Twitter	Facebook	LinkedIn	GooglePlus	Pinterest	IsActiveSAS	DepartmentId	DivisionId	CompanyId	CompanyName
+
+--UserId	Username	Password	ReportsToId	Prefix	FirstName	MiddleName	LastName	Suffix	PreferredName	Email	Email2	HomePhone	OfficePhone	OfficePhoneExtension	MobilePhone	PrimaryFax	TopicsOfInterest	CreateDate	CreateUserId	ExpirationDate	LastUpdatedDate	LastUpdatedUserId	IsActiveMB	IsActiveFF	IsATAStaff	IsAcceptedLicense	IsPrivate	RequiresPasswordChange	LastLoginDate	LastMyProfileUpdate	JobTitle	WebPage	IsActiveContact	Twitter	Facebook	LinkedIn	GooglePlus	Pinterest	IsActiveSAS	DepartmentId	DivisionId	CompanyId	CompanyName
+
+/****************************************************************************************************************************************/
+
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_User_GetUserAddresses]    Script Date: 04/06/2017 00:43:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Nischala Aamidala
+-- Create date: 4/6/2017
+-- Description:	Gets all the User Addresses
+-- =============================================
+ALTER PROCEDURE [dbo].[p_User_GetUserAddresses]
+@UserId int
+AS
+BEGIN
+
+	SELECT
+		a.*, ua.AddressTypeId
+	FROM
+		[UserAddress] ua
+		inner join [Address] a on a.AddressId = ua.AddressId
+	WHERE
+		UserId = @UserId
+
+END
+
+/*************************************************************************************
+/* Activity Topic View
+/*************************************************************************************
+USE [ATA_Membership_UM]
+GO
+
+/****** Object:  View [dbo].[v_ActivitybyActivityTopic]    Script Date: 05/04/2017 00:23:07 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER VIEW [dbo].[v_ActivitybyActivityTopic]
+AS
+  SELECT ActivityId, ActivityTopic = 
+    STUFF((SELECT ', ' + c.ActivityTopicDescription
+           FROM Activity_ActivityTopic b
+           inner join ActivityTopic c on c.ActivityTopicId = b.ActivityTopicId
+           WHERE b.ActivityId = a.ActivityId 
+          FOR XML PATH('')), 1, 2, '')
+FROM Activity_ActivityTopic a
+GROUP BY ActivityId
+ 
+
+GO
+
+
+/*************************************************************************************
+/* Activity Type View
+/*************************************************************************************
+USE [ATA_Membership_UM]
+GO
+
+/****** Object:  View [dbo].[v_ActivitybyActivityType]    Script Date: 05/04/2017 00:23:37 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER VIEW [dbo].[v_ActivitybyActivityType]
+AS
+ 
+
+  SELECT ActivityId, ActivityType = 
+    STUFF((SELECT ', ' + c.ActivityTypeDescription
+           FROM Activity_ActivityType b
+           inner join ActivityType c on c.ActivityTypeId = b.ActivityTypeId
+           WHERE b.ActivityId = a.ActivityId 
+          FOR XML PATH('')), 1, 2, '')
+FROM Activity_ActivityType a
+GROUP BY ActivityId
+ 
+
+GO
+
+/*************************************************************************************
+/* Activity Type Contact
+/*************************************************************************************
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_Activity_Getlist]    Script Date: 05/04/2017 11:09:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		Nischala Aamidala
+-- Create date: 03/11/2013
+-- Description:	Loads an Activity
+-- =============================================
+ALTER PROCEDURE [dbo].[p_Activity_Getlist]
+@userid int
+AS
+BEGIN 
+  select a.ActivityId,a.ActivitySubject,  CAST(CAST(a.CreatedDate AS date) AS Varchar) AS Expr1, b.ActivityType,c.ActivityTopic, u.firstname + ' ' + u.lastname as Createdby from Activity a 
+  inner join [user] u on u.userid = a.activityUserid
+  inner join v_ActivitybyActivityType b on a.activityid = b.activityid
+  inner join v_ActivitybyActivityTopic c on a.activityid = c.activityid
+  where a.ActivityMediaContactId = @userid 
+END
+
+/********************************************************************************/
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_Group_GetList]    Script Date: 05/04/2017 17:37:37 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		Nischala Aamidala
+-- Create date: 1/10/2017
+-- Description:	Gets all the groups for the group manager page
+-- =============================================
+ALTER PROCEDURE [dbo].[p_Group_GetList]
+@type int = null,
+@username nvarchar(100) = null,
+@groupid  int = null,
+@term nvarchar(100) = null 
+AS
+BEGIN
+SET NOCOUNT ON; 
+if @term is not null
+begin
+--Added 5/2/2017
+
+SELECT ug1.GroupId, max(g.LyrisShortDescription) as GroupName,
+MAX(u.FirstName +' ' +u.LastName)  as Liaison,
+max(g.LyrisListName)+'@lists.airlines.org' as GroupEmail,  COUNT(distinct(ug1.UserId)) as MemberCount ,
+MAX(gt.GroupTypeName) as GroupType 
+,MAX(dv.DivisionDetail) as DivisionName , MAX(dp.DepartmentDetail) as DepartmentName
+FROM [Group] g 
+left outer join [UserGroup] ug1 on ug1.GroupId = g.GroupId  and g.LyrisShortDescription like '%'+@term+'%' /*Added term here because */
+inner join GroupType gt on  gt.groupTypeid = g.GroupTypeId 
+left outer join [User] u on u.UserId = g.Liaison1UserId 
+left outer join [Division] dv on dv.DivisionId = g.DivisionId
+left outer join [Department] dp on dp.DepartmentId = g.DepartmentId
+group by ug1.GroupId 
+order by GroupType,max(g.LyrisShortDescription)
+end
+ELSE
+if @groupid is not null
+begin
+SELECT max(g.GroupId) as GroupId,max(g.LyrisShortDescription) as GroupName,
+MAX(u.FirstName +' ' +u.LastName)  as Liaison,
+max(g.LyrisListName)+'@lists.airlines.org' as GroupEmail,  COUNT(distinct(ug1.UserId)) as MemberCount ,
+MAX(gt.GroupTypeName) as GroupType, isnull(MAX(g1.LyrisShortDescription), 'NONE')  as ParentGroup ,max(g.Mission) as Mission, 
+ MAX((case when g.GAB = 0 then 'false' else 'true' end)) AS GAB,
+ max(CAST(g.BounceReports AS tinyint)) as BounceReports,
+CONVERT(VARCHAR(10),Max(g.ModifiedDate) ,111)  as LastModified,MAX(ls.Value) as LyrSend,
+MAX(dv.DivisionDetail) as DivisionName , MAX(dp.DepartmentDetail) as DepartmentName
+FROM [Group] g
+left outer join [Group] g1 on g1.GroupId = g.ParentGroupId
+left outer join [UserGroup] ug1 on ug1.GroupId = g.GroupId  
+left outer join LyrisSend ls on ls.Id = g.LyrisSendId
+inner join GroupType gt on  gt.groupTypeid = g.GroupTypeId
+left outer join [User] u on u.UserId = g.Liaison1UserId 
+left outer join [Division] dv on dv.DivisionId = g.DivisionId
+left outer join [Department] dp on dp.DepartmentId = g.DepartmentId
+group by g.GroupId 
+having g.GroupId = @groupid
+order by GroupType,max(g.LyrisShortDescription)
+end
+ELSE
+if @type = 1
+begin
+SELECT max(g.GroupId) as GroupId,max(g.LyrisShortDescription) as GroupName,
+MAX(u.FirstName +' ' +u.LastName)  as Liaison,
+max(g.LyrisListName)+'@lists.airlines.org' as GroupEmail,  COUNT(distinct(ug1.UserId)) as MemberCount ,
+ MAX(gt.GroupTypeLabel) as GroupType,
+ CONVERT(VARCHAR(10),Max(g.ModifiedDate) ,111)  as LastModified,MAX(ls.Value) as SendPermissions,
+MAX(dv.DivisionDetail) as DivisionName ,0 as admincount
+FROM [Group] g
+left outer join [UserGroup] ug1 on ug1.GroupId = g.GroupId
+and IsChildGroup = 0 and ug1.CommitteeRoleId in (select committeeroleid from committeeRole)
+left outer join LyrisSend ls on ls.Id = g.LyrisSendId
+inner join GroupType gt on  gt.groupTypeid = g.GroupTypeId
+left outer join [User] u on u.UserId = g.Liaison1UserId 
+left outer join [Division] dv on dv.DivisionId = g.DivisionId
+left outer join [Department] dp on dp.DepartmentId = g.DepartmentId
+group by ug1.GroupId  
+order by GroupType, max(LyrisShortDescription)
+ end
+ else
+if @type = 2
+begin
+SELECT max(g.GroupId) as GroupId,max(g.LyrisShortDescription) as GroupName,
+MAX(u.FirstName +' ' +u.LastName) as Liaison,COUNT(distinct(ug1.UserId)) as MemberCount , 
+MAX(gt.GroupTypeLabel) as GroupType,max(g.LyrisListName)+'@lists.airlines.org' as GroupEmail,
+CONVERT(VARCHAR(10),Max(g.ModifiedDate) ,111)  as LastModified,MAX(ls.Value) as SendPermissions,
+isnull(MAX(dv.DivisionDetail), '-') as DivisionName,0 as admincount
+FROM [Group] g
+left outer join [UserGroup] ug1 on ug1.GroupId = g.GroupId
+and g.IsChildGroup = 0 and ug1.CommitteeRoleId in  (select committeeroleid from committeeRole) 
+left outer join LyrisSend ls on ls.Id = g.LyrisSendId 
+inner join GroupType gt on  gt.groupTypeid = g.GroupTypeId
+left outer join [User] u on u.UserId = g.Liaison1UserId 
+left outer join [Division] dv on dv.DivisionId = g.DivisionId
+left outer join [Department] dp on dp.DepartmentId = g.DepartmentId
+group by ug1.GroupId  
+order by GroupType, max(LyrisShortDescription)
+end 
+if @type = 3
+begin
+SELECT max(g.GroupId) as GroupId,max(g.LyrisShortDescription) as GroupName,
+MAX(u.FirstName +' ' +u.LastName)  as Liaison, 
+COUNT(distinct(ug1.UserId)) as MemberCount ,max(g.LyrisListName)+'@lists.airlines.org' as GroupEmail, 
+MAX(gt.GroupTypeLabel) as GroupType , isnull(MAX(g1.LyrisShortDescription), 'NONE')  as ParentGroup ,
+CONVERT(VARCHAR(10),Max(g.ModifiedDate) ,111)  as LastModified,MAX(ls.Value) as SendPermissions,0 as admincount
+FROM [Group] g
+left outer join [Group] g1 on g1.GroupId = g.ParentGroupId
+left outer join [UserGroup] ug1 on ug1.GroupId = g.GroupId
+and  ug1.CommitteeRoleId in (select committeeroleid from committeeRole)  
+left outer join LyrisSend ls on ls.Id = g.LyrisSendId
+left outer join GroupType gt on  gt.groupTypeid = g.GroupTypeId
+left outer join [User] u on u.UserId = g.Liaison1UserId  
+group by ug1.GroupId 
+order by GroupType,max(g.LyrisShortDescription)
+end 
+if @type = 4  --MyGroups
+Begin 
+DECLARE @userId int = 0
+select @userId = UserId from [user] where Username like @username and IsATAStaff = 1 
+SELECT max(g.GroupId) as GroupId,max(g.LyrisShortDescription) as GroupName,
+MAX(u.FirstName +' ' +u.LastName) as Liaison,
+max(g.LyrisListName)+'@lists.airlines.org' as GroupEmail,
+COUNT(distinct(ug1.UserId)) as MemberCount ,
+MAX(gt.GroupTypeLabel) as GroupType,
+CONVERT(VARCHAR(10),Max(g.ModifiedDate) ,111)  as LastModified,MAX(ls.Value) as SendPermissions ,0 as admincount
+FROM [Group] g
+left outer join [UserGroup] ug1 on ug1.GroupId = g.GroupId
+and IsChildGroup = 0 and ug1.CommitteeRoleId in (select committeeroleid from committeeRole) 
+left outer join LyrisSend ls on ls.Id = g.LyrisSendId
+left outer join GroupType gt on  gt.groupTypeid = g.GroupTypeId
+left outer join [User] u on u.UserId = g.Liaison1UserId   
+where  g.Liaison1UserId = @userId
+or g.GroupId in (select distinct(GroupId) from [UserGroup] where UserId = @userId and CommitteeRoleId = 9)
+group by ug1.GroupId 
+order by GroupType,max(g.LyrisShortDescription)
+ 
+End 
+END
+
+/***************************************************************************************************/
+ /*********************************************************************************************************/
+ USE [ATA_Membership_UM]
+GO
+
+/****** Object:  Table [dbo].[TransactionType]    Script Date: 05/09/2017 11:54:36 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[TransactionType](
+	[ID] [int] NOT NULL,
+	[Name] [nvarchar](50) NOT NULL,
+	[TableName] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_TransactionType] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/********************************************************************************************************/
+
+USE [ATA_Membership_UM]
+GO
+
+/****** Object:  Table [dbo].[Transactions]    Script Date: 05/09/2017 11:51:16 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Transactions](
+	[TransactionID] [int] IDENTITY(1,1) NOT NULL,
+	[TransactionTypeID] [int] NOT NULL,
+	[ItemID] [int] NOT NULL,
+	[Name] [nvarchar](100) NOT NULL,
+	[Value] [nvarchar](400) NOT NULL,
+	[ModifiedBy] [int] NOT NULL,
+	[TransactionDate] [datetime] NOT NULL,
+ CONSTRAINT [PK_Transactions] PRIMARY KEY CLUSTERED 
+(
+	[TransactionID] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[Transactions]  WITH CHECK ADD  CONSTRAINT [FK_Transactions_TransactionType] FOREIGN KEY([TransactionTypeID])
+REFERENCES [dbo].[TransactionType] ([ID])
+GO
+
+ALTER TABLE [dbo].[Transactions] CHECK CONSTRAINT [FK_Transactions_TransactionType]
+GO
+/*************************************************************************************************/
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_Transactions_Create]    Script Date: 05/16/2017 17:19:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+ALTER PROCEDURE [dbo].[p_Transactions_Create]
+@TransactionID int  output,
+@TransactionTypeID int,
+@ItemID int,
+@Name  nvarchar(100),
+@Value  nvarchar(400),
+@Name1  nvarchar(100),
+@Value1  nvarchar(400),
+@ModifiedBy int,
+@TransactionDate datetime
+AS
+BEGIN 
+
+ if @TransactionID is null
+ 
+		INSERT INTO [Transactions]
+			( TransactionTypeID
+           ,[ItemID]
+           ,[Name]
+           ,[Value]
+           ,[Name1]
+           ,[Value1]
+           ,[ModifiedBy]
+           ,[TransactionDate])
+		VALUES
+			(@TransactionTypeID, @ItemID, @Name, @Value, @Name1, @Value1,@ModifiedBy,@TransactionDate) 
+	
+	SET @TransactionID = @@IDENTITY  
+			
+END
+
+/******************************************************************************************************/
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_Transactions_UserGroup_Create]    Script Date: 05/10/2017 17:50:34 ******/
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_Transactions_UserGroup_Create]    Script Date: 05/10/2017 17:50:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- Description:	Creates a new group 
+ALTER PROCEDURE [dbo].[p_Transactions_UserGroup_Create] 
+@GroupId int = null,
+@UserId int = null,
+@CompanyName nvarchar(200)=null,
+@CommitteeRoleId int = null,
+---Transaction Stuff
+--@TransactionID int  output,
+@TransactionTypeID int,
+@ItemID int= null,
+@Name  nvarchar(100)=null,
+@Value  nvarchar(400)=null,
+@ModifiedBy int = null,
+@TransactionDate datetime = null 
+AS
+BEGIN
+	declare @UId int
+	declare @GId int
+	declare @CRoleId int
+	declare @CName nvarchar(200)
+
+	IF (@GroupId IS NOT NULL and @UserId is NOT null ) -- When deleting roles for A4A User...
+	BEGIN 
+	    DECLARE db_cursor CURSOR FOR  
+		select UserId,GroupId,CommitteeRoleId from [UserGroup] ug  
+        where ug.UserId = @UserId and ug.GroupId = @GroupId
+
+		OPEN db_cursor   
+		FETCH NEXT FROM db_cursor INTO @UId,@GId, @CRoleId
+
+		WHILE @@FETCH_STATUS = 0   
+		BEGIN   
+		 ------Insert into Transaction  
+			INSERT INTO [Transactions]( TransactionTypeID,[ItemID],[Name],[Value],[Name1],[Value1],[ModifiedBy],[TransactionDate])
+		VALUES (@TransactionTypeID, @GId, 'UserId', @UId,'CommitteeRoleID',@CRoleId,@ModifiedBy,@TransactionDate) 
+			   FETCH NEXT FROM db_cursor INTO @UId,@GId, @CRoleId 
+		END    
+		CLOSE db_cursor   
+		DEALLOCATE db_cursor 
+	END
+	else
+	if (@CompanyName is not null and @GroupId is not null and @CommitteeRoleId is not null) 
+	BEGIN 
+	    DECLARE db_cursor CURSOR FOR  		
+		select ug.UserId,GroupId,CommitteeRoleId from [UserGroup] ug 
+		left outer join [User] u on u.UserId = ug.UserId  
+        left outer join UserCompany uc on u.UserId = uc.UserId
+        left outer join Company c on uc.CompanyId = c.CompanyId
+        where ug.CommitteeRoleId = @CommitteeRoleId and GroupId = @GroupId and c.CompanyName like ''+@CompanyName +'' 
+
+		OPEN db_cursor   
+		FETCH NEXT FROM db_cursor INTO @UId,@GId, @CRoleId 
+
+		WHILE @@FETCH_STATUS = 0   
+		BEGIN   
+		 ------Insert into Transaction  
+		INSERT INTO [Transactions]( TransactionTypeID,[ItemID],[Name],[Value],[Name1],[Value1],[ModifiedBy],[TransactionDate])
+		VALUES (@TransactionTypeID, @GId, 'UserId', @UId,'CommitteeRoleID',@CRoleId,@ModifiedBy,@TransactionDate) 
+			   FETCH NEXT FROM db_cursor INTO @UId,@GId, @CRoleId 
+		END    
+		CLOSE db_cursor   
+		DEALLOCATE db_cursor 
+	END
+	
+    ELSE
+    IF (@GroupId IS NOT NULL and @CommitteeRoleId is NOT null )
+	BEGIN 
+        BEGIN 
+	    DECLARE db_cursor CURSOR FOR  		
+		select ug.UserId,GroupId,CommitteeRoleId  from [UserGroup] ug  
+        where ug.CommitteeRoleId = @CommitteeRoleId and ug.GroupId = @GroupId
+
+		OPEN db_cursor   
+		FETCH NEXT FROM db_cursor INTO @UId,@GId, @CRoleId
+
+		WHILE @@FETCH_STATUS = 0   
+		BEGIN   
+		 ------Insert into Transaction  
+		INSERT INTO [Transactions]( TransactionTypeID,[ItemID],[Name],[Value],[Name1],[Value1],[ModifiedBy],[TransactionDate])
+		VALUES (@TransactionTypeID, @GId, 'UserId', @UId,'CommitteeRoleID',@CRoleId,@ModifiedBy,@TransactionDate) 
+			   
+			   FETCH NEXT FROM db_cursor INTO @UId,@GId, @CRoleId 
+		END    
+		CLOSE db_cursor   
+		DEALLOCATE db_cursor
+	END 
+  END
+END 
+  
+/******************************************************************************************************/
+/******************************************************************************************************/
+ 
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserDataforLyrisGroupbyRole]    Script Date: 07/28/2017 07:08:48 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Nischala Aamidala
+-- Create date: 02/08/2013
+-- Description:	Loads an ActivityType
+-- =============================================
+ALTER PROCEDURE [dbo].[p_UserDataforLyrisGroupbyRole]
+@GroupId int,
+@RoleId int
+AS
+BEGIN
+ select u.Email as Email, (u.FirstName +' '+ u.LastName) as Name,g.LyrisShortDescription as GroupName,ug.UserId,ug.GroupId, ug.CommitteeRoleId as RoleId   from [UserGroup] ug 
+left outer join [User] u on u.UserId = ug.UserId  
+left outer join UserCompany uc on u.UserId = uc.UserId
+left outer join Company c on uc.CompanyId = c.CompanyId
+inner join [Group] g on g.GroupId = ug.GroupId
+where ug.CommitteeRoleId = @RoleId and ug.GroupId = @GroupId  
+ 
+END
+
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserDataforLyrisGroupbyCompanyName]    Script Date: 07/28/2017 07:08:43 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Nischala Aamidala
+-- Create date: 02/08/2013
+-- Description:	Loads an ActivityType
+-- =============================================
+ALTER PROCEDURE [dbo].[p_UserDataforLyrisGroupbyCompanyName]
+@GroupId int,
+@RoleId int,
+@CompanyName nvarchar(300)
+AS
+BEGIN
+ select u.Email as Email, (u.FirstName +' '+ u.LastName) as Name,g.LyrisShortDescription  as GroupName,
+ ug.UserId,ug.GroupId, ug.CommitteeRoleId as RoleId   from [UserGroup] ug 
+left outer join [User] u on u.UserId = ug.UserId  
+left outer join UserCompany uc on u.UserId = uc.UserId
+left outer join Company c on uc.CompanyId = c.CompanyId
+inner join [Group] g on g.GroupId = ug.GroupId
+where ug.CommitteeRoleId = @RoleId and ug.GroupId = @GroupId and c.CompanyName like  @CompanyName
+ 
+END
+
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserDataforLyrisGroupbyUser]    Script Date: 07/28/2017 06:59:54 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Nischala Aamidala
+-- Create date: 02/08/2013
+-- Description:	Loads an ActivityType
+-- =============================================
+Alter PROCEDURE [dbo].[p_UserDataforLyrisGroupbyUser]
+@GroupId int,
+@UserId int
+AS
+BEGIN
+ select u.Email as Email, (u.FirstName +' '+ u.LastName) as Name,g.LyrisShortDescription as GroupName,
+ ug.UserId, ug.GroupId, ug.CommitteeRoleId as RoleId from [UserGroup] ug 
+left outer join [User] u on u.UserId = ug.UserId  
+left outer join UserCompany uc on u.UserId = uc.UserId
+left outer join Company c on uc.CompanyId = c.CompanyId 
+inner join [Group] g on g.GroupId = ug.GroupId
+where ug.UserId = @UserId and ug.GroupId = @GroupId  
+ 
+END
+
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserDataforLyrisGroup]    Script Date: 07/28/2017 07:13:49 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Nischala Aamidala
+-- Create date: 02/08/2013
+-- Description:	Loads an ActivityType
+-- =============================================
+ALTER PROCEDURE [dbo].[p_UserDataforLyrisGroup]
+@GroupId int,
+@UserId int
+AS
+BEGIN
+select (select email as Name from [User] where userid = @UserId) as Email,
+(select  FirstName +', '+ LastName as Name from [User] where userid = @UserId) as Name,
+(select LyrisShortDescription from [Group] where GroupId = @GroupId) as GroupName
+END 
+/***********************************************************************************************************/
+/***********************************************************************************************************/
+ 
+ USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserGroup_GetbyUserCompany]    Script Date: 10/13/2017 23:58:04 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserGroup_delete]    Script Date: 04/10/2017 16:24:19 ******/
+--SET ANSI_NULLS ON
+--GO
+--SET QUOTED_IDENTIFIER ON
+--GO
+
+-- Description:	Creates a new group 
+ALTER PROCEDURE [dbo].[p_UserGroup_GetbyUserCompany] 
+@CompanyId int = null,
+@term nvarchar(50) = null,
+@isActiveMB bit = null,
+@isMember bit = null,
+@currentUserId int = null
+AS
+BEGIN 
+declare @showCommittee bit
+declare @q1 nvarchar(200)
+declare @q2 nvarchar(200)
+declare @sql nvarchar(max)
+declare @search nvarchar(100)
+SET @search = '''%' + @term + '%''' 
+set @q1 = ''
+set @q2 = '' 
+ 
+IF (@CompanyId IS NOT NULL )
+   BEGIN  
+     if (select (CASE  WHEN c.CompanyTypeId = 1 or c.CompanyTypeId = 2  THEN 1  ELSE 0 END)   from [Company] c where CompanyId = @CompanyId) = 0
+			set @q1 = ' and IsCommittee = 0'
+			
+	  if (@isActiveMB = 0)		
+	  set @q2 =  ' and g.GroupTypeId not in (5)'  /*' and g.IsSecurityGroup = 0'*/
+	   
+	 set @sql = 'select g.GroupId,g.LyrisShortDescription + ''('' + gt.GroupShortLabel + '')'' as GroupName from [Group] g inner join [GroupType] gt on gt.GroupTypeId = g.GroupTypeId where 
+		         g.LyrisShortDescription like ' + @search + @q2 + @q1 +
+		         ' and g.groupid in (select Groupid from [UserGroup] ug where ug.UserId =    @currentUserId    and ug.CommitteeRoleId = 9 ) ' +
+		         ' order by g.LyrisShortDescription' 
+   END  
+   else
+   begin
+   set @sql = 'select g.GroupId,g.LyrisShortDescription + ''('' + gt.GroupShortLabel + '')'' as GroupName from [Group] g inner join [GroupType] gt on gt.GroupTypeId = g.GroupTypeId where 
+		           g.LyrisShortDescription like ' + @search  +
+		           ' and g.groupid in (select Groupid from [UserGroup] ug where ug.UserId =    @currentUserId   and ug.CommitteeRoleId = 9 ) ' +
+		           '  order by g.LyrisShortDescription'
+		          
+    end
+    EXEC sp_executesql @sql, N'@currentUserId int', @currentUserId
+	PRINT @sql
+	end  
+
+
+
+/****************************************************************************************************/
+/****************************************************************************************************/
+
+
+
+	USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserGroup_LoadLI]    Script Date: 10/16/2017 08:12:00 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- Description:	Gets Group Users for taskforce and other tabs in edit group
+ALTER PROCEDURE [dbo].[p_UserGroup_LoadLI] 
+@GroupId int = null,
+@RoleId nvarchar(40)=null,
+@Company nvarchar(100)=null,
+@UserId int  =null,
+@CurrentUserId int = null,
+@IsCurrentUserAdmin bit  = null
+AS
+BEGIN  
+DECLARE @sql nvarchar(max)
+	IF (@Company is not null and @GroupId IS NOT NULL and @RoleId IS NOT NULL)
+	BEGIN
+		Select ug.GroupId, ug.UserId,cr.CommitteeRoleName as Role,cr.CommitteeRoleId as RoleId,
+		u.LastName +', '+ u.FirstName + ' (' + c.CompanyName +')' as UserName from [ATA_Membership_UM].[dbo].[usergroup] ug
+		inner join [user] u on  ug.UserId = u.userid
+		inner join CommitteeRole cr on cr.CommitteeRoleId = ug.CommitteeRoleId
+		inner join [UserCompany] uc on uc.UserId  =u.UserId
+		inner join [Company] c on c.CompanyId = uc.CompanyId 
+		where GroupId = @GroupId and ug.CommitteeRoleId in ( @RoleId ) and c.CompanyName like '%'+@Company+'%'
+		order by cr.CommitteeRoleName,UserName,c.CompanyName
+	END
+	Else 
+	IF (@GroupId IS NOT NULL and @RoleId IS NOT NULL)
+ 
+	BEGIN
+	set @sql = 'Select ug.GroupId, ug.UserId,cr.CommitteeRoleName as Role,cr.CommitteeRoleId as RoleId,
+		u.LastName  +'' ''+ u.FirstName   as UserName,c.CompanyName as CompanyName,c.CompanyId as CompanyId from [ATA_Membership_UM].[dbo].[usergroup] ug
+		inner join [user] u on  ug.UserId = u.userid
+		inner join CommitteeRole cr on cr.CommitteeRoleId = ug.CommitteeRoleId
+		inner join [UserCompany] uc on uc.UserId  =u.UserId
+		inner join [Company] c on c.CompanyId = uc.CompanyId 
+		where GroupId = '+ CAST(@GroupId AS NVARCHAR(10))+'  and ug.CommitteeRoleId  in  ( '+@RoleId+')
+		order by c.CompanyName,UserName,cr.CommitteeRoleName'
+		PRINT @sql
+        EXEC sp_executesql @sql
+        --OLD Query
+		--Select ug.GroupId, ug.UserId,cr.CommitteeRoleName as Role,cr.CommitteeRoleId as RoleId,
+		--u.LastName +', '+ u.FirstName + ' (' + c.CompanyName +')' as UserName from [ATA_Membership_UM].[dbo].[usergroup] ug
+		--inner join [user] u on  ug.UserId = u.userid
+		--inner join CommitteeRole cr on cr.CommitteeRoleId = ug.CommitteeRoleId
+		--inner join [UserCompany] uc on uc.UserId  =u.UserId
+		--inner join [Company] c on c.CompanyId = uc.CompanyId 
+		--where GroupId = @GroupId and ug.CommitteeRoleId  in  ( @RoleId)
+		--order by cr.CommitteeRoleName,UserName
+	END
+	Else 
+	IF (@GroupId IS NOT NULL)
+	 BEGIN
+		  Select ug.GroupId, ug.UserId,cr.CommitteeRoleName as Role,cr.CommitteeRoleId as RoleId,u.LastName +', '+ u.FirstName  as UserName,c.CompanyName from [ATA_Membership_UM].[dbo].[usergroup] ug
+	inner join [user] u on  ug.UserId = u.userid
+	inner join CommitteeRole cr on cr.CommitteeRoleId = ug.CommitteeRoleId
+	inner join [UserCompany] uc on uc.UserId  =u.UserId
+	inner join [Company] c on c.CompanyId = uc.CompanyId 
+	where cr.A4ARole = 0   and GroupId =   @GroupId
+	order by cr.CommitteeRoleName,UserName
+		END
+	 Else
+	 IF (@UserId IS NOT NULL)
+	 BEGIN
+		  Select ug.GroupId,g.GroupName, ug.UserId,cr.CommitteeRoleName as Role,gt.[GroupShortLabel] as GroupType,
+		  cr.CommitteeRoleId as RoleId,u.LastName +', '+ u.FirstName  as UserName,c.CompanyName,
+		  CASE WHEN @IsCurrentUserAdmin = 1 then 1 
+		  ELSe
+			  CASE WHEN (select COUNT(*) from [UserGroup] ug1 where ug1.GroupId = ug.groupID and UserId=@CurrentUserId and CommitteeRoleId = 9 ) > 0 THEN 1
+			  ELSE 0 END 
+		  END 
+          AS IsCurrentUserAdmin
+          from [ATA_Membership_UM].[dbo].[usergroup] ug
+		  inner join [user] u on  ug.UserId = u.userid
+		  inner join [Group] g on g.GroupId = ug.GroupId
+		  inner join [GroupType] gt on gt.GroupTypeId = g.GroupTypeId
+		  inner join CommitteeRole cr on cr.CommitteeRoleId = ug.CommitteeRoleId
+		  inner join [UserCompany] uc on uc.UserId  =u.UserId
+		  inner join [Company] c on c.CompanyId = uc.CompanyId 
+		  where cr.A4ARole = 0   and ug.UserId =   @UserId
+		  order by cr.CommitteeRoleName,UserName
+	 END 
+	IF (@UserId IS NOT NULL)
+	 BEGIN
+		  Select ug.GroupId,g.GroupName, ug.UserId,cr.CommitteeRoleName as Role,
+		  cr.CommitteeRoleId as RoleId,u.LastName +', '+ u.FirstName  as UserName,c.CompanyName 
+          from [ATA_Membership_UM].[dbo].[usergroup] ug
+		  inner join [user] u on  ug.UserId = u.userid
+		  inner join [Group] g on g.GroupId = ug.GroupId
+		  inner join CommitteeRole cr on cr.CommitteeRoleId = ug.CommitteeRoleId
+		  inner join [UserCompany] uc on uc.UserId  =u.UserId
+		  inner join [Company] c on c.CompanyId = uc.CompanyId 
+		  where cr.A4ARole = 0   and ug.UserId =   @UserId
+		  order by cr.CommitteeRoleName,UserName
+	 END
+END
+
+///**********************************************************************************************************************
+*************************************************************************************************************************/
+USE [ATA_Membership_UM]
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserGroup_GetbyUserCompany]    Script Date: 10/24/2017 15:00:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+/****** Object:  StoredProcedure [dbo].[p_UserGroup_delete]    Script Date: 04/10/2017 16:24:19 ******/
+--SET ANSI_NULLS ON
+--GO
+--SET QUOTED_IDENTIFIER ON
+--GO
+
+-- Description:	Creates a new group 
+ALTER PROCEDURE [dbo].[p_UserGroup_GetbyUserCompany] 
+@CompanyId int = null,
+@term nvarchar(50) = null,
+@isActiveMB bit = null,
+@isAdmin bit = null,
+@currentUserId int = null
+AS
+BEGIN  
+declare @q1 nvarchar(200)
+declare @q2 nvarchar(200)
+declare @sql nvarchar(max)
+declare @search nvarchar(100)
+
+SET @search = '''%' + @term + '%''' 
+set @q1 = ''
+set @q2 = '' 
+set @term = '%' + @term +'%'
+--Set term with wild cards for the bottom query
+
+IF (@isAdmin = 1 )
+   BEGIN 
+      select g.GroupId,g.LyrisShortDescription + '('+ gt.GroupShortLabel + ')' as GroupName from [Group] g 
+	  inner join [GroupType] gt on gt.GroupTypeId = g.GroupTypeId 
+	  where g.LyrisShortDescription like @term 
+	  order by g.LyrisShortDescription
+   END   
+ELSE
+BEGIN
+IF (@CompanyId IS NOT NULL )
+   BEGIN  
+     if (select (CASE  WHEN c.CompanyTypeId = 1 or c.CompanyTypeId = 2  THEN 1  ELSE 0 END)   from [Company] c where CompanyId = @CompanyId) = 0
+			set @q1 = ' and IsCommittee = 0'
+			
+	  if (@isActiveMB = 0)		
+	  set @q2 =  ' and g.GroupTypeId not in (5)'  /*' and g.IsSecurityGroup = 0'*/
+	   
+	 set @sql = 'select g.GroupId,g.LyrisShortDescription + ''('' + gt.GroupShortLabel + '')'' as GroupName from [Group] g inner join [GroupType] gt on gt.GroupTypeId = g.GroupTypeId where 
+		         g.LyrisShortDescription like ' + @search + @q2 + @q1 +
+		         ' and g.groupid in (select Groupid from [UserGroup] ug where ug.UserId =    @currentUserId    and ug.CommitteeRoleId = 9 ) ' +
+		         ' order by g.LyrisShortDescription' 
+   END  
+   else
+   begin
+   set @sql = 'select g.GroupId,g.LyrisShortDescription + ''('' + gt.GroupShortLabel + '')'' as GroupName from [Group] g inner join [GroupType] gt on gt.GroupTypeId = g.GroupTypeId where 
+		           g.LyrisShortDescription like ' + @search  +
+		           ' and g.groupid in (select Groupid from [UserGroup] ug where ug.UserId =    @currentUserId   and ug.CommitteeRoleId = 9 ) ' +
+		           '  order by g.LyrisShortDescription'
+		          
+    end 
+	end  
+	END
+
+	/*************************************************************************************************************************************************/

@@ -1,0 +1,52 @@
+﻿<style>
+    .element-width {
+        width: 200px;
+    }
+</style>
+
+<div class="overlay">
+    <div id="loading-img"></div>
+</div>
+
+<div id="DivMsgA4AStaffContainer">
+    <span class="text-success niceLabel margin-topbot10  bold" data-bind="text: InfoMessage"></span>
+    <h3 class="text-danger niceLabel margin-topbot10  bold" data-bind="text: ErrorMessage"></h3>
+</div>
+
+<div id="DivSaveA4AStaffContainer" class="savebtn">
+    <button class="z-btn btn btn-primary" data-bind='click: save, enable: A4AStaff().length > 0' type='submit'>Save A4A Staff Roles</button>
+</div>
+
+<div>
+    <p>You have selected <span data-bind='text: A4AStaff().length'>&nbsp;</span> A4A Staff(s) roles</p>
+</div>
+
+<div class='A4AStaffContainer' id="A4AStaffContainer">
+    <div>
+        <select class="chosen form-control" id="a4astaffchosen" style="width:300px;" data-bind="options: A4AStaffList,selectedOptions: selected,optionsText:'name',value:A4AStaffSelected, optionsCaption: 'Choose..',chosen: {}"></select>
+    </div>
+
+    <table class="table" data-bind='visible: A4AStaff().length > 0'>
+        <thead>
+            <tr>
+                <th class="niceLabel">Name</th>
+                <th class="niceLabel">Manage Group</th>
+                <th class="niceLabel">Email Admin</th>
+                <th class="niceLabel">Receive Bounce Reports</th>
+                <th class="niceLabel">Subscribe</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: A4AStaff().sort(function(l,r) { return l.Name == r.Name ? 0 : (l.Name < r.Name ? -1 : 1)}) ">
+            <tr>
+                <td class="element-width"><span class='required niceLabel' data-bind='text: Name'> </span></td>
+                <td class="element-width"><input type="checkbox" data-bind='checked: ManageGroup' />  </td>
+                <td class="element-width"><input type="checkbox" name="EmailAdmin" data-bind='checked: EmailAdmin' />  </td>
+                <td class="element-width"><input type="checkbox" data-bind='checked: BounceReports' />  </td>
+                <td class="element-width"><input type="checkbox" data-bind='checked: StaffSubscribe' />  </td>
+                <td data-bind="if: isAdmin()" style="font-size: 12px;"><a href='#' data-bind='click: $parent.removeA4AStaff'>Delete</a></td>
+                <td data-bind="if: shouldShowDelete() && !isAdmin()" style="font-size: 12px;"><a href='#' data-bind='click: $parent.removeA4AStaff'>Delete</a></td>
+                <td data-bind="if: !isAdmin() && !ManageGroup && !shouldShowDelete()" style="font-size: 12px;"><a href='#' data-bind='click: $parent.removeA4AStaff'>Delete</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

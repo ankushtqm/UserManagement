@@ -1,0 +1,158 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <title>@ViewBag.Title - A4A User Management</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    <style type="text/css">
+        /* prime */
+        ul.primary li a {
+            display: block;
+            padding: 15px 0px 0px 0px;
+            border-right: 1px solid #3D3D3D;
+        }
+
+        ul.primary li:last-child a {
+            border-right: none;
+        }
+
+        ul.primary li a:hover {
+            color: #000;
+        }
+        /* subs */
+        ul.sub {
+            position: relative;
+            z-index: 200;
+            box-shadow: 2px 2px 0 #BEBEBE;
+            /*width: 35%;*/
+            display: none;
+        }
+
+            ul.sub li {
+                float: none;
+                margin: 0;
+            }
+
+                ul.sub li a {
+                    border-bottom: 1px dotted #ccc;
+                    border-right: none;
+                    color: #000;
+                    padding: 15px 30px;
+                }
+
+                ul.sub li:last-child a {
+                    border-bottom: none;
+                }
+
+                ul.sub li a:hover {
+                    color: #000;
+                    background: #eeeeee;
+                }
+
+        /* sub display*/
+        ul.primary li:hover ul {
+            display: block;
+            background: #fff;
+        }
+
+        /* keeps the tab background white */
+        ul.primary li:hover a {
+            background: #666;
+            color: #666;
+            text-shadow: none;
+        }
+
+        ul.primary li:hover > a {
+            color: #000;
+        }
+
+        header nav ul li a {
+            padding: 10px 3px !important;
+            height: 65px;
+            line-height: 1;
+            vertical-align: middle;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header nav ul li:nth-of-type(6) a {
+            background: #424242;
+            background-image: -moz-linear-gradient(top, #424242, #424242);
+            background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #424242),color-stop(1, #424242));
+        }
+
+        header nav ul li a:hover, header nav ul li a:focus {
+            color: #fff !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- header -->
+    <header class="hidden-print" style="background-color:#fff;">
+        <div class="nav-container" style="position:fixed;z-index:99;background-color:#fff;border-bottom:3px solid #428bca;width:100%; ">
+            <img src="~/images/A4A-new-logo.png" alt="Logo" height="60" style="padding-left: 20px;" />
+            <nav>
+                <ul class="primary">
+                    <li><a href="/User/index/#1" target="_parent">Add Contacts</a></li>
+                    <li>@Html.ActionLink("Search Contacts", "Index", "Home")</li>
+                    <li><a href="/Group/index/#2" id="grpHref" onclick="javascript: window.location.reload();" target="_parent">Add Groups</a></li>
+                    @*<li><a href="/Group/List"   target="_parent">Groups</a></li>*@
+                    <li><a href="/Group/List" target="_parent">Search Groups</a></li>
+                    <li><a href="/Group/Transaction" target="_parent">Transactions</a></li>
+                    @*<li id="reportsTab" style="visibility:hidden"><a href="/home/Reports" target="_parent">Reports</a></li>*@
+                    <li style="color: #333333"><a href="http://participationreports.airlines.org/" target="_blank"><span>Reports <span style="font-size:10px; display: block;">(Links to Staff Portal)</span></span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container body-content">
+        <div class="row bot-buffer text-center">
+            @*<div class="col-lg-4  col-xs-12">
+                    <ol id ="breadcrumb" class="breadcrumb">
+                        <li><a href="/"><i class="fa fa-dashboard"></i>&nbsp;Home</a></li>
+                    </ol>
+                </div>*@
+            <div class="col-xs-12">
+                @RenderSection("heading", required: true)
+            </div>
+        </div>
+        @RenderBody()
+        @*<hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year- A4A User Management</p>
+            </footer>*@
+    </div>
+    <footer class="um-footer">
+        <p>&copy; @DateTime.Now.Year - Airlines for America (A4A). All rights reserved</p>
+    </footer>
+    @Scripts.Render("~/bundles/bootstrap")
+    <script type="text/javascript">
+        window.onload = function () {
+            var url = "/api/GetIsCurrentUserAdmin";
+            $.ajax({
+                url: url,
+                contentType: 'application/json',
+                success: function (data) {
+                    if (data) {
+                        $("a#grpHref").attr('href', '/Group/index#1');
+                        $("#reportsTab").show();
+                    }
+                    else {
+                        $("#reportsTab").hide();
+                    }
+                },
+                error: function (xhr, status, error) {
+                }
+            });
+        };
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

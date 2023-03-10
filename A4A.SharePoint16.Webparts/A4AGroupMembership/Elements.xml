@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/" >
+  <Module Name="A4AGroupMembership" List="113" Url="_catalogs/wp">
+    <File Path="A4AGroupMembership\A4AGroupMembership.webpart" Url="A4A.SharePoint16.Webparts_A4AGroupMembership.webpart" Type="GhostableInLibrary" >
+      <Property Name="Group" Value="Custom" />
+    </File>
+  </Module>
+</Elements>

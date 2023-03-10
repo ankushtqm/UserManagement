@@ -1,0 +1,39 @@
+﻿<span class="text-left text-danger niceLabel italic margin-topbot10  bold"    data-bind="text:errorMessage()"></span>
+<span class="text-left text-success niceLabel italic margin-topbot10 bold" data-bind="text:infoMessage()"></span>
+<br/>
+<p> 
+    <span class="bold" style="vertical-align:middle;">Company:</span>
+    <select id="inpGGACompanies" class="form-control"
+                data-bind="options: Companies, optionsText: 'name', optionsValue: 'id', value:company, optionsCaption: 'Choose Company'"></select>
+    <span class="bold " style="vertical-align:middle;">Role:</span>
+    <select id="inpGGAGroupRole" class="form-control"
+            data-bind="options: Roles, optionsText: 'name', optionsValue: 'id', value:role, optionsCaption: 'Choose Role'"></select>
+    <span class="bold " style="vertical-align:middle;">Choose User:</span>
+    <input type="text"  class="chosen form-control" style="width:300px;" id="ggaUser"  placeholder="Enter Username.." 
+               data-bind="ko_autocomplete: { source: GetAllUsers, select: selectPrimAltUser4Company ,minLength: 3 }" /> 
+    <a href='#' class='text-danger deleteX' data-bind="click: clearGGAUser">X</a>
+</p> 
+<br /><br />  
+
+<ul data-bind="foreach:  Companies">
+    <li>                    
+        <h2  class="text-justify text-info bold niceLabel"  data-bind="text:name"></h2> 
+        <ul data-bind="foreach: $parent.people.index.CompanyName()[$data.name]">
+            <li style="margin-left:20px;"> 
+                <div class="row padding-4">
+                    <div class="col-lg-3">
+                         <span data-bind="text: Name"></span>
+                    </div>
+                    <div class="col-lg-1">
+                         <span class="niceLabel-default italic text-info" data-bind="text: Type"></span> 
+                    </div>
+                    <div class="col-lg-1"> 
+                         <a href="#" class="text-danger" data-bind="click:$parents[1].removeCommitteePrimAlt" >Delete</a> 
+                    </div> 
+                </div>
+            </li>
+        </ul>
+        <hr />
+    </li>
+</ul>
+<br />

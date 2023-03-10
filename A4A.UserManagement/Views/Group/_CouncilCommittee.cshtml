@@ -1,0 +1,147 @@
+﻿<div id="DivCompanyMsg" class="savebtn">
+    <span id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></span>
+    <span class="text-danger margin-topbot10 niceLabel bold" data-bind='text: $data.errorMessage()'></span>
+</div>
+
+<div id="DivSaveCompanyRoles" class="savecompanyroles savebtn">
+    <button class="btn btn-primary" type='submit' onclick="saveA4ARoles()">Save Council/Committee Contacts</button>
+</div>
+
+<div class="row">
+    <div class="control-label col-sm-1">
+        <label class="niceLabel"> Role</label>
+    </div>
+
+    <div class="control-label col-sm-2">
+        <label class="control-label niceLabel"> Contact</label>
+    </div>
+
+    <div class="control-label col-sm-1">
+        <label class="control-label niceLabel"> Email Admin</label>
+    </div>
+
+    <div class="control-label col-sm-1">
+        <label class="control-label niceLabel"> Subscribe</label>
+    </div>
+
+    <div class="control-label col-sm-1">
+        <label class="control-label niceLabel"> Delete</label>
+    </div>
+</div>
+
+<div class='row'>
+    <div class='col-sm-1'>
+        <label class="niceLabel committelbl"> Chair</label>
+    </div>
+    <div class='col-sm-2'>
+        <input type="text" class="chosen form-control" style="width:300px;" id="GroupChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectChair ,minLength: 3 }" />
+    </div>
+    <div class='col-sm-1'>
+        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkStaff}, checked:CheckStatusStaff' />
+    </div>
+    <div class="col-sm-1">
+        <div id="DivCommitteeSubscribe" class="chklist" style="display:none">
+            <label class="chklistcontainer"><input type="checkbox" checked disabled><span class="checkmark"></span></label>
+        </div>
+    </div>
+    <div class='col-sm-1'>
+        <a href='#' class='text-danger btndelete' style='padding-left: 1px; font-size: 12px;' data-bind='click: $data.removeChairGroupUser'>Delete</a>
+    </div>
+</div>
+
+<div class='row' style="margin-top:7px">
+    <div class='col-sm-1'>
+        <label class="niceLabel committelbl"> Vice Chair</label>
+    </div>
+    <div class='col-sm-2'>
+        <input type="text" class="chosen form-control" style="width:300px;" id="GroupViceChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectViceChair ,minLength: 3 }" />
+    </div>
+    <div class='col-sm-1'>
+        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkGroupUser}, checked:CheckStatusGroupUser' />
+    </div>
+    <div class="col-sm-1">
+        <div id="DivCommitteeStaffSubscribe" class="chklist" style="display:none">
+            <label class="chklistcontainer"><input type="checkbox" checked disabled><span class="checkmark"></span></label>
+        </div>
+    </div>
+    <div class='col-sm-1'>
+        <a href='#' class='text-danger btndelete' style='padding-left: 1px; font-size: 12px;' data-bind='click: $data.removeViceChairGroupUser'>Delete</a>
+    </div>
+</div>
+
+<br />
+
+<div>
+    <span class='text-danger niceLabel margin-topbot10' id='errorPrimUser'></span>
+</div>
+
+<div class="row">
+    <div class="control-label col-sm-1">
+        <label class="control-label niceLabel"> Company</label>
+    </div>
+
+    <div class="control-label col-sm-2">
+        <label class="niceLabel"> Primary</label>
+    </div>
+
+    <div class="control-label col-sm-1">
+        <label class="niceLabel"> Email Admin</label>
+    </div>
+
+    <div class="control-label col-sm-1">
+        <label class="niceLabel"> Subscribe</label>
+    </div>
+
+    <div class="control-label col-sm-1">
+        <label class="niceLabel"> Delete</label>
+    </div>
+
+    <div class="control-label col-sm-2" style="padding-left:50px">
+        <label class="niceLabel"> Alternate</label>
+    </div>
+
+    <div class="control-label col-sm-1" style="padding-left:50px">
+        <label class="niceLabel"> Email Admin</label>
+    </div>
+
+    <div class="control-label col-sm-1">
+        <label class="niceLabel"> Subscribe</label>
+    </div>
+
+    <div class="control-label col-sm-1">
+        <label class="niceLabel"> Delete</label>
+    </div>
+</div>
+
+<primaryalternate params="Company: 'Air Canada'">
+</primaryalternate>
+
+<primaryalternate params="Company: 'Alaska Airlines'">
+</primaryalternate>
+
+<primaryalternate params="Company: 'American Airlines'">
+</primaryalternate>
+
+<primaryalternate params="Company: 'Atlas Air'">
+</primaryalternate>
+
+<primaryalternate params="Company: 'Delta Air Lines'">
+</primaryalternate>
+
+<primaryalternate params="Company: 'FedEx'">
+</primaryalternate>
+
+<primaryalternate params="Company: 'Hawaiian Airlines'">
+</primaryalternate>
+
+<primaryalternate params="Company: 'JetBlue Airways'">
+</primaryalternate>
+
+<primaryalternate params="Company: 'Southwest Airlines'">
+</primaryalternate>
+
+<primaryalternate params="Company: 'United Airlines'">
+</primaryalternate>
+
+<primaryalternate params="Company: 'Ups'">
+</primaryalternate>

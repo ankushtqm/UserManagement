@@ -1,0 +1,109 @@
+﻿<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
+
+<style>
+    table.dataTable tbody th, table.dataTable tbody td {
+        padding: 8px 0px;
+        font-size: 12px;
+    }
+</style>
+
+<div>
+    <div>
+        <table id="tblGrpTransactions" class="niceLabel-default">
+            <thead>
+                <tr>
+                    <th style="width: 131px; padding-left: 0px; font-size: 12px; ">Action</th>
+                    <th style="width: 287px; padding-left: 0px; font-size: 12px; ">Details</th>
+                    <th style="width: 137px; padding-left: 0px; font-size: 12px; ">Modified By</th>
+                    <th style="padding-left: 0px; font-size: 12px;">Modified Date</th>
+                    <th>TimeStamp</th>
+                </tr>
+            </thead>
+        </table>
+        <br />
+        <button id="showMore" class="btn btn-primary" onclick="showMore()">More</button>
+    </div>
+    <br />
+</div>
+
+<script>
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            sURLVariables = sPageURL.split('&'), sParameterName, i;
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    };
+    var gid = parseInt(getUrlParameter('gid'));
+    var query = "/api/getTransactions/?groupId=" + gid + "&count=" + 5;
+
+    function showMore() {
+        query = "/api/getTransactions/?groupId=" + gid;
+
+        getTransaction();
+        $('#showMore').hide();
+    }
+
+    var getTransaction = function () {
+        $.ajax({
+            url: query,
+            type: "GET",
+            datatype: "json",
+            processData: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                var table;
+                if ($.fn.dataTable.isDataTable('#tblGrpTransactions')) {
+                    table = $('#tblGrpTransactions').DataTable();
+                    table.clear();
+                    table.rows.add(JSON.parse(result)).draw();
+                }
+                else {
+                    table = $("#tblGrpTransactions").DataTable({
+                        "aaData": JSON.parse(result),
+                        retrieve: true,
+                        "deferRender": true,
+                        bProcessing: true,
+                        paging: false,
+                        bAutoWidth: false,
+                        bFilter: false, bInfo: false,
+                        "aaSorting": [4, "desc"],
+                        aoColumns: [
+                            { mData: "Action" },
+                            { mData: "Details" },
+                            { mData: "modifiedby" },
+                            { mData: "TransactionDate" },
+                            { mData: "TDTimeStamp", "asSorting": ["desc"] },
+                        ],
+                        "aoColumnDefs": [
+                            { "asSorting": ["desc"], "aTargets": [4] },
+                            { "aDataSort": [4], "aTargets": [3] },
+                            {
+                                "aTargets": [4],
+                                "bVisible": false,
+                                "bSearchable": false
+                            },
+                        ],
+                        "bInfo": false,
+                        "bLengthChange": false,
+                        "oLanguage": {
+                            "sEmptyTable": "No Transactions found for the group."
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    if (gid > 0) {
+        getTransaction();
+    } else {
+        $('#transaction').hide()
+    }
+</script>

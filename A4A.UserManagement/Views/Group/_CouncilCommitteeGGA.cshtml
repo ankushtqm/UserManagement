@@ -1,0 +1,172 @@
+﻿<div id="DivCommitteeMsg" class="savebtn">
+    <div id="spnMessage" class="spnMessage text-danger margin-topbot10 niceLabel bold"></div>
+    <span class="text-danger margin-topbot10 niceLabel bold" data-bind='text: $data.errorMessage()'></span>
+</div>
+
+<div id="DivSaveCommitteeRoles" class="savecommitteeroles savebtn">
+    <button class="btn btn-primary" type='submit' onclick="saveA4ACommitteeRoles()">Save Council/Committee Unlimited Alternates</button>
+</div>
+
+<div class="preloader">
+    <div><img src="~/images/Preloader-2.gif" /></div>
+</div>
+
+<div class="row" style="display:none">
+    <div class="control-label col-sm-1">
+        <label class="niceLabel"> Role</label>
+    </div>
+
+    <div class="control-label col-sm-2">
+        <label class="control-label niceLabel"> Contact</label>
+    </div>
+
+    <div class="control-label col-sm-1">
+        <label class="control-label niceLabel"> Email Admin</label>
+    </div>
+
+    <div class="control-label col-sm-1">
+        <label class="control-label niceLabel"> Delete</label>
+    </div>
+</div>
+
+<div class='row' style="display:none">
+    <div class='col-sm-1'>
+        <label class="niceLabel committelbl"> Chair</label>
+    </div>
+    <div class='col-sm-2'>
+        <input type="text" class="chosen form-control" style="width:300px;" id="GroupChairGGA" data-bind="ko_autocomplete: { source: getLanguagesCommittee, select: selectCommitteeChair ,minLength: 3 }" />
+    </div>
+    <div class='col-sm-1'>
+        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkCommitteeStaff}, checked:CheckStatusCommitteeStaff' />
+    </div>
+    <div class='col-sm-1'>
+        <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeCommitteeChairGroupUser'>Delete</a>
+    </div>
+</div>
+
+<div class='row' style="margin-top: 7px; display: none">
+    <div class='col-sm-1'>
+        <label class="niceLabel committelbl"> Vice Chair</label>
+    </div>
+    <div class='col-sm-2'>
+        <input type="text" class="chosen form-control" style="width:300px;" id="GroupViceChairGGA" data-bind="ko_autocomplete: { source: getLanguagesCommittee, select: selectCommitteeViceChair ,minLength: 3 }" />
+    </div>
+    <div class='col-sm-1'>
+        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkCommitteeGroupUser}, checked:CheckStatusCommitteeGroupUser' />
+    </div>
+    <div class='col-sm-1'>
+        <a href='#' class='text-danger' style='padding-left:1px;' data-bind='click: $data.removeCommitteeViceChairGroupUser'>Delete</a>
+    </div>
+</div>
+
+<div id="DivCouncilCommiteeMsg">
+    <span class="text-left text-danger niceLabel italic margin-topbot10  bold" data-bind="text:errorMessage()"></span>
+    <span class="text-left text-success niceLabel italic margin-topbot10 bold" data-bind="text:infoMessage()"></span>
+</div>
+
+<br />
+<p>
+    <span class="bold " style="vertical-align:middle;">Contact:</span>
+    <input type="text" class="chosen form-control" style="width:200px;" id="ggaUser" placeholder="Enter Username.." data-bind="ko_autocomplete: { source: GetAllUserWithCompany,select: selectPrimAltUser,minLength: 3 }" />
+    <a href='#' class='text-danger' data-bind="click: clearGGAUser" style="font-size:1em;">Delete</a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="bold " style="vertical-align:middle;">Role:</span>
+    <select id="inpGGAGroupRole" class="form-control" data-bind="options: Roles, optionsText: 'name', optionsValue: 'id', value:role, event:{ change: selectPrimAltUser4Company}, optionsCaption: 'Choose Role'" style="width:180px;"></select>
+</p>
+<br />
+
+<div id="DivCommitteeStaffUser" style="display:none">
+    <label>Leadership</label>
+    <table id="A4ACommitteStaffDtl">
+        <thead>
+            <tr>
+                <th class="niceLabel" style="padding-left: 0px; width: 193px; ">Company Name</th>
+                <th class="niceLabel" style="width: 209px">Last Name</th>
+                <th class="niceLabel" style="width: 206px">First Name</th>
+                <th class="niceLabel" style="width: 200px">Role</th>
+                <th class="niceLabel" style="width: 202px">Email Admin</th>
+                <th class="niceLabel" style="width: 202px">Subscribe</th>
+                <th class="niceLabel">Delete</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<div id="DivCommitteeUser" style="margin-top: 30px; display: none">
+    <label>Primary, Alternates, Informational Contacts</label>
+    <table id="A4ACommitteDtl">
+        <thead>
+            <tr>
+                <th class="niceLabel" style="padding-left: 0px; width: 193px; ">Company Name</th>
+                <th class="niceLabel" style="width: 209px">Last Name</th>
+                <th class="niceLabel" style="width: 206px">First Name</th>
+                <th class="niceLabel" style="width: 200px">Role</th>
+                <th class="niceLabel" style="width: 202px">Email Admin</th>
+                <th class="niceLabel" style="width: 202px">Subscribe</th>
+                <th class="niceLabel">Delete</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<table class="table" style="display:none">
+    <thead>
+        <tr>
+            <th class="niceLabel" style="padding-left:0px">Company Name</th>
+            <th class="niceLabel">Last Name</th>
+            <th class="niceLabel">First Name</th>
+            <th class="niceLabel">Role</th>
+            <th class="niceLabel">Email Admin</th>
+            <th class="niceLabel">Delete</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: A4ACommitteList().sort(function(l,r) { return l.CompanyName == r.CompanyName ? 0 : (l.CompanyName < r.CompanyName ? -1 : 1)}) ">
+        <tr>
+            <td class="element-width" style="padding-left:0px"><span class='required niceLabel' data-bind='text: CompanyName'></span></td>
+            <td class="element-width"><span class='required niceLabel' data-bind='text: FirstName'></span></td>
+            <td class="element-width"><span class='required niceLabel' data-bind='text: LastName'></span></td>
+            <td class="element-width"><span class='required niceLabel' data-bind='text: Role'></span></td>
+            <td class="element-width"><input type="checkbox" name="EmailAdmin" data-bind='value:UserId, checked:CheckStatus' onchange="EmailAdmin(this)" /></td>
+            <td><a href="#" class='text-danger' data-bind='click: $parent.removeCommitteeList'>Delete</a></td>
+        </tr>
+    </tbody>
+</table>
+
+<table id="A4ACommitteStaffList" class="table" style="display:none">
+    <thead>
+        <tr>
+            <th class="niceLabel" style="padding-left:0px">Company Name</th>
+            <th class="niceLabel">Last Name</th>
+            <th class="niceLabel">First Name</th>
+            <th class="niceLabel">Role</th>
+            <th class="niceLabel">Email Admin</th>
+            <th class="niceLabel">Delete</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: A4ACommitteStaffList().sort(function(l,r) { return l.CompanyName == r.CompanyName ? 0 : (l.CompanyName < r.CompanyName ? -1 : 1)}) ">
+        <tr>
+            <td class="element-width" style="padding-left:0px"><span class='required niceLabel' data-bind='text: CompanyName'></span></td>
+            <td class="element-width"><span class='required niceLabel' data-bind='text: FirstName'></span></td>
+            <td class="element-width"><span class='required niceLabel' data-bind='text: LastName'></span></td>
+            <td class="element-width"><span class='required niceLabel' data-bind='text: Role'></span></td>
+            <td class="element-width"><input type="checkbox" name="EmailAdmin" data-bind='value:UserId, checked:CheckStatus' onchange="EmailAdmin(this)" /></td>
+            <td>
+                <div id="DivRemoveCommitteePrimAlt">
+                    <a href="#" class='text-danger' data-bind='click: $parent.removeCommitteeStaffList'>Delete</a>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<style>
+    .dataTables_wrapper .dataTables_filter {
+        display: none;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+        display: none;
+    }
+
+    table.dataTable thead th, table.dataTable thead td {
+        padding: 10px 0px;
+    }
+</style>

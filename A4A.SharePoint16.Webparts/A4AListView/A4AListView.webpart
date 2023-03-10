@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<webParts>
+  <webPart xmlns="http://schemas.microsoft.com/WebPart/v3">
+    <metaData>
+      <type name="A4A.SharePoint16.Webparts.A4AListView.A4AListView, $SharePoint.Project.AssemblyFullName$" />
+      <importErrorMessage>$Resources:core,ImportErrorMessage;</importErrorMessage>
+    </metaData>
+    <data>
+      <properties>
+        <property name="Title" type="string">A4A Portal List View</property>
+        <property name="Description" type="string">A4A List View Display webpart for landing pages</property>
+        <property name="ChromeType" type="chrometype">TitleOnly</property>
+      </properties>
+    </data>
+  </webPart>
+</webParts>

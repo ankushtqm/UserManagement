@@ -1,0 +1,4 @@
+﻿<SafeControls>
+  <SafeControl Namespace="ATA.ObjectModel" TypeName="*" Safe="True"/>
+  <SafeControl Namespace="SusQTech.Data.DataObjects" TypeName="*" Safe="True"/>
+</SafeControls>

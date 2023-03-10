@@ -1,0 +1,1101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ATA_SLOTSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Airport">
+          <Key>
+            <PropertyRef Name="AirportId" />
+          </Key>
+          <Property Name="AirportId" Type="int" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="Created" Type="datetime" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="100" />
+          <Property Name="Modified" Type="datetime" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="CompanyId" />
+          </Key>
+          <Property Name="CompanyId" Type="int" Nullable="false" />
+          <Property Name="ICAOCode" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="IATACode" Type="nvarchar" MaxLength="10" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="WebSite" Type="nvarchar" MaxLength="200" />
+          <Property Name="IsMember" Type="bit" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="Created" Type="datetime" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="100" />
+          <Property Name="Modified" Type="datetime" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="100" />
+          <Property Name="Display" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="DailySlotHolderOperator">
+          <Key>
+            <PropertyRef Name="DailySlotHolderOperatorId" />
+          </Key>
+          <Property Name="DailySlotHolderOperatorId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SlotNo" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="AirportId" Type="int" Nullable="false" />
+          <Property Name="SlotTime" Type="int" Nullable="false" />
+          <Property Name="ArriveDeparture" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="CurrentDate" Type="datetime" Nullable="false" />
+          <Property Name="HolderId" Type="int" />
+          <Property Name="OperatorId" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ATA_SLOTS.dbo.DirtySlotHolderOperator' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="DirtySlotHolderOperator">
+          <Key>
+            <PropertyRef Name="SlotNo" />
+            <PropertyRef Name="AirportId" />
+          </Key>
+          <Property Name="SlotNo" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="AirportId" Type="int" Nullable="false" />
+          <Property Name="ToBeDeleted" Type="bit" />
+        </EntityType>
+        <EntityType Name="NextUniqueIdHolder">
+          <Key>
+            <PropertyRef Name="NextUniqueIdHolderId" />
+          </Key>
+          <Property Name="NextUniqueIdHolderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="KeyName" Type="nvarchar" MaxLength="100" />
+          <Property Name="NextAvailableId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Slot">
+          <Key>
+            <PropertyRef Name="SlotId" />
+          </Key>
+          <Property Name="SlotId" Type="int" Nullable="false" />
+          <Property Name="SlotNo" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="AirportId" Type="int" Nullable="false" />
+          <Property Name="SlotTime" Type="int" />
+          <Property Name="ArriveDeparture" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="EffectiveDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="Created" Type="datetime" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="100" />
+          <Property Name="Modified" Type="datetime" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="SlotHolder">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="SlotNo" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="AirportId" Type="int" Nullable="false" />
+          <Property Name="SlotTime" Type="int" Nullable="false" />
+          <Property Name="ArriveDeparture" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="EffectiveDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="Frequency" Type="int" Nullable="false" />
+          <Property Name="CarrierMo" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierTu" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierWe" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierTh" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierFr" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierSa" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierSu" Type="nvarchar" MaxLength="10" />
+          <Property Name="CompanyId" Type="int" Nullable="false" />
+          <Property Name="CreationTransactionNo" Type="nvarchar" MaxLength="20" />
+          <Property Name="TransactionNo" Type="nvarchar" MaxLength="4000" />
+          <Property Name="TransactionRefNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="Concurrence" Type="nvarchar" MaxLength="200" />
+          <Property Name="Notes" Type="nvarchar" MaxLength="500" />
+          <Property Name="FAAApprovalDate" Type="datetime" />
+          <Property Name="StatusCodeId" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="100" />
+          <Property Name="Modified" Type="datetime" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="SlotOperator">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="SlotNo" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="AirportId" Type="int" Nullable="false" />
+          <Property Name="SlotTime" Type="int" Nullable="false" />
+          <Property Name="ArriveDeparture" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="EffectiveDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="Frequency" Type="int" Nullable="false" />
+          <Property Name="CarrierMo" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierTu" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierWe" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierTh" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierFr" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierSa" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierSu" Type="nvarchar" MaxLength="10" />
+          <Property Name="CompanyId" Type="int" Nullable="false" />
+          <Property Name="CreationTransactionNo" Type="nvarchar" MaxLength="20" />
+          <Property Name="TransactionNo" Type="nvarchar" MaxLength="4000" />
+          <Property Name="TransactionRefNo" Type="nvarchar" MaxLength="50" />
+          <Property Name="Concurrence" Type="nvarchar" MaxLength="200" />
+          <Property Name="Notes" Type="nvarchar" MaxLength="500" />
+          <Property Name="FAAApprovalDate" Type="datetime" />
+          <Property Name="StatusCodeId" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="100" />
+          <Property Name="Modified" Type="datetime" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="SlotTransaction">
+          <Key>
+            <PropertyRef Name="SlotTransactionId" />
+          </Key>
+          <Property Name="SlotTransactionId" Type="int" Nullable="false" />
+          <Property Name="SlotNo" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="AirportId" Type="int" Nullable="false" />
+          <Property Name="SlotTime" Type="int" Nullable="false" />
+          <Property Name="ArriveDeparture" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="EffectiveDate" Type="datetime" Nullable="false" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="Frequency" Type="int" Nullable="false" />
+          <Property Name="CarrierMo" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierTu" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierWe" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierTh" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierFr" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierSa" Type="nvarchar" MaxLength="10" />
+          <Property Name="CarrierSu" Type="nvarchar" MaxLength="10" />
+          <Property Name="LossingCompany" Type="nvarchar" MaxLength="10" />
+          <Property Name="GainingCompanyId" Type="int" Nullable="false" />
+          <Property Name="IsHolder" Type="bit" />
+          <Property Name="TransactionType" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Signature" Type="nvarchar" MaxLength="200" />
+          <Property Name="FlightNo" Type="nvarchar" MaxLength="20" />
+          <Property Name="ErrorTransaction" Type="bit" />
+          <Property Name="TransactionNo" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="TransactionRefNo" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="FAAApprovalDate" Type="datetime" />
+          <Property Name="Concurrence" Type="nvarchar" MaxLength="200" />
+          <Property Name="Notes" Type="nvarchar" MaxLength="500" />
+          <Property Name="StatusCodeId" Type="int" Nullable="false" />
+          <Property Name="Created" Type="datetime" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="100" />
+          <Property Name="Modified" Type="datetime" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="StatusCode">
+          <Key>
+            <PropertyRef Name="StatusCodeId" />
+          </Key>
+          <Property Name="StatusCodeId" Type="int" Nullable="false" />
+          <Property Name="Code" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="Created" Type="datetime" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="100" />
+          <Property Name="Modified" Type="datetime" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <Association Name="FK_DailySlotHolderOperatorAirport">
+          <End Role="Airport" Type="Self.Airport" Multiplicity="1" />
+          <End Role="DailySlotHolderOperator" Type="Self.DailySlotHolderOperator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Airport">
+              <PropertyRef Name="AirportId" />
+            </Principal>
+            <Dependent Role="DailySlotHolderOperator">
+              <PropertyRef Name="AirportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DailySlotHolderOperatorHolderId">
+          <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+          <End Role="DailySlotHolderOperator" Type="Self.DailySlotHolderOperator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="DailySlotHolderOperator">
+              <PropertyRef Name="HolderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DailySlotHolderOperatorOperatorId">
+          <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+          <End Role="DailySlotHolderOperator" Type="Self.DailySlotHolderOperator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="DailySlotHolderOperator">
+              <PropertyRef Name="OperatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotHolderToAirport">
+          <End Role="Airport" Type="Self.Airport" Multiplicity="1" />
+          <End Role="SlotHolder" Type="Self.SlotHolder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Airport">
+              <PropertyRef Name="AirportId" />
+            </Principal>
+            <Dependent Role="SlotHolder">
+              <PropertyRef Name="AirportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotHolderToCompany">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="SlotHolder" Type="Self.SlotHolder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="SlotHolder">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotHolderToStatusCode">
+          <End Role="StatusCode" Type="Self.StatusCode" Multiplicity="1" />
+          <End Role="SlotHolder" Type="Self.SlotHolder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusCode">
+              <PropertyRef Name="StatusCodeId" />
+            </Principal>
+            <Dependent Role="SlotHolder">
+              <PropertyRef Name="StatusCodeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotOperatorToAirport">
+          <End Role="Airport" Type="Self.Airport" Multiplicity="1" />
+          <End Role="SlotOperator" Type="Self.SlotOperator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Airport">
+              <PropertyRef Name="AirportId" />
+            </Principal>
+            <Dependent Role="SlotOperator">
+              <PropertyRef Name="AirportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotOperatorToCompany">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="SlotOperator" Type="Self.SlotOperator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="SlotOperator">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotOperatorToStatusCode">
+          <End Role="StatusCode" Type="Self.StatusCode" Multiplicity="1" />
+          <End Role="SlotOperator" Type="Self.SlotOperator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusCode">
+              <PropertyRef Name="StatusCodeId" />
+            </Principal>
+            <Dependent Role="SlotOperator">
+              <PropertyRef Name="StatusCodeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotToAirport">
+          <End Role="Airport" Type="Self.Airport" Multiplicity="1" />
+          <End Role="Slot" Type="Self.Slot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Airport">
+              <PropertyRef Name="AirportId" />
+            </Principal>
+            <Dependent Role="Slot">
+              <PropertyRef Name="AirportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotTransactionToAirport">
+          <End Role="Airport" Type="Self.Airport" Multiplicity="1" />
+          <End Role="SlotTransaction" Type="Self.SlotTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Airport">
+              <PropertyRef Name="AirportId" />
+            </Principal>
+            <Dependent Role="SlotTransaction">
+              <PropertyRef Name="AirportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotTransactionToStatusCode">
+          <End Role="StatusCode" Type="Self.StatusCode" Multiplicity="1" />
+          <End Role="SlotTransaction" Type="Self.SlotTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusCode">
+              <PropertyRef Name="StatusCodeId" />
+            </Principal>
+            <Dependent Role="SlotTransaction">
+              <PropertyRef Name="StatusCodeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionToGainingCompany">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="SlotTransaction" Type="Self.SlotTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="SlotTransaction">
+              <PropertyRef Name="GainingCompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ATA_SLOTSModelStoreContainer">
+          <EntitySet Name="Airport" EntityType="Self.Airport" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Company" EntityType="Self.Company" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DailySlotHolderOperator" EntityType="Self.DailySlotHolderOperator" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NextUniqueIdHolder" EntityType="Self.NextUniqueIdHolder" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Slot" EntityType="Self.Slot" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SlotHolder" EntityType="Self.SlotHolder" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SlotOperator" EntityType="Self.SlotOperator" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SlotTransaction" EntityType="Self.SlotTransaction" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StatusCode" EntityType="Self.StatusCode" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DirtySlotHolderOperator" EntityType="Self.DirtySlotHolderOperator" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [DirtySlotHolderOperator].[SlotNo] AS [SlotNo], 
+    [DirtySlotHolderOperator].[AirportId] AS [AirportId], 
+    [DirtySlotHolderOperator].[ToBeDeleted] AS [ToBeDeleted]
+    FROM [dbo].[DirtySlotHolderOperator] AS [DirtySlotHolderOperator]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_DailySlotHolderOperatorAirport" Association="Self.FK_DailySlotHolderOperatorAirport">
+            <End Role="Airport" EntitySet="Airport" />
+            <End Role="DailySlotHolderOperator" EntitySet="DailySlotHolderOperator" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DailySlotHolderOperatorHolderId" Association="Self.FK_DailySlotHolderOperatorHolderId">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="DailySlotHolderOperator" EntitySet="DailySlotHolderOperator" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DailySlotHolderOperatorOperatorId" Association="Self.FK_DailySlotHolderOperatorOperatorId">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="DailySlotHolderOperator" EntitySet="DailySlotHolderOperator" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotHolderToAirport" Association="Self.FK_SlotHolderToAirport">
+            <End Role="Airport" EntitySet="Airport" />
+            <End Role="SlotHolder" EntitySet="SlotHolder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotHolderToCompany" Association="Self.FK_SlotHolderToCompany">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="SlotHolder" EntitySet="SlotHolder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotHolderToStatusCode" Association="Self.FK_SlotHolderToStatusCode">
+            <End Role="StatusCode" EntitySet="StatusCode" />
+            <End Role="SlotHolder" EntitySet="SlotHolder" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotOperatorToAirport" Association="Self.FK_SlotOperatorToAirport">
+            <End Role="Airport" EntitySet="Airport" />
+            <End Role="SlotOperator" EntitySet="SlotOperator" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotOperatorToCompany" Association="Self.FK_SlotOperatorToCompany">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="SlotOperator" EntitySet="SlotOperator" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotOperatorToStatusCode" Association="Self.FK_SlotOperatorToStatusCode">
+            <End Role="StatusCode" EntitySet="StatusCode" />
+            <End Role="SlotOperator" EntitySet="SlotOperator" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotToAirport" Association="Self.FK_SlotToAirport">
+            <End Role="Airport" EntitySet="Airport" />
+            <End Role="Slot" EntitySet="Slot" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotTransactionToAirport" Association="Self.FK_SlotTransactionToAirport">
+            <End Role="Airport" EntitySet="Airport" />
+            <End Role="SlotTransaction" EntitySet="SlotTransaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotTransactionToStatusCode" Association="Self.FK_SlotTransactionToStatusCode">
+            <End Role="StatusCode" EntitySet="StatusCode" />
+            <End Role="SlotTransaction" EntitySet="SlotTransaction" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionToGainingCompany" Association="Self.FK_TransactionToGainingCompany">
+            <End Role="Company" EntitySet="Company" />
+            <End Role="SlotTransaction" EntitySet="SlotTransaction" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ATA_SLOTSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Airport">
+          <Key>
+            <PropertyRef Name="AirportId" />
+          </Key>
+          <Property Name="AirportId" Type="Int32" Nullable="false" />
+          <Property Name="Code" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Modified" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DailySlotHolderOperators" Relationship="Self.FK_DailySlotHolderOperatorAirport" FromRole="Airport" ToRole="DailySlotHolderOperator" />
+          <NavigationProperty Name="SlotHolders" Relationship="Self.FK_SlotHolderToAirport" FromRole="Airport" ToRole="SlotHolder" />
+          <NavigationProperty Name="SlotOperators" Relationship="Self.FK_SlotOperatorToAirport" FromRole="Airport" ToRole="SlotOperator" />
+          <NavigationProperty Name="Slots" Relationship="Self.FK_SlotToAirport" FromRole="Airport" ToRole="Slot" />
+          <NavigationProperty Name="SlotTransactions" Relationship="Self.FK_SlotTransactionToAirport" FromRole="Airport" ToRole="SlotTransaction" />
+        </EntityType>
+        <EntityType Name="Company">
+          <Key>
+            <PropertyRef Name="CompanyId" />
+          </Key>
+          <Property Name="CompanyId" Type="Int32" Nullable="false" />
+          <Property Name="ICAOCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IATACode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="WebSite" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="IsMember" Type="Boolean" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Modified" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Display" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DailySlotHolderOperators" Relationship="Self.FK_DailySlotHolderOperatorHolderId" FromRole="Company" ToRole="DailySlotHolderOperator" />
+          <NavigationProperty Name="DailySlotHolderOperators1" Relationship="Self.FK_DailySlotHolderOperatorOperatorId" FromRole="Company" ToRole="DailySlotHolderOperator" />
+          <NavigationProperty Name="SlotHolders" Relationship="Self.FK_SlotHolderToCompany" FromRole="Company" ToRole="SlotHolder" />
+          <NavigationProperty Name="SlotOperators" Relationship="Self.FK_SlotOperatorToCompany" FromRole="Company" ToRole="SlotOperator" />
+          <NavigationProperty Name="SlotTransactions" Relationship="Self.FK_TransactionToGainingCompany" FromRole="Company" ToRole="SlotTransaction" />
+        </EntityType>
+        <EntityType Name="DailySlotHolderOperator">
+          <Key>
+            <PropertyRef Name="DailySlotHolderOperatorId" />
+          </Key>
+          <Property Name="DailySlotHolderOperatorId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SlotNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AirportId" Type="Int32" Nullable="false" />
+          <Property Name="SlotTime" Type="Int32" Nullable="false" />
+          <Property Name="ArriveDeparture" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CurrentDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="HolderId" Type="Int32" />
+          <Property Name="OperatorId" Type="Int32" />
+          <NavigationProperty Name="Airport" Relationship="Self.FK_DailySlotHolderOperatorAirport" FromRole="DailySlotHolderOperator" ToRole="Airport" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_DailySlotHolderOperatorHolderId" FromRole="DailySlotHolderOperator" ToRole="Company" />
+          <NavigationProperty Name="Company1" Relationship="Self.FK_DailySlotHolderOperatorOperatorId" FromRole="DailySlotHolderOperator" ToRole="Company" />
+        </EntityType>
+        <EntityType Name="NextUniqueIdHolder">
+          <Key>
+            <PropertyRef Name="NextUniqueIdHolderId" />
+          </Key>
+          <Property Name="NextUniqueIdHolderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="KeyName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="NextAvailableId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Slot">
+          <Key>
+            <PropertyRef Name="SlotId" />
+          </Key>
+          <Property Name="SlotId" Type="Int32" Nullable="false" />
+          <Property Name="SlotNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AirportId" Type="Int32" Nullable="false" />
+          <Property Name="SlotTime" Type="Int32" />
+          <Property Name="ArriveDeparture" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="EffectiveDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Modified" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Airport" Relationship="Self.FK_SlotToAirport" FromRole="Slot" ToRole="Airport" />
+        </EntityType>
+        <EntityType Name="SlotHolder">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="SlotNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AirportId" Type="Int32" Nullable="false" />
+          <Property Name="SlotTime" Type="Int32" Nullable="false" />
+          <Property Name="ArriveDeparture" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="EffectiveDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="Frequency" Type="Int32" Nullable="false" />
+          <Property Name="CarrierMo" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierTu" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierWe" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierTh" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierFr" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierSa" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierSu" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyId" Type="Int32" Nullable="false" />
+          <Property Name="CreationTransactionNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionNo" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionRefNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Concurrence" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="FAAApprovalDate" Type="DateTime" Precision="3" />
+          <Property Name="StatusCodeId" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Modified" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Airport" Relationship="Self.FK_SlotHolderToAirport" FromRole="SlotHolder" ToRole="Airport" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_SlotHolderToCompany" FromRole="SlotHolder" ToRole="Company" />
+          <NavigationProperty Name="StatusCode" Relationship="Self.FK_SlotHolderToStatusCode" FromRole="SlotHolder" ToRole="StatusCode" />
+        </EntityType>
+        <EntityType Name="SlotOperator">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="SlotNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AirportId" Type="Int32" Nullable="false" />
+          <Property Name="SlotTime" Type="Int32" Nullable="false" />
+          <Property Name="ArriveDeparture" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="EffectiveDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="Frequency" Type="Int32" Nullable="false" />
+          <Property Name="CarrierMo" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierTu" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierWe" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierTh" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierFr" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierSa" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierSu" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyId" Type="Int32" Nullable="false" />
+          <Property Name="CreationTransactionNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionNo" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="TransactionRefNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Concurrence" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="FAAApprovalDate" Type="DateTime" Precision="3" />
+          <Property Name="StatusCodeId" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Modified" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Airport" Relationship="Self.FK_SlotOperatorToAirport" FromRole="SlotOperator" ToRole="Airport" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_SlotOperatorToCompany" FromRole="SlotOperator" ToRole="Company" />
+          <NavigationProperty Name="StatusCode" Relationship="Self.FK_SlotOperatorToStatusCode" FromRole="SlotOperator" ToRole="StatusCode" />
+        </EntityType>
+        <EntityType Name="SlotTransaction">
+          <Key>
+            <PropertyRef Name="SlotTransactionId" />
+          </Key>
+          <Property Name="SlotTransactionId" Type="Int32" Nullable="false" />
+          <Property Name="SlotNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AirportId" Type="Int32" Nullable="false" />
+          <Property Name="SlotTime" Type="Int32" Nullable="false" />
+          <Property Name="ArriveDeparture" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="EffectiveDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDate" Type="DateTime" Precision="3" />
+          <Property Name="Frequency" Type="Int32" Nullable="false" />
+          <Property Name="CarrierMo" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierTu" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierWe" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierTh" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierFr" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierSa" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="CarrierSu" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="LossingCompany" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="GainingCompanyId" Type="Int32" Nullable="false" />
+          <Property Name="IsHolder" Type="Boolean" />
+          <Property Name="TransactionType" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Signature" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="FlightNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ErrorTransaction" Type="Boolean" />
+          <Property Name="TransactionNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TransactionRefNo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FAAApprovalDate" Type="DateTime" Precision="3" />
+          <Property Name="Concurrence" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="StatusCodeId" Type="Int32" Nullable="false" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Modified" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Airport" Relationship="Self.FK_SlotTransactionToAirport" FromRole="SlotTransaction" ToRole="Airport" />
+          <NavigationProperty Name="Company" Relationship="Self.FK_TransactionToGainingCompany" FromRole="SlotTransaction" ToRole="Company" />
+          <NavigationProperty Name="StatusCode" Relationship="Self.FK_SlotTransactionToStatusCode" FromRole="SlotTransaction" ToRole="StatusCode" />
+        </EntityType>
+        <EntityType Name="StatusCode">
+          <Key>
+            <PropertyRef Name="StatusCodeId" />
+          </Key>
+          <Property Name="StatusCodeId" Type="Int32" Nullable="false" />
+          <Property Name="Code" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="Created" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Modified" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SlotHolders" Relationship="Self.FK_SlotHolderToStatusCode" FromRole="StatusCode" ToRole="SlotHolder" />
+          <NavigationProperty Name="SlotOperators" Relationship="Self.FK_SlotOperatorToStatusCode" FromRole="StatusCode" ToRole="SlotOperator" />
+          <NavigationProperty Name="SlotTransactions" Relationship="Self.FK_SlotTransactionToStatusCode" FromRole="StatusCode" ToRole="SlotTransaction" />
+        </EntityType>
+        <EntityType Name="DirtySlotHolderOperator">
+          <Key>
+            <PropertyRef Name="SlotNo" />
+            <PropertyRef Name="AirportId" />
+          </Key>
+          <Property Name="SlotNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AirportId" Type="Int32" Nullable="false" />
+          <Property Name="ToBeDeleted" Type="Boolean" />
+        </EntityType>
+        <Association Name="FK_DailySlotHolderOperatorAirport">
+          <End Role="Airport" Type="Self.Airport" Multiplicity="1" />
+          <End Role="DailySlotHolderOperator" Type="Self.DailySlotHolderOperator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Airport">
+              <PropertyRef Name="AirportId" />
+            </Principal>
+            <Dependent Role="DailySlotHolderOperator">
+              <PropertyRef Name="AirportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotHolderToAirport">
+          <End Role="Airport" Type="Self.Airport" Multiplicity="1" />
+          <End Role="SlotHolder" Type="Self.SlotHolder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Airport">
+              <PropertyRef Name="AirportId" />
+            </Principal>
+            <Dependent Role="SlotHolder">
+              <PropertyRef Name="AirportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotOperatorToAirport">
+          <End Role="Airport" Type="Self.Airport" Multiplicity="1" />
+          <End Role="SlotOperator" Type="Self.SlotOperator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Airport">
+              <PropertyRef Name="AirportId" />
+            </Principal>
+            <Dependent Role="SlotOperator">
+              <PropertyRef Name="AirportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotToAirport">
+          <End Role="Airport" Type="Self.Airport" Multiplicity="1" />
+          <End Role="Slot" Type="Self.Slot" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Airport">
+              <PropertyRef Name="AirportId" />
+            </Principal>
+            <Dependent Role="Slot">
+              <PropertyRef Name="AirportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotTransactionToAirport">
+          <End Role="Airport" Type="Self.Airport" Multiplicity="1" />
+          <End Role="SlotTransaction" Type="Self.SlotTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Airport">
+              <PropertyRef Name="AirportId" />
+            </Principal>
+            <Dependent Role="SlotTransaction">
+              <PropertyRef Name="AirportId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DailySlotHolderOperatorHolderId">
+          <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+          <End Role="DailySlotHolderOperator" Type="Self.DailySlotHolderOperator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="DailySlotHolderOperator">
+              <PropertyRef Name="HolderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DailySlotHolderOperatorOperatorId">
+          <End Role="Company" Type="Self.Company" Multiplicity="0..1" />
+          <End Role="DailySlotHolderOperator" Type="Self.DailySlotHolderOperator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="DailySlotHolderOperator">
+              <PropertyRef Name="OperatorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotHolderToCompany">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="SlotHolder" Type="Self.SlotHolder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="SlotHolder">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotOperatorToCompany">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="SlotOperator" Type="Self.SlotOperator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="SlotOperator">
+              <PropertyRef Name="CompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TransactionToGainingCompany">
+          <End Role="Company" Type="Self.Company" Multiplicity="1" />
+          <End Role="SlotTransaction" Type="Self.SlotTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Company">
+              <PropertyRef Name="CompanyId" />
+            </Principal>
+            <Dependent Role="SlotTransaction">
+              <PropertyRef Name="GainingCompanyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotHolderToStatusCode">
+          <End Role="StatusCode" Type="Self.StatusCode" Multiplicity="1" />
+          <End Role="SlotHolder" Type="Self.SlotHolder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusCode">
+              <PropertyRef Name="StatusCodeId" />
+            </Principal>
+            <Dependent Role="SlotHolder">
+              <PropertyRef Name="StatusCodeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotOperatorToStatusCode">
+          <End Role="StatusCode" Type="Self.StatusCode" Multiplicity="1" />
+          <End Role="SlotOperator" Type="Self.SlotOperator" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusCode">
+              <PropertyRef Name="StatusCodeId" />
+            </Principal>
+            <Dependent Role="SlotOperator">
+              <PropertyRef Name="StatusCodeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SlotTransactionToStatusCode">
+          <End Role="StatusCode" Type="Self.StatusCode" Multiplicity="1" />
+          <End Role="SlotTransaction" Type="Self.SlotTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StatusCode">
+              <PropertyRef Name="StatusCodeId" />
+            </Principal>
+            <Dependent Role="SlotTransaction">
+              <PropertyRef Name="StatusCodeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ATA_SLOTSEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Airports" EntityType="Self.Airport" />
+          <EntitySet Name="Companies" EntityType="Self.Company" />
+          <EntitySet Name="DailySlotHolderOperators" EntityType="Self.DailySlotHolderOperator" />
+          <EntitySet Name="NextUniqueIdHolders" EntityType="Self.NextUniqueIdHolder" />
+          <EntitySet Name="Slots" EntityType="Self.Slot" />
+          <EntitySet Name="SlotHolders" EntityType="Self.SlotHolder" />
+          <EntitySet Name="SlotOperators" EntityType="Self.SlotOperator" />
+          <EntitySet Name="SlotTransactions" EntityType="Self.SlotTransaction" />
+          <EntitySet Name="StatusCodes" EntityType="Self.StatusCode" />
+          <EntitySet Name="DirtySlotHolderOperators" EntityType="Self.DirtySlotHolderOperator" />
+          <AssociationSet Name="FK_DailySlotHolderOperatorAirport" Association="Self.FK_DailySlotHolderOperatorAirport">
+            <End Role="Airport" EntitySet="Airports" />
+            <End Role="DailySlotHolderOperator" EntitySet="DailySlotHolderOperators" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotHolderToAirport" Association="Self.FK_SlotHolderToAirport">
+            <End Role="Airport" EntitySet="Airports" />
+            <End Role="SlotHolder" EntitySet="SlotHolders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotOperatorToAirport" Association="Self.FK_SlotOperatorToAirport">
+            <End Role="Airport" EntitySet="Airports" />
+            <End Role="SlotOperator" EntitySet="SlotOperators" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotToAirport" Association="Self.FK_SlotToAirport">
+            <End Role="Airport" EntitySet="Airports" />
+            <End Role="Slot" EntitySet="Slots" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotTransactionToAirport" Association="Self.FK_SlotTransactionToAirport">
+            <End Role="Airport" EntitySet="Airports" />
+            <End Role="SlotTransaction" EntitySet="SlotTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DailySlotHolderOperatorHolderId" Association="Self.FK_DailySlotHolderOperatorHolderId">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="DailySlotHolderOperator" EntitySet="DailySlotHolderOperators" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DailySlotHolderOperatorOperatorId" Association="Self.FK_DailySlotHolderOperatorOperatorId">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="DailySlotHolderOperator" EntitySet="DailySlotHolderOperators" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotHolderToCompany" Association="Self.FK_SlotHolderToCompany">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="SlotHolder" EntitySet="SlotHolders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotOperatorToCompany" Association="Self.FK_SlotOperatorToCompany">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="SlotOperator" EntitySet="SlotOperators" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TransactionToGainingCompany" Association="Self.FK_TransactionToGainingCompany">
+            <End Role="Company" EntitySet="Companies" />
+            <End Role="SlotTransaction" EntitySet="SlotTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotHolderToStatusCode" Association="Self.FK_SlotHolderToStatusCode">
+            <End Role="StatusCode" EntitySet="StatusCodes" />
+            <End Role="SlotHolder" EntitySet="SlotHolders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotOperatorToStatusCode" Association="Self.FK_SlotOperatorToStatusCode">
+            <End Role="StatusCode" EntitySet="StatusCodes" />
+            <End Role="SlotOperator" EntitySet="SlotOperators" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SlotTransactionToStatusCode" Association="Self.FK_SlotTransactionToStatusCode">
+            <End Role="StatusCode" EntitySet="StatusCodes" />
+            <End Role="SlotTransaction" EntitySet="SlotTransactions" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ATA_SLOTSModelStoreContainer" CdmEntityContainer="ATA_SLOTSEntities">
+          <EntitySetMapping Name="Airports">
+            <EntityTypeMapping TypeName="ATA_SLOTSModel.Airport">
+              <MappingFragment StoreEntitySet="Airport">
+                <ScalarProperty Name="AirportId" ColumnName="AirportId" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Modified" ColumnName="Modified" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Companies">
+            <EntityTypeMapping TypeName="ATA_SLOTSModel.Company">
+              <MappingFragment StoreEntitySet="Company">
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="ICAOCode" ColumnName="ICAOCode" />
+                <ScalarProperty Name="IATACode" ColumnName="IATACode" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="WebSite" ColumnName="WebSite" />
+                <ScalarProperty Name="IsMember" ColumnName="IsMember" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Modified" ColumnName="Modified" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="Display" ColumnName="Display" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DailySlotHolderOperators">
+            <EntityTypeMapping TypeName="ATA_SLOTSModel.DailySlotHolderOperator">
+              <MappingFragment StoreEntitySet="DailySlotHolderOperator">
+                <ScalarProperty Name="DailySlotHolderOperatorId" ColumnName="DailySlotHolderOperatorId" />
+                <ScalarProperty Name="SlotNo" ColumnName="SlotNo" />
+                <ScalarProperty Name="AirportId" ColumnName="AirportId" />
+                <ScalarProperty Name="SlotTime" ColumnName="SlotTime" />
+                <ScalarProperty Name="ArriveDeparture" ColumnName="ArriveDeparture" />
+                <ScalarProperty Name="CurrentDate" ColumnName="CurrentDate" />
+                <ScalarProperty Name="HolderId" ColumnName="HolderId" />
+                <ScalarProperty Name="OperatorId" ColumnName="OperatorId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NextUniqueIdHolders">
+            <EntityTypeMapping TypeName="ATA_SLOTSModel.NextUniqueIdHolder">
+              <MappingFragment StoreEntitySet="NextUniqueIdHolder">
+                <ScalarProperty Name="NextUniqueIdHolderId" ColumnName="NextUniqueIdHolderId" />
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="KeyName" ColumnName="KeyName" />
+                <ScalarProperty Name="NextAvailableId" ColumnName="NextAvailableId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Slots">
+            <EntityTypeMapping TypeName="ATA_SLOTSModel.Slot">
+              <MappingFragment StoreEntitySet="Slot">
+                <ScalarProperty Name="SlotId" ColumnName="SlotId" />
+                <ScalarProperty Name="SlotNo" ColumnName="SlotNo" />
+                <ScalarProperty Name="AirportId" ColumnName="AirportId" />
+                <ScalarProperty Name="SlotTime" ColumnName="SlotTime" />
+                <ScalarProperty Name="ArriveDeparture" ColumnName="ArriveDeparture" />
+                <ScalarProperty Name="EffectiveDate" ColumnName="EffectiveDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Modified" ColumnName="Modified" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SlotHolders">
+            <EntityTypeMapping TypeName="ATA_SLOTSModel.SlotHolder">
+              <MappingFragment StoreEntitySet="SlotHolder">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="SlotNo" ColumnName="SlotNo" />
+                <ScalarProperty Name="AirportId" ColumnName="AirportId" />
+                <ScalarProperty Name="SlotTime" ColumnName="SlotTime" />
+                <ScalarProperty Name="ArriveDeparture" ColumnName="ArriveDeparture" />
+                <ScalarProperty Name="EffectiveDate" ColumnName="EffectiveDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Frequency" ColumnName="Frequency" />
+                <ScalarProperty Name="CarrierMo" ColumnName="CarrierMo" />
+                <ScalarProperty Name="CarrierTu" ColumnName="CarrierTu" />
+                <ScalarProperty Name="CarrierWe" ColumnName="CarrierWe" />
+                <ScalarProperty Name="CarrierTh" ColumnName="CarrierTh" />
+                <ScalarProperty Name="CarrierFr" ColumnName="CarrierFr" />
+                <ScalarProperty Name="CarrierSa" ColumnName="CarrierSa" />
+                <ScalarProperty Name="CarrierSu" ColumnName="CarrierSu" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="CreationTransactionNo" ColumnName="CreationTransactionNo" />
+                <ScalarProperty Name="TransactionNo" ColumnName="TransactionNo" />
+                <ScalarProperty Name="TransactionRefNo" ColumnName="TransactionRefNo" />
+                <ScalarProperty Name="Concurrence" ColumnName="Concurrence" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="FAAApprovalDate" ColumnName="FAAApprovalDate" />
+                <ScalarProperty Name="StatusCodeId" ColumnName="StatusCodeId" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Modified" ColumnName="Modified" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SlotOperators">
+            <EntityTypeMapping TypeName="ATA_SLOTSModel.SlotOperator">
+              <MappingFragment StoreEntitySet="SlotOperator">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="SlotNo" ColumnName="SlotNo" />
+                <ScalarProperty Name="AirportId" ColumnName="AirportId" />
+                <ScalarProperty Name="SlotTime" ColumnName="SlotTime" />
+                <ScalarProperty Name="ArriveDeparture" ColumnName="ArriveDeparture" />
+                <ScalarProperty Name="EffectiveDate" ColumnName="EffectiveDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Frequency" ColumnName="Frequency" />
+                <ScalarProperty Name="CarrierMo" ColumnName="CarrierMo" />
+                <ScalarProperty Name="CarrierTu" ColumnName="CarrierTu" />
+                <ScalarProperty Name="CarrierWe" ColumnName="CarrierWe" />
+                <ScalarProperty Name="CarrierTh" ColumnName="CarrierTh" />
+                <ScalarProperty Name="CarrierFr" ColumnName="CarrierFr" />
+                <ScalarProperty Name="CarrierSa" ColumnName="CarrierSa" />
+                <ScalarProperty Name="CarrierSu" ColumnName="CarrierSu" />
+                <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+                <ScalarProperty Name="CreationTransactionNo" ColumnName="CreationTransactionNo" />
+                <ScalarProperty Name="TransactionNo" ColumnName="TransactionNo" />
+                <ScalarProperty Name="TransactionRefNo" ColumnName="TransactionRefNo" />
+                <ScalarProperty Name="Concurrence" ColumnName="Concurrence" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="FAAApprovalDate" ColumnName="FAAApprovalDate" />
+                <ScalarProperty Name="StatusCodeId" ColumnName="StatusCodeId" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Modified" ColumnName="Modified" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SlotTransactions">
+            <EntityTypeMapping TypeName="ATA_SLOTSModel.SlotTransaction">
+              <MappingFragment StoreEntitySet="SlotTransaction">
+                <ScalarProperty Name="SlotTransactionId" ColumnName="SlotTransactionId" />
+                <ScalarProperty Name="SlotNo" ColumnName="SlotNo" />
+                <ScalarProperty Name="AirportId" ColumnName="AirportId" />
+                <ScalarProperty Name="SlotTime" ColumnName="SlotTime" />
+                <ScalarProperty Name="ArriveDeparture" ColumnName="ArriveDeparture" />
+                <ScalarProperty Name="EffectiveDate" ColumnName="EffectiveDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="Frequency" ColumnName="Frequency" />
+                <ScalarProperty Name="CarrierMo" ColumnName="CarrierMo" />
+                <ScalarProperty Name="CarrierTu" ColumnName="CarrierTu" />
+                <ScalarProperty Name="CarrierWe" ColumnName="CarrierWe" />
+                <ScalarProperty Name="CarrierTh" ColumnName="CarrierTh" />
+                <ScalarProperty Name="CarrierFr" ColumnName="CarrierFr" />
+                <ScalarProperty Name="CarrierSa" ColumnName="CarrierSa" />
+                <ScalarProperty Name="CarrierSu" ColumnName="CarrierSu" />
+                <ScalarProperty Name="LossingCompany" ColumnName="LossingCompany" />
+                <ScalarProperty Name="GainingCompanyId" ColumnName="GainingCompanyId" />
+                <ScalarProperty Name="IsHolder" ColumnName="IsHolder" />
+                <ScalarProperty Name="TransactionType" ColumnName="TransactionType" />
+                <ScalarProperty Name="Signature" ColumnName="Signature" />
+                <ScalarProperty Name="FlightNo" ColumnName="FlightNo" />
+                <ScalarProperty Name="ErrorTransaction" ColumnName="ErrorTransaction" />
+                <ScalarProperty Name="TransactionNo" ColumnName="TransactionNo" />
+                <ScalarProperty Name="TransactionRefNo" ColumnName="TransactionRefNo" />
+                <ScalarProperty Name="FAAApprovalDate" ColumnName="FAAApprovalDate" />
+                <ScalarProperty Name="Concurrence" ColumnName="Concurrence" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="StatusCodeId" ColumnName="StatusCodeId" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Modified" ColumnName="Modified" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StatusCodes">
+            <EntityTypeMapping TypeName="ATA_SLOTSModel.StatusCode">
+              <MappingFragment StoreEntitySet="StatusCode">
+                <ScalarProperty Name="StatusCodeId" ColumnName="StatusCodeId" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="Created" ColumnName="Created" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="Modified" ColumnName="Modified" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DirtySlotHolderOperators">
+            <EntityTypeMapping TypeName="ATA_SLOTSModel.DirtySlotHolderOperator">
+              <MappingFragment StoreEntitySet="DirtySlotHolderOperator">
+                <ScalarProperty Name="SlotNo" ColumnName="SlotNo" />
+                <ScalarProperty Name="AirportId" ColumnName="AirportId" />
+                <ScalarProperty Name="ToBeDeleted" ColumnName="ToBeDeleted" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

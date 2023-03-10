@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "About";
+}
+
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<p>Ajax auto search</p>
+Search :
+<input type="text" id="txtSearch" class="ui-autocomplete-input" size="50" autocomplete="off" />
+<div class="overlay">
+    <div id="loading-img"></div>
+</div>
+
+<div style="margin-top:2em; font-family:Arial">
+    <select id="inpInfoList" class="form-control"></select>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var mySelect = $("#inpInfoList")
+        $('#txtSearch').autocomplete({
+            source: function (request, response) {
+                $('.overlay').show();
+                $.ajax({
+                    url: '/api/GetAllContacts',
+                    type: 'GET',
+                    cache: false,
+                    data: request,
+                    dataType: 'json',
+                    success: function (json) {
+                        // call autocomplete callback method with results
+                        $(".overlay").hide();
+                        response($.map(json, function (key, value) {
+                            return {
+                                label: key,
+                                value: value
+                            }
+                        }));
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        console.log('error', textStatus, errorThrown);
+                    }
+                });
+            },
+            minLength: 2,
+            select: function (event, ui) {
+                mySelect.append($("<option></option>")
+                    .attr("value", ui.item.value)
+                    .text(ui.item.label));
+
+                alert('you have selected ' + ui.item.label + ' ID: ' + ui.item.value);
+                return false;
+            }
+        })
+    });
+</script>

@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0A6D9586-DE36-4427-B46E-C46B169EAE7D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ATA.CodeLibrary</RootNamespace>
+    <AssemblyName>ATA.CodeLibrary</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>ATA.CodeLibrary.snk</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <PublishUrl>http://localhost/ATA.CodeLibrary/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DotNetOpenAuth.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetOpenAuth.Core.4.3.4.13329\lib\net45-full\DotNetOpenAuth.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.Net.Http">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20505.0\lib\net40\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20505.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommitteeRole.cs" />
+    <Compile Include="DataTableConversion.cs" />
+    <Compile Include="GroupCommitteeUserRoles.cs" />
+    <Compile Include="GroupCompanyUserRoles.cs" />
+    <Compile Include="GroupStaffUserRoles.cs" />
+    <Compile Include="GroupUserRoles.cs" />
+    <Compile Include="TransactionType.cs" />
+    <Compile Include="Transactions.cs" />
+    <Compile Include="UserGroupJsonModel.cs" />
+    <Compile Include="Address.cs" />
+    <Compile Include="AddressType.cs" />
+    <Compile Include="Airport.cs" />
+    <Compile Include="LyrisSend.cs" />
+    <Compile Include="AppliesToSite.cs" />
+    <Compile Include="ATAGroup.cs" />
+    <Compile Include="ATAGroupManager.cs" />
+    <Compile Include="ATAStaffUsersListEntry.cs" />
+    <Compile Include="BaseLogger.cs" />
+    <Compile Include="Company.cs" />
+    <Compile Include="GroupType.cs" />
+    <Compile Include="CompanyType.cs" />
+    <Compile Include="ConnectionFactory.cs" />
+    <Compile Include="ConsoleLogger.cs" />
+    <Compile Include="ActivityType.cs" />
+    <Compile Include="ActivityItem.cs" />
+    <Compile Include="DataViewtoExcelExporter.cs" />
+    <Compile Include="ExporterUtil.cs" />
+    <Compile Include="FuelCompanyType.cs" />
+    <Compile Include="MeetingList.cs" />
+    <Compile Include="DataObjectAttribute.cs" />
+    <Compile Include="DataObjectBase.cs" />
+    <Compile Include="DataObjectList.cs" />
+    <Compile Include="DataObjectListReader.cs" />
+    <Compile Include="DataObjectPropertyAttribute.cs" />
+    <Compile Include="DbUtil.cs" />
+    <Compile Include="EditGroup.cs" />
+    <Compile Include="EditIssue.cs" />
+    <Compile Include="EmailLogger.cs" />
+    <Compile Include="EventLogger.cs" />
+    <Compile Include="ExceptionHoldingObject.cs" />
+    <Compile Include="Facility.cs" />
+    <Compile Include="FieldMapper.cs" />
+    <Compile Include="GenericSqlDictionary.cs" />
+    <Compile Include="GroupSubscriptionManager.cs" />
+    <Compile Include="IsSelectedLookupUser.cs" />
+    <Compile Include="Issue.cs" />
+    <Compile Include="JobTitle.cs" />
+    <Compile Include="LoggerJob.cs" />
+    <Compile Include="LookupUser.cs" />
+    <Compile Include="ManyToManyRelationship.cs" />
+    <Compile Include="MeetingListUser.cs" />
+    <Compile Include="MemberType.cs" />
+    <Compile Include="OpenEnrollmentGroup.cs" />
+    <Compile Include="PossiblePreferredEmail.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SecurityUtil.cs" />
+    <Compile Include="SponsoredUser.cs" />
+    <Compile Include="SponsorGroup.cs" />
+    <Compile Include="SubscriptionGroup.cs" />
+    <Compile Include="UserAddress.cs" />
+    <Compile Include="UserCompany.cs" />
+    <Compile Include="UserGroup.cs" />
+    <Compile Include="UserIssue.cs" />
+    <Compile Include="UserMemberType.cs" />
+    <Compile Include="UserSponsor.cs" />
+    <Compile Include="Utility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ATA.CodeLibrary.snk" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DLLS\SafeControls\ATA.CodeLibrary.dll.xml" />
+    <Content Include="Microsoft.ApplicationBlocks.Data.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ATA.ActiveDirectoryServices\ATA.ActiveDirectoryServices.csproj">
+      <Project>{A38A3C57-7FD8-45D9-A70A-A017CCDA90D0}</Project>
+      <Name>ATA.ActiveDirectoryServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ATA.LyrisManager\ATA.LyrisProxy.csproj">
+      <Project>{2736faaf-b103-4854-a735-b1298a5f3afe}</Project>
+      <Name>ATA.LyrisProxy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ATA.Member.Util\ATA.Member.Util.csproj">
+      <Project>{09c5e912-7f85-4982-9742-2238c5cf0494}</Project>
+      <Name>ATA.Member.Util</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CONFIG\" />
+    <Folder Include="DLLS\GAC\" />
+    <Folder Include="TEMPLATE\FEATURES\" />
+    <Folder Include="TEMPLATE\LAYOUTS\" />
+    <Folder Include="TEMPLATE\XML\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

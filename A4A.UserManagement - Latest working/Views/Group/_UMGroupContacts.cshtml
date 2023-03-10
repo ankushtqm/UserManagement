@@ -1,0 +1,95 @@
+﻿
+
+
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
+
+<div class="row">
+    <div class="col-sm-6">
+        Find Contacts:
+        <input type="text" id="txtSearch" class="ui-autocomplete-input" size="50" autocomplete="off" /> 
+    </div>
+    <div class="col-sm-3">
+        @*<div class="overlay">
+            <div id="loading-img"></div>
+         </div>*@
+         <div  @*style="margin-top:2em; font-family:Arial"*@>
+              <select id="inpInfoList" class="form-control"></select>
+         </div>
+     </div>
+    </div>
+<table class="table" data-bind='visible: UMContacts().length > 0'>
+    <thead>
+        <tr>
+            <th class="control-label">Name</th>
+            <th class="control-label">Key</th>            
+        </tr>
+    </thead>
+    <tbody data-bind='foreach: UMContacts'>
+        <tr>
+            <td><input class='required  form-control' data-bind='value: Name' /></td>
+            <td><input class='required  form-control' data-bind='Key' />  </td>
+           
+            <td><a href='#' data-bind='click: $root.removeUMContacts'>Delete</a></td>
+        </tr>
+    </tbody>
+</table>
+
+
+<script type="text/javascript">
+    $(document).ready(function () { 
+        var mySelect = $("#inpInfoList");
+        var show1 = true;
+            $('#txtSearch').autocomplete({
+                source: function (request, response) {
+                   $.ajax({
+                        url: '/api/GetAllContacts',
+                        type: 'GET',
+                        cache: false,
+                        data: request,
+                        dataType: 'json',
+                        success: function (json) {
+                            // call autocomplete callback method with results
+                            //$(".overlay").hide();
+                            response($.map(json, function (key, value) {
+                                return {
+                                    label: key,
+                                    value: value
+                                } 
+                            }));
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            alert('error - ' + textStatus);
+                            console.log('error', textStatus, errorThrown);
+                        }
+                    });
+                },
+                minLength: 4,
+                close : function (event, ui) {
+                    if (!$("ul.ui-autocomplete").is(":visible") && show1) {
+                        $("ul.ui-autocomplete").show();
+                    }
+                },
+              
+                select: function (event, ui) {
+                    show1 = true; //Keep showing the results tab
+                    alert(ui.item.value + "  " + ui.item.label)
+                    var GroupId = $('#hdnGroupId').val();
+                    mySelect.append($("<option></option>")
+                    .attr("value", ui.item.value)
+                    .text(ui.item.label));
+                    groupRegisterViewModel.addUMContactsViewModel.UMContacts.push({
+                        GroupId: 1,
+                        Name: ui.item.label,
+                        Key: ui.item.value
+                    });                    
+                    return false;
+                }
+            }).keyup(function (e) {
+                if (e.which === 27) { //Hide the results tab on esc
+                    show1 = false;
+                    $(".ui-menu-item").hide();
+                }
+            });
+    });
+</script>

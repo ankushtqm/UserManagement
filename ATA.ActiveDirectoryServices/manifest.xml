@@ -1,0 +1,6 @@
+<Solution xmlns='http://schemas.microsoft.com/sharepoint/' SolutionId='1C477B4E-F766-4ac9-82B8-3E465B660E3B'>
+    <Assemblies>
+        <Assembly DeploymentTarget='GlobalAssemblyCache' Location='GAC\ATA.ActiveDirectoryServices.dll'>
+        </Assembly>
+    </Assemblies>
+</Solution>

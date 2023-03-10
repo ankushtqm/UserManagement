@@ -1,0 +1,552 @@
+﻿@{
+    ViewBag.Title = "View Group";
+} 
+ <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+@*<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>*@ 
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
+
+    <style type="text/css">
+     /*John wanted the text color to be black*/
+    .content {
+        color:#000 !important;
+    } 
+   #divLinks a{
+         color: white !important;
+         text-decoration:underline;
+         font-weight:bold;
+         font-size:1.2em;
+     }
+     #divLinks{
+         margin-left:20px;
+     }
+        /*Subscribers table padding*/
+        table.dataTable tbody th, table.dataTable tbody td {
+        padding: 4px 5px;
+    }
+        /*--------------------------**/
+        /*body,input,select,textarea,button,.ui-btn{
+            font-size:inherit !important;
+            line-height:inherit;
+        }*/
+       .grid-divider {
+            position: relative;
+            padding: 0;
+        }
+        .grid-divider>[class*='col-'] {
+            position: static;
+        }
+        .grid-divider>[class*='col-']:nth-child(n+2):before {
+            content: "";
+            border-left: 1px solid #ccc;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+        }
+        .col-padding {
+            padding: 0 15px;
+        }
+        /*#tblSubscribers_wrapper {
+        margin-top: -20px !important;
+        }*/
+        table.dataTable thead th,table.dataTable thead td
+        {padding:4px  5px!important;border-bottom:none !important;}
+        table.dataTable.no-footer
+         {border-bottom:none !important}
+        .dataTables_wrapper.no-footer .dataTables_scrollBody {
+            border-bottom: none!important;
+        }
+    </style>
+    <style type="text/css" media="print">
+      @@media print{@@page {size: landscape; margin:0;}}
+      input[type="search"] { display:none;}
+      .dataTables_filter { display:none; }
+      .landScape
+        {
+         width: 100%;
+         height: 100%;
+         margin: 0% 0% 0% 0%;
+         filter: progid:DXImageTransform.Microsoft.BasicImage(Rotation=3);
+        }
+      /*//Datatable Buttons alignment*/
+      div.dt-buttons {
+      margin-top:-40px !important;
+    }
+    </style>
+    <div class="content landScape">
+        @section heading{
+        <span id="Headtitle">Group Details<br /><span class="niceLabel text-success" id="SubTitle"></span></span>}
+        <div id="dlgMission" title="Mission">
+            <p>
+                <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
+                <span id="txtMission"></span>
+            </p>
+        </div>
+        <div class="preloader">
+            <div><img src="~/images/Preloader-2.gif" /></div>
+        </div>
+        <div id="errorMessage" class="text-danger font-large" ></div>
+        <input type="hidden" id="hdnEmailAddresses" />
+        <div class="sub-container ">
+            <div class="row  " style="border-bottom:1px solid black;"></div>
+                <div class="row grid-divider dark-info paddingbot-10" style="line-height: 1.2;">
+                    <div class="col-md-7">
+                        <span id="txtGroupName" class="niceLabel-bold color-white fleft"></span>
+                        <a id="opener" class="fleft"><img src="~/images/Help-icon.png" style="height: 17px;" /></a>
+                        <link media="print" rel="Alternate" href="print.pdf">
+                  
+                        <div id="divLinks"  class="nopadding hidden-print fleft">
+                        </div>
+                    </div>
+                    <div class="col-md-2 nopadding ">
+                        <div style="padding-left:10px;margin-top:5px;font-size:1em;">
+                            <span class="niceLabel color-white"><b>Subscribers:</b></span> 
+                            <span id="txtTotSub" class="niceLabel color-white"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-1 nopadding">
+                        <div style="padding-left:10px;margin-top:5px;font-size:1em;">
+                            <span class="niceLabel color-white"><b>Liaison:</b></span>
+                            <span id="txtLiaison" class="niceLabel color-white"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-1 nopadding">
+                        <div style="padding-left:10px;margin-top:5px;font-size:1em;">
+                            <span class="niceLabel color-white"><b>Liaison2:</b></span>
+                            <span id="txtLiaison2" class="niceLabel color-white"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row grid-divider info"> 
+                     <div class="niceLabel-subheading-grey   col-xs-4">Group Properties</div>
+                     <div class="niceLabel-subheading-grey   col-xs-4">&nbsp;&nbsp;A4A Users</div>
+                     <div class="niceLabel-subheading-grey   col-xs-4">&nbsp;&nbsp;History</div>
+                </div>
+                <div class="row grid-divider" style="margin-top:3px;height:255px;overflow-y:auto;overflow-x:visible;">
+                    <div class="niceLabel-default col-sm-4">
+                        <div>
+                          
+                                <!-- Start table html -->
+                                <div class="row">
+                                    <label for="inpGroupType" class="col-xs-4">Group Type:</label>
+                                    <span id="txtGroupType" class="col-xs-8"></span>
+                                </div>
+                                <div class="row">
+                                    <label for="inpEmail" class="col-xs-4">Email:</label>
+                                    <span id="txtEmail" class="col-xs-8"></span>
+                                </div>
+                                <div class="row">
+                                    <label for="inpLyrisSend" class="col-xs-4">Email Send Permissions:</label>
+                                    <span id="txtLyrisSend" class="col-xs-8 "></span>
+                                </div>
+                                <div class="row">
+                                    <label for="inpRoll" class="col-xs-4">Roll-up to:</label>
+                                    <span id="txtRoll" class="col-xs-8"></span>
+                                </div>
+                                <div class="row">
+                                    <label for="inpDivision" class="col-xs-4">Division:</label>
+                                    <span id="txtDivision" class="col-xs-8"></span>
+                                </div>
+                                <div class="row">
+                                    <label for="inpDept" class="col-xs-4">Department:</label>
+                                    <span id="txtDept" class="col-xs-8 "></span>
+                                </div>
+                                <div class="row">
+                                    <label for="inpLastMod" class="col-xs-4">Properties Last Modified:</label>
+                                    <span id="txtLastMod" class="col-xs-8"></span>
+                                </div>
+                                <div class="row">
+                                    <label for="inpGAB" class="col-xs-4">Global Address Book:</label>
+                                    <span id="txtGAB" class="col-xs-8"></span>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="col-padding"> 
+                            <div id="a4a-sub">
+                                <table id="tblA4ASub" class="niceLabel-default">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Role</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="col-padding"> 
+                            <div id="">
+                                <table id="tblGrpTransactions" class="niceLabel-default">
+                                    <thead>
+                                        <tr>
+                                            <th>Action</th>
+                                            <th>Details</th>
+                                            <th>Modified By</th>
+                                            <th>Modified Date</th>
+                                            <th>TimeStamp</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <br/>
+       
+
+        <div class="sub-container col-padding">
+            <div class="row  " style="border-bottom:1px solid black;"></div>
+            <div class="row grid-divider info" style="line-height: 1.2;">
+                <span class="niceLabel-italic-blue">Subscribers</span> <br /><br />
+            </div>
+                <table id="tblSubscribers" class="niceLabel-default  display" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>LastName</th>
+                            <th>FirstName</th>
+                            <th>MiddleName</th>
+                            <th>E-Mail</th>
+                            <th>Office #</th>
+                            <th>Mobile #</th>
+                            <th>HomePhone #</th>
+                            <th>JobTitle</th>
+                            <th>WebPage</th>
+                            <th>Address1</th>
+                            <th>Address2</th>
+                            <th>City</th>
+                            <th>State</th>
+                            <th>Province</th>
+                            <th>ZipCode</th>
+                            <th>Country</th>
+                            <th>Last Modified</th>
+                            <th>Roles</th>
+                            <th class="hidden-print">View Contact</th>
+                        </tr>
+                    </thead>
+                </table>
+             
+            </div> 
+            </div>
+            @section scripts {
+                <script type="text/javascript">
+                    var getUrlParameter = function getUrlParameter(sParam) {
+                         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                               sURLVariables = sPageURL.split('&'), sParameterName, i;
+                          for (i = 0; i < sURLVariables.length; i++) {
+                                sParameterName = sURLVariables[i].split('=');
+                                if (sParameterName[0] === sParam) {
+                                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                                }
+                            }
+                        };
+                        var gid = parseInt(getUrlParameter('gid'));
+                        var tab = parseInt(getUrlParameter('tab'));
+                        if (gid > 0) {
+                            //Update properties
+                            var group = $.getJSON('/api/getgrouplist/?type=0&groupid=' + gid, function (data) {
+                                $("#breadcrumb").hide();
+                                if (data.length > 2) {
+                                    var dat = JSON.parse(data);
+                                    gname = dat[0]["GroupName"];
+                                    gtype = dat[0]["GroupType"];
+                                    gemail = dat[0]["GroupEmail"];
+                                    LyrSend = dat[0]["LyrSend"];
+                                    Liaison = dat[0]["Liaison"];
+                                    Liaison2 = dat[0]["Liaison2"];
+                                    Subscribers = dat[0]["MemberCount"];
+                                    ParentGroup = dat[0]["ParentGroup"];
+                                    Mission = dat[0]["Mission"];
+                                    GAB = dat[0]["GAB"];
+                                    BounceReports = dat[0]["BounceReports"];
+                                    LastMod = dat[0]["LastModified"];
+                                    Div = dat[0]["DivisionName"];
+                                    Dept = dat[0]["DepartmentName"];
+
+                                    $("#txtGroupType").text(gtype);
+                                    $("#txtGroupName").html(gname);
+                                    $("#txtEmail").text(gemail);
+                                    $("#txtLyrisSend").html(LyrSend);
+                                    $("#txtLiaison").text(Liaison);
+                                    $("#txtLiaison2").text(Liaison2);
+                                    $("#txtTotSub").html(Subscribers);
+                                    $("#txtRoll").text(ParentGroup);
+                                    $("#txtDivision").html(Div);
+                                    $("#txtDept").text(Dept);
+                                    $("#txtMission").html(Mission);
+                                    $("#txtGAB").text(GAB);
+                                    $("#txtLastMod").text(LastMod);
+                                }
+                                else
+                                {
+                                    $("#errorMessage").html("No GroupId found for the Group Id provided!");
+                                }
+                            }); 
+                       
+                            
+                            //Update Group Transactions
+                            var query = "/api/getTransactions/?groupId=" + gid;
+                            $.ajax({
+                                url: query,
+
+                                type: "GET",
+                                datatype: "json",
+                                processData: false,
+                                contentType: "application/json; charset=utf-8",
+                                success: function (result) {
+                                    var table = $("#tblGrpTransactions").DataTable({
+                                        "aaData": JSON.parse(result),
+                                        retrieve: true,
+                                        "deferRender": true,
+                                        bProcessing: true,
+                                        bAutoWidth: false,
+                                        bFilter: false, bInfo: false,
+                                        "aaSorting": [ 4, "desc" ],
+                                        aoColumns: [                                          
+                                          { mData: "Action"},
+                                          { mData: "Details" },
+                                          { mData: "modifiedby" },
+                                          { mData: "TransactionDate" },
+                                          { mData: "TDTimeStamp", "asSorting": ["desc"] },
+                                        ],
+                                        "aoColumnDefs": [
+                                          { "asSorting": ["desc"], "aTargets": [4] },
+                                          { "aDataSort": [4], "aTargets": [3] },
+                                          {
+                                              "aTargets": [4],
+                                              "bVisible": false,
+                                              "bSearchable": false
+                                          },
+                                        ], 
+                                        "bInfo": false,
+                                        "bLengthChange": false,
+                                        bPaginate: false, 
+                                        "oLanguage": {
+                                            "sEmptyTable": "No Transactions found for the group."
+                                        }
+                                    });
+                                },
+                                error: function (exception) { $("#errorMessage").html('Exception in getting Transactions' + exception.responseText); }
+                            });
+
+                            //Update A4A Subscribers
+                            var query = "/api/getgroupuserlist/?GroupId=" + gid + "&type=1";
+                            $.ajax({
+                                url: query,
+                                type: "GET",
+                                datatype: "json",
+                                processData: false,
+                                contentType: "application/json; charset=utf-8",
+                                success: function (result) { 
+                                    var table = $("#tblA4ASub").DataTable({
+                                        "aaData": JSON.parse(result),
+                                        retrieve: true,
+                                        "deferRender": true,
+                                        bProcessing: true,
+                                        bAutoWidth: false,
+                                        aoColumns: [
+                                          { mData: "Name", "sClass": "nowrap" },
+                                          { mData: "Roles" },
+                                        ],
+                                        "bInfo": false,
+                                        "bFilter": false,
+                                        bPaginate: false,
+                                        "oLanguage": {
+                                            "sEmptyTable": "No A4A admins found for the group."
+                                        }
+                                    });
+                                },
+                                error: function (exception) { $("#errorMessage").html('Exception in getting A4A Subscribers:' + exception.responseText); }
+                            });
+
+                            //Get Email Addresses list to be copied
+                            var query = "/api/GetGroupEmailOnlyMembers/?GroupId=" + gid;
+                            $.ajax({
+                                url: query,
+                                type: "GET",
+                                datatype: "json",
+                                processData: false,
+                                contentType: "application/json; charset=utf-8",
+                                success: function (result) {  
+                                    $("#hdnEmailAddresses").val(result);                                    
+                                },
+                                error: function (exception) { $("errorMessage").text('Exception in loading email addresses:' + exception.responseText); }
+                            });
+                            //Update Member/nonmember Subscribers
+                            var query = "/api/getgroupuserlist/?GroupId=" + gid + "&type=2";
+                            $.ajax({
+                                url: query,
+                                type: "GET",
+                                datatype: "json",
+                                processData: false,
+                                contentType: "application/json; charset=utf-8",
+                                success: function (result) {
+
+                                    var table = $("#tblSubscribers").DataTable({
+                                        "aaData": JSON.parse(result),
+                                        retrieve: true,
+                                        "deferRender": true,
+                                        bAutoWidth: false,
+                                        dom: 'Bfrtip',
+                                        buttons: [
+                                            //{
+                                            //    extend: 'copyHtml5',
+                                            //    exportOptions: {
+                                            //        columns: ':contains("Office")'
+                                            //    }
+                                            //},
+                                            'excelHtml5'
+                                            //,'csvHtml5'
+                                            //, 'pdfHtml5'
+                                        ],
+                               aoColumns: [
+                                       
+                                          { mData: "CompanyName", "sClass": "nowrap" }, 
+                                          { mData: "LastName" },
+                                          { mData: "FirstName" },
+                                          { mData: "MiddleName" }, 
+                                          { mData: "Email" },
+                                          { mData: "OfficePhone" },
+                                          { mData: "MobilePhone" },
+                                          { mData: "HomePhone" },
+                                          { mData: "JobTitle" },
+                                          { mData: "WebPage" },
+                                          { mData: "Address1" },
+                                          { mData: "Address2" },
+                                          { mData: "City" },
+                                          { mData: "State" },
+                                          { mData: "Province" },
+                                          { mData: "ZipCode" },
+                                          { mData: "Country" },  
+                                          { mData: "LastModified" },
+                                          { mData: "Roles"},
+                                          { mData: "View", sWidth: "30px" ,sClass:"hidden-print" },
+                                        ], "aoColumnDefs": [
+                                              { "bVisible": false, "aTargets": [3,7,8,9,10,11,12,13,14,15,16] },
+                                         {
+                                             "aTargets": [-1],
+                                             "mRender": function (data, type, full) {
+                                                 return '<a  href="/user/show/?uid='+ full.UserId + '"  title="View"><img alt="View"  src="/images/view_20.png" border="0" /></a>';
+                                             }
+                                         },
+                                        ],
+                                        "bInfo": false,
+                                        bPaginate: false,
+                                        "oLanguage": {
+                                            "sEmptyTable": "No Subscribers found for the group."
+                                        }
+                                    });
+                                },
+                                error: function (exception) { $("#errorMessage").html('Exception in getting A4A Subscribers:' + exception.responseText); }
+                            }).done(function () {
+                                $(".preloader").hide();
+                            });
+
+                            //Check if you can Show the Edit icon
+                            var str1 = '<a href="/group/index#1"  target="_blank">New</a> ';
+                            var str2 = '';
+                            var str3 = '<a href="#" onclick="window.print();return false;">Print</a> ';
+                            var str4 = '';
+                            var url = "/api/GetIsCurrentUserGroupAdmin?GroupId=" + gid;   //returns all manage role & Liasionsuserids
+                            $.ajax({
+                                url: url,
+                                contentType: 'application/json',
+                                success: function (data) {
+                                    if (data) {
+                                        str2 = '<a href="/group/index/?gid=' + gid + '" target="_blank">Edit</a> ';  
+                                        str4 = '<a href="#" onclick="copyEmailToClipboard();">CopyEmails</a> ';
+                                        
+                                    } else
+                                    { 
+                                        $(".buttons-excel").css("display", "none");
+                                        $(".dt-buttons").css("display", "none");
+                                    }
+                                    $("#divLinks").html(str2 + '&nbsp;&nbsp;' + str4); //John wanted Add | Print to be removed - 7/31/2018
+                                },
+                                error: function (xhr, status, error) {
+                                    return false;
+                                }
+                            });
+
+                            function copyEmailToClipboard(text) {
+                                var textArea = document.createElement("textarea");
+ 
+                                // Place in top-left corner of screen regardless of scroll position.
+                                textArea.style.position = 'fixed';
+                                textArea.style.top = 0;
+                                textArea.style.left = 0;
+
+                                // Ensure it has a small width and height. Setting to 1px / 1em
+                                // doesn't work as this gives a negative w/h on some browsers.
+                                textArea.style.width = '2em';
+                                textArea.style.height = '2em';
+
+                                // We don't need padding, reducing the size if it does flash render.
+                                textArea.style.padding = 0;
+
+                                // Clean up any borders.
+                                textArea.style.border = 'none';
+                                textArea.style.outline = 'none';
+                                textArea.style.boxShadow = 'none';
+
+                                // Avoid flash of white box if rendered for any reason.
+                                textArea.style.background = 'transparent';
+
+                                //GEt Email Addresses list to be copied
+                                textArea.value = $("#hdnEmailAddresses").val(); 
+                               
+                                document.body.appendChild(textArea);
+                                textArea.focus();
+                                textArea.select();
+
+                                try {
+                                    var successful = document.execCommand('copy');
+                                    var msg = successful ? 'successful' : 'unsuccessful'; 
+                                    alert("Copied!");
+                                } catch (err) {
+                                    //console.log
+                                      alert('Oops, unable to copy');
+                                }
+
+                                document.body.removeChild(textArea);
+                            }
+
+
+                        }
+                        else {
+                            $("#errorMessage").html("No GroupId found! Please provide GroupId!");
+                            $(".preloader").hide();
+                        }
+                    $(function () {
+                        $(function () {
+                            $("#dlgMission").dialog({
+                                autoOpen: false,
+                                modal: true,
+                                show: {
+                                    effect: "blind",
+                                    duration: 1000
+                                },
+                                hide: {
+                                    effect: "explode",
+                                    duration: 1000
+                                },
+                                buttons: {
+                                    Ok: function () {
+                                        $(this).dialog("close");
+                                    }
+                                }
+                            });
+                            $("#opener").on("click", function () {
+                                $("#dlgMission").dialog("open");
+                            });
+                        });
+                    });
+                </script>
+            }
+

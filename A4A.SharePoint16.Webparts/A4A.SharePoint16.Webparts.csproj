@@ -1,0 +1,245 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{468A1D9B-BEEB-45FE-AF4E-271390DC78B0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>A4A.SharePoint16.Webparts</RootNamespace>
+    <AssemblyName>A4A.SharePoint16.Webparts</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetOfficeVersion>16.0</TargetOfficeVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{C1CDDADD-2546-481F-9697-4EA41081F2FC};{14822709-B5A1-4724-98CA-57A101D1B079};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <MinimumOfficeToolsVersion>14.0</MinimumOfficeToolsVersion>
+    <SandboxedSolution>False</SandboxedSolution>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.IdentityModel, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Extensions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=69c3241e6f0468ca, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Office.Client.Policy, Version=16.1.3912.1204, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.3912.1204\lib\net45\Microsoft.Office.Client.Policy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Client.TranslationServices, Version=16.1.3912.1204, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.3912.1204\lib\net45\Microsoft.Office.Client.TranslationServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.SharePoint.Tools, Version=16.1.3912.1204, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.3912.1204\lib\net45\Microsoft.Office.SharePoint.Tools.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Online.SharePoint.Client.Tenant, Version=16.1.3912.1204, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.3912.1204\lib\net45\Microsoft.Online.SharePoint.Client.Tenant.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client, Version=15.0.0.0" />
+    <Reference Include="Microsoft.SharePoint.Client.DocumentManagement, Version=16.1.3912.1204, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.3912.1204\lib\net45\Microsoft.SharePoint.Client.DocumentManagement.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Publishing, Version=16.1.3912.1204, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.3912.1204\lib\net45\Microsoft.SharePoint.Client.Publishing.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Runtime, Version=15.0.0.0" />
+    <Reference Include="Microsoft.SharePoint.Client.Search, Version=16.1.3912.1204, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.3912.1204\lib\net45\Microsoft.SharePoint.Client.Search.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Search.Applications, Version=16.1.3912.1204, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.3912.1204\lib\net45\Microsoft.SharePoint.Client.Search.Applications.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Taxonomy, Version=16.1.3912.1204, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.3912.1204\lib\net45\Microsoft.SharePoint.Client.Taxonomy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.UserProfiles, Version=16.1.3912.1204, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.3912.1204\lib\net45\Microsoft.SharePoint.Client.UserProfiles.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.WorkflowServices, Version=16.1.3912.1204, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.3912.1204\lib\net45\Microsoft.SharePoint.Client.WorkflowServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.SharePoint" />
+    <Reference Include="Microsoft.SharePoint.Client.ServerRuntime" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="A4AGroupLiaison\A4AGroupLiaison.ascx.cs">
+      <DependentUpon>A4AGroupLiaison.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="A4AGroupLiaison\A4AGroupLiaison.ascx.g.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>A4AGroupLiaison.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="A4AGroupMembership\A4AGroupMembership.ascx.cs">
+      <DependentUpon>A4AGroupMembership.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="A4AGroupMembership\A4AGroupMembership.ascx.g.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>A4AGroupMembership.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="A4AGroupMission\A4AGroupMission.ascx.cs">
+      <DependentUpon>A4AGroupMission.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="A4AGroupMission\A4AGroupMission.ascx.g.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>A4AGroupMission.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="A4AListView\A4AListView.ascx.cs">
+      <DependentUpon>A4AListView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="A4AListView\A4AListView.ascx.g.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>A4AListView.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="ControlTemplates\A4A.SharePoint16.Webparts\MySites.ascx.cs">
+      <DependentUpon>MySites.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ControlTemplates\A4A.SharePoint16.Webparts\MySites.ascx.designer.cs">
+      <DependentUpon>MySites.ascx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SharePointContext.cs" />
+    <Compile Include="TestSiteMapWebpart\TestSiteMapWebpart.ascx.cs">
+      <DependentUpon>TestSiteMapWebpart.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="TestSiteMapWebpart\TestSiteMapWebpart.ascx.g.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestSiteMapWebpart.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="TokenHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="A4AGroupLiaison\A4AGroupLiaison.webpart" />
+    <None Include="A4AGroupLiaison\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{4c0b535a-6d9e-47f1-9cc9-d4c14d224a48}</SharePointProjectItemId>
+    </None>
+    <None Include="A4AGroupMembership\A4AGroupMembership.webpart" />
+    <None Include="A4AGroupMembership\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{c6efab48-4765-487e-8527-733e8dccdcfb}</SharePointProjectItemId>
+    </None>
+    <None Include="A4AGroupMission\A4AGroupMission.webpart" />
+    <None Include="A4AGroupMission\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{1cc85755-c35f-44ab-aa5d-12f8f53910ba}</SharePointProjectItemId>
+    </None>
+    <None Include="A4AListView\A4AListView.webpart" />
+    <None Include="A4AListView\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{3ce3a30a-3f2f-4bb2-bc09-b276759f40e6}</SharePointProjectItemId>
+    </None>
+    <None Include="app.config" />
+    <None Include="ControlTemplates\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{c29e6147-261d-443b-9070-389e1eb6f561}</SharePointProjectItemId>
+    </None>
+    <None Include="Features\Feature1\Feature1.feature">
+      <FeatureId>{c48bb3ec-1583-4fc1-9ae3-cff7c0735376}</FeatureId>
+    </None>
+    <None Include="key.snk" />
+    <None Include="packages.config" />
+    <None Include="Package\Package.package">
+      <PackageId>{84697dae-9305-4bd6-a3a6-7e1a50d86df5}</PackageId>
+    </None>
+    <None Include="Package\Package.Template.xml">
+      <DependentUpon>Package.package</DependentUpon>
+    </None>
+    <None Include="TestSiteMapWebpart\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{fba4d52d-c461-45b1-9d18-0cefc3a59036}</SharePointProjectItemId>
+    </None>
+    <None Include="TestSiteMapWebpart\TestSiteMapWebpart.webpart" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="A4AGroupLiaison\A4AGroupLiaison.ascx">
+      <Generator>SharePointWebPartCodeGenerator</Generator>
+      <LastGenOutput>A4AGroupLiaison.ascx.g.cs</LastGenOutput>
+    </Content>
+    <Content Include="A4AGroupLiaison\Elements.xml" />
+    <Content Include="A4AGroupMembership\A4AGroupMembership.ascx">
+      <Generator>SharePointWebPartCodeGenerator</Generator>
+      <LastGenOutput>A4AGroupMembership.ascx.g.cs</LastGenOutput>
+    </Content>
+    <Content Include="A4AGroupMembership\Elements.xml" />
+    <Content Include="A4AGroupMission\A4AGroupMission.ascx">
+      <Generator>SharePointWebPartCodeGenerator</Generator>
+      <LastGenOutput>A4AGroupMission.ascx.g.cs</LastGenOutput>
+    </Content>
+    <Content Include="A4AGroupMission\Elements.xml" />
+    <Content Include="A4AListView\A4AListView.ascx">
+      <Generator>SharePointWebPartCodeGenerator</Generator>
+      <LastGenOutput>A4AListView.ascx.g.cs</LastGenOutput>
+    </Content>
+    <Content Include="A4AListView\Elements.xml" />
+    <Content Include="ControlTemplates\A4A.SharePoint16.Webparts\MySites.ascx" />
+    <Content Include="Features\Feature1\Feature1.Template.xml">
+      <DependentUpon>Feature1.feature</DependentUpon>
+    </Content>
+    <Content Include="TestSiteMapWebpart\Elements.xml" />
+    <Content Include="TestSiteMapWebpart\TestSiteMapWebpart.ascx">
+      <Generator>SharePointWebPartCodeGenerator</Generator>
+      <LastGenOutput>TestSiteMapWebpart.ascx.g.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ATA.ActiveDirectoryServices\ATA.ActiveDirectoryServices.csproj">
+      <Project>{a38a3c57-7fd8-45d9-a70a-a017ccda90d0}</Project>
+      <Name>ATA.ActiveDirectoryServices</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ATA.Authentication\ATA.Authentication.csproj">
+      <Project>{54f298c0-ea01-4818-a6aa-f5ac7e28e01b}</Project>
+      <Name>ATA.Authentication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ATA.CodeLibrary\ATA.CodeLibrary.csproj">
+      <Project>{0a6d9586-de36-4427-b46e-c46b169eae7d}</Project>
+      <Name>ATA.CodeLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ATA.Member.Util\ATA.Member.Util.csproj">
+      <Project>{09c5e912-7f85-4982-9742-2238c5cf0494}</Project>
+      <Name>ATA.Member.Util</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(VSToolsPath)\SharePointTools\Microsoft.VisualStudio.SharePoint.targets" Condition="'$(VSToolsPath)' != ''" />
+</Project>

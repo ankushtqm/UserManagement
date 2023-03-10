@@ -1,0 +1,824 @@
+﻿@{
+    ViewBag.Title = "List";
+}
+<style>
+    .preloader {
+        background: rgba(255,255,255,0.9);
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9998;
+        opacity: 1;
+        transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        -webkit-transition: all 0.5s ease-in-out;
+    }
+
+        .preloader img {
+            position: fixed;
+            z-index: 9999;
+            top: 40%;
+            left: 45%;
+        }
+
+    input, select {
+        max-width: 100% !important;
+    }
+
+    .option-header {
+        display: flex;
+        justify-content: center;
+    }
+
+        .option-header > div:last-of-type {
+            margin-left: 5rem;
+        }
+
+    #MyGroup > tbody > tr > td:hover {
+        background-color: #eaeaea;
+    }
+
+    #ByGroupType > tbody > tr > td:hover {
+        background-color: #eaeaea;
+    }
+
+    #MyGroup > tbody > tr > td {
+        padding-left: 4rem;
+    }
+
+    #ByGroupType > tbody > tr > td {
+        padding-left: 4rem;
+    }
+
+    .chklist .chklistcontainer {
+        display: block;
+        position: relative;
+        margin-bottom: 6px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        cursor: not-allowed;
+    }
+
+        .chklist .chklistcontainer input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+    .chklist .checkmark {
+        position: absolute;
+        height: 13px;
+        width: 13px;
+        border-radius: 2px;
+        background-color: #777 !important;
+    }
+
+    .chklist .chklistcontainer:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+
+    .chklist .chklistcontainer input:checked ~ .checkmark {
+        background-color: #2196F3;
+    }
+
+    .chklist .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    .chklist .chklistcontainer input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    .chklist .chklistcontainer .checkmark:after {
+        left: 5px;
+        top: 1px;
+        width: 4px;
+        height: 8.5px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(40deg);
+    }
+</style>
+
+@section scripts
+ {
+    <script type="text/javascript">
+        var ManageGroupRole = new Map();
+        var SendEmailRole = new Map();
+        var BounceReportRole = new Map();
+        var SubscribeRole = new Map();
+        var A4AModel = new Array();
+        function deleteGroup(groupid) {
+            $(".preloader").show();
+            $.ajax({
+                url: '/api/RemoveGroup/?GroupId=' + groupid,
+                type: 'post',
+                //data: dataObject,
+                contentType: 'application/json',
+                success: function (data) {
+                    alert("Group deleted successfully!");
+                    window.location.reload(false);
+                    $(".preloader").hide();
+                },
+                error: function (xhr, status, error) {
+                    var err = eval("(" + xhr.responseText + ")");
+                    alert(xhr.responseText);
+                    $(".preloader").hide();
+                    return false;
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            var getUrlParameter = function getUrlParameter(sParam) {
+                var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                    sURLVariables = sPageURL.split('&'), sParameterName, i;
+                for (i = 0; i < sURLVariables.length; i++) {
+                    sParameterName = sURLVariables[i].split('=');
+                    if (sParameterName[0] === sParam) {
+                        return sParameterName[1] === undefined ? true : sParameterName[1];
+                    }
+                }
+            };
+
+            //api/GetA4AStaff
+            var getAllA4AStaff = function () {
+                $.ajax({
+                    url: '/api/GetA4AStaff',
+                    type: 'get',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        //impersonateA4AUsers
+                        var optionList = '<option></option>';
+                        for (let user in data) {
+                            optionList += `<option value=${data[user].Username}>${data[user].PreferredName} </option>`
+                        }
+                        $('#impersonateA4AUsers').html(optionList);
+                    },
+                    error: function (xhr, status, error) {
+                        $(".preloader").hide();
+                        return false;
+                    }
+                });
+            }
+
+            getAllA4AStaff();
+
+            $('.groupdelete').click(function () {
+                var grpid = $(this).attr('id');
+                return false;
+            });
+
+            var isAdmin = false;
+
+            //By All Groups
+            var BindGroupType = function () {
+                $(".preloader").show();
+                $('#MyGroup').hide();
+                $('#MyGroup_wrapper').hide();
+                $('#ByGroupType').show();
+                $('#ByGroupType_wrapper').show();
+                if (sessionStorage.getItem("ByGroupType")) { setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30); }
+                $.ajax({
+                    url: '/api/getgrouplist/?type=1',
+                    type: 'get',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        var table = $("#ByGroupType").DataTable({
+                            "aaData": JSON.parse(data),
+                            retrieve: true,
+                            "deferRender": true,
+                            bProcessing: true,
+                            paging: false,
+                            bAutoWidth: false,
+                            aoColumns: [
+                                { mData: "GroupName", sWidth: "20%" },
+                                { mData: "GroupType" },
+                                { mData: "Liaison", sWidth: "100px" },
+                                { mData: "GroupEmail", sWidth: "100px" },
+                                { mData: "GroupEmail", sWidth: "100px" },
+                                { mData: "MemberCount", sWidth: "90px" },
+                                { mData: "SendPermissions", sWidth: "115px" },
+                                { mData: "ManageGroup", sWidth: "30px" },
+                                { mData: "SendEmail", sWidth: "120px" },
+                                { mData: "BounceReport", sWidth: "30px" },
+                                { mData: "Subscribe", sWidth: "30px" },
+                                { mData: "Delete", sWidth: "30px" },
+
+                            ]
+                            , "aoColumnDefs": [
+                                { "bVisible": false, "aTargets": [1, 4] },
+                                {
+                                    "aTargets": [0],
+                                    "mRender": function (data, type, full) {
+                                        if (!((full.GroupTypeId === 1 || full.GroupTypeId === 2 || full.GroupTypeId === 7 || full.GroupTypeId === 8 || full.GroupTypeId === 9 || full.GroupTypeId === 10) && full.IsChildGroup == 1 && full.IsCommittee === 0)) {  /*!full.GroupName.match("Info$")*/
+                                            return '<a  href="/group/index/?gid=' + full.GroupId + '" title="editgroup" target=”_blank”>' + full.GroupName + '</a>';
+                                        } else {
+                                            return '<a  href="/group/index/?gid=' + full.ParentGroupId + '#6" title="editgroup" target=”_blank”>' + full.GroupName + '</a>';
+                                        }
+                                    }
+                                },
+                                {
+                                    "aTargets": [-1],
+                                    "mRender": function (data, type, full) {
+                                        if (!((full.GroupTypeId === 1 || full.GroupTypeId === 2 || full.GroupTypeId === 7 || full.GroupTypeId === 8 || full.GroupTypeId === 9 || full.GroupTypeId === 10) && full.IsChildGroup === 1 && full.IsCommittee === 0)) {  /*!full.GroupName.match("Info$")*/
+                                            return '<img  onclick="deleteGroup(' + full.GroupId + ')"   class="groupdelete"  alt="View" height="15px"   id="delete_' + full.GroupId + '"    src="/images/icon-delete-red.png" border="0" />';
+                                        } else {
+                                            return '<img  onclick="deleteGroup(' + full.GroupId + ')"   class="groupdelete"  alt="View" height="15px"   id="delete_' + full.ParentGroupId + '"    src="/images/icon-delete-red.png" border="0" />';
+                                        }
+                                    }
+                                },
+                                {
+                                    "aTargets": [7],
+                                    "mRender": function (data, type, full) {
+                                        if (full.GroupUserId > 0) {
+                                            if (full.ManageGroup === 1)
+                                                return '<input type="checkbox" class="chklist1" name="ManageGroup" value=' + full.GroupId + ' onchange = "ManageGroup(this)" checked > ';
+                                            else
+                                                return '<input type="checkbox" class="chklist1" disabled>';
+                                        }
+                                        else {
+                                            if (full.ManageGroup === 1)
+                                                return '<input type="checkbox" class="chklist1" name="ManageGroup" value=' + full.GroupId + ' onchange = "ManageGroup(this)" checked disabled> ';
+                                            else
+                                                return '<input type="checkbox" class="chklist1" disabled>';
+                                        }
+                                    }
+                                },
+                                {
+                                    "aTargets": [8],
+                                    "mRender": function (data, type, full) {
+                                        if (full.GroupUserId > 0) {
+                                            if (full.SendEmail === 1) {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist2" name="SendEmail" value=' + full.GroupId + ' onchange = "SendEmail(this)" checked>';
+                                                }
+                                                return '<input type="checkbox" class="chklist2" checked disabled>'
+                                            }
+                                            else {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist2" name="SendEmail" value=' + full.GroupId + ' onchange = "SendEmail(this)">';
+                                                }
+                                                return '<input type="checkbox" class="chklist2" disabled>';
+                                            }
+                                        }
+                                        else {
+                                            if (full.SendEmail === 1) {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist3" name="SendEmail" value=' + full.GroupId + ' onchange = "SendEmail(this)" checked disabled>';
+                                                }
+                                                return '<input type="checkbox" class="chklist3" checked disabled>'
+                                            }
+                                            else {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist3" name="SendEmail" value=' + full.GroupId + ' onchange = "SendEmail(this)" disabled>';
+                                                }
+                                                return '<input type="checkbox" class="chklist3" disabled>';
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "aTargets": [9],
+                                    "mRender": function (data, type, full) {
+                                        if (full.GroupUserId > 0) {
+                                            if (full.BounceReport === 1) {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist4" name="BounceReport" value=' + full.GroupId + ' onchange = "BounceReport(this)" checked>';
+                                                }
+                                                return '<input type="checkbox" class="chklist4" checked disabled>'
+                                            }
+                                            else {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist4" name="BounceReport" value=' + full.GroupId + ' onchange = "BounceReport(this)">';
+                                                }
+                                                return '<input type="checkbox" class="chklist4" disabled>';
+                                            }
+                                        } else {
+                                            if (full.BounceReport === 1) {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist5" name="BounceReport" value=' + full.GroupId + ' onchange = "BounceReport(this)" checked disabled>';
+                                                }
+                                                return '<input type="checkbox" class="chklist5" checked disabled>'
+                                            }
+                                            else {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist5" name="BounceReport" value=' + full.GroupId + ' onchange = "BounceReport(this)" disabled>';
+                                                }
+                                                return '<input type="checkbox" class="chklist5" disabled>';
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "aTargets": [10],
+                                    "mRender": function (data, type, full) {
+                                        if (full.GroupUserId > 0) {
+                                            if (full.Subscribe === 1) {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist6" name="Subscribe" value=' + full.GroupId + ' onchange = "Subscribe(this)" checked>';
+                                                }
+                                                return '<input type="checkbox" class="chklist6" checked disabled>'
+                                            }
+                                            else {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist6" name="Subscribe" value=' + full.GroupId + ' onchange = "Subscribe(this)">';
+                                                }
+                                                return '<input type="checkbox" class="chklist6" disabled>';
+                                            }
+                                        } else {
+                                            if (full.Subscribe === 1) {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist7" name="Subscribe" value=' + full.GroupId + ' onchange = "Subscribe(this)" checked disabled>';
+                                                }
+                                                return '<input type="checkbox" class="chklist7" checked disabled>'
+                                            }
+                                            else {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist7" name="Subscribe" value=' + full.GroupId + ' onchange = "Subscribe(this)" disabled>';
+                                                }
+                                                return '<input type="checkbox" class="chklist7" disabled>';
+                                            }
+                                        }
+                                    }
+                                }
+                                , {
+                                    "aTargets": [0],
+                                    "sWidth": "200px"
+                                }
+                            ],
+                            "order": [[1, 'asc']],
+                            "displayLength": 25,
+                            "drawCallback": function (settings) {
+                                var api = this.api();
+                                var rows = api.rows({ page: 'current' }).nodes();
+                                var last = null;
+
+                                api.column(1, { page: 'current' }).data().each(function (group, i) {
+                                    if (last !== group) {
+                                        $(rows).eq(i).before(
+                                            '<tr class="group niceLabel info"><td colspan="12"><b>' + group + '</b></td></tr>'
+                                        );
+                                        last = group;
+                                    }
+                                });
+                            }
+                        });
+                        $('#impersonate').hide();
+
+                        if (!isAdmin) {
+                            // Get the column API object for delete button
+                            var column1 = table.column(-1);
+                            // Toggle the visibility
+                            column1.visible(false);
+                            // Get the column API object for edit button
+                            var column2 = table.column(-3);
+                            // Toggle the visibility
+                            column2.visible(false);
+                        }
+
+                        // Setup - add a text input to each footer cell
+                        $('#ByGroupType thead th').each(function () {
+                            var title = $('#ByGroupType thead th').eq($(this).index()).text();
+                            if (title != "Group Email") {
+                                if (title.toLowerCase().indexOf("modified") < 0 && title.toLowerCase().indexOf("permissions") < 0 && title.toLowerCase().indexOf("subscriber") < 0 && title.toLowerCase().indexOf("view") < 0 && title.toLowerCase().indexOf("edit") < 0 && title.toLowerCase().indexOf("delete") < 0 && title.toLowerCase().indexOf("total subscriber") < 0 && title.toLowerCase().indexOf("manage group") < 0 && title.toLowerCase().indexOf("email admin(sender)") < 0 && title.toLowerCase().indexOf("bounce report") < 0) {
+                                    $(this).html('<input class=" form-control" type="text" placeholder="Search ' + title + '" />');
+                                    $('#AllGroupbtn').prop('checked', true)
+                                    $('#MyGroupbtn').prop('checked', false)
+                                }
+                            }
+                        });
+                        // Apply the search
+                        table.columns().every(function () {
+                            var that = this;
+                            $('input', this.header()).on('keyup change', function () {
+                                if (that.search() !== this.value) {
+                                    that
+                                        .search(this.value)
+                                        .draw();
+                                }
+                            });
+                        });
+                        table.columns().eq(0).each(function (colIdx) {
+                            $('input, select', table.column(colIdx).header()).on('click', function (e) {
+                                e.stopPropagation();
+                            });
+                        });
+                    },
+                    error: function (exception) {
+                        alert('Exception in get ByGroupType:' + exception.responseText);
+                    }
+                }).done(function (data) {
+                    setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30);
+                    sessionStorage.setItem("ByGroupType", true);
+                });
+            }
+            $('#btnGroupbyGroupMyGroup').click(function () {
+                BindMyGroup();
+                $(this).removeClass("btn-info").addClass("btn-primary");
+                $('#btnGroupbyGroupType').addClass("btn-info");
+                //$('#pagetitle').html("My Groups");
+            });
+            $('#btnGroupbyGroupType').click(function () {
+                BindGroupType();
+                $('ByGroupType').removeClass("hidden").addClass("display");
+                $(this).removeClass("btn-info").addClass("btn-primary");
+                $('#btnGroupbyGroupMyGroup').addClass("btn-info");
+                //$('#pagetitle').html(" All Groups");
+            });
+
+            ///////////////////////////////////
+            //////MY GROUPS/////////////////////
+            //////////////////////////////
+            function BindMyGroup(username = null) {
+                $(".preloader").show();
+                $('#ByGroupType').hide();
+                $('#ByGroupType_wrapper').hide();
+                $('#MyGroup').show();
+                $('#MyGroup_wrapper').show();
+                if (sessionStorage.getItem("MyGroup")) { setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30); }
+                $.ajax({
+                    url: '/api/getgrouplist/?type=4&username=' + username,
+                    type: 'get',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        var table;
+                        if ($.fn.dataTable.isDataTable('#MyGroup')) {
+                            table = $('#MyGroup').DataTable();
+                            table.clear();
+                            table.rows.add(JSON.parse(data)).draw();
+                        }
+                        else {
+                            table = $("#MyGroup").DataTable({
+                                "aaData": JSON.parse(data),
+                                retrieve: true,
+                                "deferRender": true,
+                                bProcessing: true,
+                                paging: false,
+                                bAutoWidth: false,
+                                "oLanguage": {
+                                    "sEmptyTable": "No Groups found!"
+                                },
+                                aoColumns: [
+                                    { mData: "GroupName", sWidth: "20%" },
+                                    { mData: "GroupType" },
+                                    { mData: "Liaison", sWidth: "100px" },
+                                    { mData: "GroupEmail", sWidth: "100px" },
+                                    { mData: "DepartmentDetail", sWidth: "100px" },
+                                    { mData: "MemberCount", sWidth: "30px" },
+                                    { mData: "SendPermissions", sWidth: "100px" },
+                                    { mData: "ManageGroup", sWidth: "30px" },
+                                    { mData: "SendEmail", sWidth: "30px" },
+                                    { mData: "BounceReport", sWidth: "30px" },
+                                    { mData: "Subscribe", sWidth: "30px" },
+                                ]
+                                , "aoColumnDefs": [
+                                    { "bVisible": false, "aTargets": [1, 4] },
+                                    {
+                                        "aTargets": [0],
+                                        "mRender": function (data, type, full) {
+                                            if (!((full.GroupTypeId === 1 || full.GroupTypeId === 2 || full.GroupTypeId === 7 || full.GroupTypeId === 8 || full.GroupTypeId === 9 || full.GroupTypeId === 10) && full.IsChildGroup == 1 && full.IsCommittee === 0)) {  /*!full.GroupName.match("Info$")*/
+                                                return '<a  href="/group/index/?gid=' + full.GroupId + '" title="editgroup" target=”_blank”>' + full.GroupName + '</a>';
+                                            }
+                                            else {
+                                                return '<a  href="/group/index/?gid=' + full.ParentGroupId + '#6" title="editgroup" target=”_blank”>' + full.GroupName + '</a>';
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "aTargets": [7],
+                                        "mRender": function (data, type, full) {
+                                            if (full.ManageGroup === 1)
+                                                return '<input type="checkbox" class="chklist8" name="ManageGroup" value=' + full.GroupId + ' onchange = "ManageGroup(this)" checked > ';
+                                            else
+                                                return '<input type="checkbox" class="chklist8" disabled>';
+                                        }
+                                    },
+                                    {
+                                        "aTargets": [8],
+                                        "mRender": function (data, type, full) {
+                                            if (full.SendEmail === 1) {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist9" name="SendEmail" value=' + full.GroupId + ' onchange = "SendEmail(this)" checked>';
+                                                }
+                                                return '<div class="chklist"><label class="chklistcontainer"><input type="checkbox" checked disabled style="display:none"><span class="checkmark"></span></label></div>'
+                                            }
+                                            else {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist9" name="SendEmail" value=' + full.GroupId + ' onchange = "SendEmail(this)">';
+                                                }
+                                                return '<input type="checkbox" class="chklist9" disabled>';
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "aTargets": [9],
+                                        "mRender": function (data, type, full) {
+                                            if (full.BounceReport === 1) {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist10" name="BounceReport" value=' + full.GroupId + ' onchange = "BounceReport(this)" checked>';
+                                                }
+                                                return '<div class="chklist"><label class="chklistcontainer"><input type="checkbox" checked disabled style="display:none"><span class="checkmark"></span></label></div>'
+                                            }
+                                            else {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist10" name="BounceReport" value=' + full.GroupId + ' onchange = "BounceReport(this)">';
+                                                }
+                                                return '<input type="checkbox" class="chklist10" disabled>';
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "aTargets": [10],
+                                        "mRender": function (data, type, full) {
+                                            if (full.Subscribe === 1) {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist12" name="Subscribe" value=' + full.GroupId + ' onchange = "Subscribe(this)" checked>';
+                                                }
+                                                return '<div class="chklist"><label class="chklistcontainer"><input type="checkbox" checked disabled style="display:none"><span class="checkmark"></span></label></div>'
+                                            }
+                                            else {
+                                                if (full.ManageGroup === 1) {
+                                                    return '<input type="checkbox" class="chklist12" name="Subscribe" value=' + full.GroupId + ' onchange = "Subscribe(this)">';
+                                                }
+                                                return '<input type="checkbox" class="chklist12" disabled>';
+                                            }
+                                        }
+                                    }
+                                ],
+                                "order": [[1, 'asc']],
+                                "displayLength": 25,
+                                "drawCallback": function (settings) {
+
+                                    var api = this.api();
+                                    var rows = api.rows({ page: 'current' }).nodes();
+                                    var last = null;
+
+                                    api.column(1, { page: 'current' }).data().each(function (group, i) {
+                                        if (last !== group) {
+                                            $(rows).eq(i).before(
+                                                '<tr class="group niceLabel info"><td colspan="10"><b>' + group + '</b></td></tr>'
+                                            );
+                                            last = group;
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                        //// Setup - add a text input to each footer cell
+                        $('#MyGroup thead th').each(function () {
+                            var title = $('#MyGroup thead th').eq($(this).index()).text();
+                            if (title != "Group Email") {
+                                if (title.toLowerCase().indexOf("modified") < 0 && title.toLowerCase().indexOf("permissions") < 0 && title.toLowerCase().indexOf("count") < 0 && title.toLowerCase().indexOf("view") < 0 && title.toLowerCase().indexOf("edit") < 0 && title.toLowerCase().indexOf("delete") < 0 && title.toLowerCase().indexOf("total subscriber") < 0 && title.toLowerCase().indexOf("manage group") < 0 && title.toLowerCase().indexOf("email admin(sender)") < 0 && title.toLowerCase().indexOf("bounce report") < 0 && title.toLowerCase().indexOf("subscriber") < 0) {
+                                    $(this).html('<input class=" form-control" type="text" placeholder="Search ' + title + '" />');
+                                    $('#AllGroupbtn').prop('checked', false)
+                                    $('#MyGroupbtn').prop('checked', true)
+                                }
+                            }
+
+                        });
+                        //// Apply the search
+                        table.columns().every(function () {
+                            var that = this;
+                            $('input', this.header()).on('keyup change', function () {
+                                if (that.search() !== this.value) {
+                                    that
+                                        .search(this.value)
+                                        .draw();
+                                }
+                            });
+                        });
+                        if (!isAdmin) {
+                            $('#impersonate').hide();
+                        }
+                        table.columns().eq(0).each(function (colIdx) {
+                            $('input, select', table.column(colIdx).header()).on('click', function (e) {
+                                e.stopPropagation();
+                            });
+                        });
+                    },
+                    error: function (exception) {
+                        alert('Exception in get My Groups:' + exception.responseText);
+                    }
+                }).done(function (data) {
+                    setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30);
+                    sessionStorage.setItem("MyGroup", true);
+                });
+            }
+
+            $('#impersonateA4AUsers').change(
+                function () {
+                    var selectBox = document.getElementById("impersonateA4AUsers");
+                    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+                    sessionStorage.setItem("UserSelected", selectedValue);
+                    BindMyGroup(selectedValue);
+                })
+
+            //Do the intital binding
+            var type = parseInt(getUrlParameter('type'));
+            if (type == 1) {
+                var group = $.getJSON('/api/GetIsCurrentUserAdmin', function (data) {
+                    isAdmin = data;
+                }).done(function () {
+                    BindMyGroup();
+                });
+            } else if (type == 2) {
+                var group = $.getJSON('/api/GetIsCurrentUserAdmin', function (data) {
+                    isAdmin = data;
+                }).done(function () {
+                    BindGroupType();
+                });
+                //$('#pagetitle').html("All Groups");
+            }
+            else {
+                var group = $.getJSON('/api/GetIsCurrentUserAdmin', function (data) {
+                    isAdmin = data;
+                }).done(function () {
+                    sessionStorage.clear();
+                    BindMyGroup();
+                });
+
+            }
+
+        });
+        //$('#ByGroupType').hide();
+        //var hideAllGroups = function () {
+        //    $('#ByGroupType').hide();
+        //    $('#MyGroup').show();
+        //}
+
+        //var hideMyGroups = function () {
+        //    $('#ByGroupType').show();
+        //    $('#MyGroup').hide();
+        //}
+        function ManageGroup(e) {
+            ManageGroupRole.set(e.value, e.checked)
+        }
+
+        function SendEmail(e) {
+            debugger;
+            SendEmailRole.set(e.value, e.checked)
+        }
+
+        function BounceReport(e) {
+            BounceReportRole.set(e.value, e.checked)
+        }
+
+        function Subscribe(e) {
+            SubscribeRole.set(e.value, e.checked)
+        }
+
+        $('input:radio[name="GroupSelection"]').change(
+            function () {
+                if ($(this).is(':checked') && $(this).val() == '1') {
+                    window.location = "/Group/List";
+                }
+                else {
+                    window.location = "/Group/List?type=2";
+                }
+            });
+
+        function saveA4Aroles() {
+            debugger;
+            let userName = sessionStorage.getItem("UserSelected");
+            for (var key of ManageGroupRole.keys()) {
+                A4AModel.push({
+                    groupId: key,
+                    role: 'Manage Group',
+                    value: ManageGroupRole.get(key),
+                    userName: userName
+                })
+            }
+
+            for (var key of BounceReportRole.keys()) {
+                A4AModel.push({
+                    groupId: key,
+                    role: ' Receive Bounce Reports',
+                    value: BounceReportRole.get(key),
+                    userName: userName
+                })
+            }
+
+            for (var key of SendEmailRole.keys()) {
+                A4AModel.push({
+                    groupId: key,
+                    role: 'Send Emails as Administrator',
+                    value: SendEmailRole.get(key),
+                    userName: userName
+                })
+            }
+
+            for (var key of SubscribeRole.keys()) {
+                A4AModel.push({
+                    groupId: key,
+                    role: 'A4A Staff Subscribe',
+                    value: SubscribeRole.get(key),
+                    userName: userName
+                })
+            }
+            //let dataobj = Object.assign({}, A4AModel)
+            if (A4AModel.length <= 0) {
+                alert("Please select atleast one group to change there roles.");
+                return;
+            }
+
+            let dataobj = JSON.stringify(A4AModel)
+
+            $.ajax({
+                url: '/api/updategroupuserroles',
+                type: "post",
+                data: dataobj,
+                contentType: 'application/json',
+                dataType: "Json",
+                success: function (result) {
+                    alert("Records updated successfully!");
+                },
+                error: function (exception) {
+                    alert("Error updating the records:" + exception.responseText);
+                }
+            });
+            A4AModel = new Array();
+            ManageGroupRole = new Map();
+            SendEmailRole = new Map();
+            BounceReportRole = new Map();
+            SubscribeRole = new Map();
+        }
+    </script>
+}
+<div class="content">
+    @section heading{
+        @*<span id="Headtitle">Group List View   <br /><span class="niceLabel-bold" id="pagetitle">Groups</span></span>*@}
+    <div class="overlay">
+        <div id="loading-img"></div>
+    </div>
+    <div class="preloader">
+        <div><img src="~/images/Preloader-2.gif" /></div>
+    </div>
+    <div class="option-header">
+        <div>
+            <input id="MyGroupbtn" type="radio" name="GroupSelection" value="1" /><span class="niceLabel-bold" style="padding-left:5px">My Groups</span>
+        </div>
+        <div>
+            <input id="AllGroupbtn" type="radio" name="GroupSelection" value="0" /><span class="niceLabel-bold" style="padding-left:5px">All Groups</span>
+        </div>
+    </div>
+    <div id="impersonate" style="display:flex;justify-content:flex-end;margin-bottom:2rem">
+        <p style="color: #333333; font-weight: 700">Impersonate: </p>
+        <select id="impersonateA4AUsers" style="width:163px">
+        </select>
+    </div>
+    <div>
+        <button class="btn btn-primary" onclick="saveA4Aroles()">Save A4A Staff Roles</button>
+        <br />
+    </div>
+    <table id="MyGroup" style="display:none;" width="100%">
+        <thead>
+            <tr>
+                <th>GroupName</th>
+                <th>GroupType</th>
+                <th>Liaison</th>
+                <th>Group Email</th>
+                <th>Department</th>
+                <th>Total Subscribers</th>
+                <th>List Email Permissions</th>
+                <th>Manage Group</th>
+                <th>Email Admin(Sender)</th>
+                <th>Bounce Report</th>
+                <th>Subscriber</th>
+            </tr>
+        </thead>
+    </table>
+    <table id="ByGroupType" class="display" cellspacing="0" style="display:none;">
+        <thead>
+            <tr>
+                <th>GroupName</th>
+                <th>GroupType</th>
+                <th>Liaison</th>
+                <th>Group Email</th>
+                <th>Department</th>
+                <th>Total Subscribers</th>
+                <th>List Email Permissions</th>
+                <th>Manage Group</th>
+                <th>Email Admin(Sender)</th>
+                <th>Bounce Report</th>
+                <th>Subscriber</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+    </table>
+    <br />
+    <button class="btn btn-primary" onclick="saveA4Aroles()">Save A4A Staff Roles</button>
+</div>

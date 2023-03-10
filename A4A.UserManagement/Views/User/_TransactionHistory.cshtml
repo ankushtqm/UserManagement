@@ -1,0 +1,110 @@
+﻿<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
+<style>
+    table.dataTable thead th, table.dataTable thead td {
+        border-bottom: 2px solid #ddd;
+    }
+</style>
+<div id="transaction" class="row">
+    <span class="niceLabel-bold text-warning" style="color: #666;">Transaction History</span>
+    <br />
+    <br />
+    <div>
+        <table id="tblGrpTransactions" class="table display responsive nowrap" style="border-bottom:0px">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Details</th>
+                    <th>Modified By</th>
+                    <th>Modified Date</th>
+                    <th>TimeStamp</th>
+                </tr>
+            </thead>
+        </table>
+        <br />
+        <button id="showMore" class="btn btn-primary" onclick="showMore()">More</button>
+    </div>
+</div>
+
+
+<script>
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            sURLVariables = sPageURL.split('&'), sParameterName, i;
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    };
+    var uid = parseInt(getUrlParameter('uid'));
+
+    var query = "/api/getTransactions/?userId=" + uid + "&count=" + 5;
+
+    function showMore() {
+        query = "/api/getTransactions/?userId=" + uid;
+
+        getTransaction();
+        $('#showMore').hide();
+    }
+
+    var getTransaction = function () {
+        $.ajax({
+            url: query,
+            type: "GET",
+            datatype: "json",
+            processData: false,
+            contentType: "application/json; charset=utf-8",
+            success: function (result) {
+                var table;
+                if ($.fn.dataTable.isDataTable('#tblGrpTransactions')) {
+                    table = $('#tblGrpTransactions').DataTable();
+                    table.clear();
+                    table.rows.add(JSON.parse(result)).draw();
+                }
+                else {
+                    table = $("#tblGrpTransactions").DataTable({
+                        "aaData": JSON.parse(result),
+                        retrieve: true,
+                        "deferRender": true,
+                        bProcessing: true,
+                        paging: false,
+                        bAutoWidth: false,
+                        bFilter: false, bInfo: false,
+                        "aaSorting": [4, "desc"],
+                        aoColumns: [
+                            { mData: "Action" },
+                            { mData: "Details" },
+                            { mData: "modifiedby" },
+                            { mData: "TransactionDate" },
+                            { mData: "TDTimeStamp", "asSorting": ["desc"] },
+                        ],
+                        "aoColumnDefs": [
+                            { "asSorting": ["desc"], "aTargets": [4] },
+                            { "aDataSort": [4], "aTargets": [3] },
+                            {
+                                "aTargets": [4],
+                                "bVisible": false,
+                                "bSearchable": false
+                            },
+                        ],
+                        "bInfo": false,
+                        "bLengthChange": false,
+                        "oLanguage": {
+                            "sEmptyTable": "No Transactions found for the group."
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    if (uid > 0) {
+        getTransaction();
+    } else {
+        $('#transaction').hide()
+    }
+</script>
