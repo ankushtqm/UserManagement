@@ -26,7 +26,7 @@ namespace A4A.UM.Controllers
             //  {
             ATAMembershipProvider provider = ATAMembershipUtility.Instance.GetATAMembershipProvider();
             string editorUserName = ATAMembershipUtility.Instance.ParseUsername(HttpContext.Current.User.Identity.Name);
-            _currentUser = (ATAMembershipUser)provider.GetUser("teqmavens", true);
+            _currentUser = (ATAMembershipUser)provider.GetUser(editorUserName, true);
             //}
             return _currentUser;
         }
@@ -111,7 +111,7 @@ namespace A4A.UM.Controllers
             string editorUserName = ATAMembershipUtility.Instance.ParseUsername(this.User.Identity.Name);
             //find a user
             ATAMembershipProvider provider = ATAMembershipUtility.Instance.GetATAMembershipProvider();
-            ATAMembershipUser user = (ATAMembershipUser)provider.GetUser("teqmavens", true);
+            ATAMembershipUser user = (ATAMembershipUser)provider.GetUser(editorUserName, true);
             return user;
         }
         [Route("api/GetDept")] //for taskforce and other view loads

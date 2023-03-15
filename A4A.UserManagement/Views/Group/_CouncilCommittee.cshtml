@@ -34,13 +34,21 @@
         <label class="niceLabel committelbl"> Chair</label>
     </div>
     <div class='col-sm-2'>
-        <input type="text" class="chosen form-control" style="width:300px;" id="GroupChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectChair ,minLength: 3 }" />
+        <input type="text" class="chosen form-control" id="GroupChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectChair ,minLength: 3 }" />
     </div>
     <div class='col-sm-1'>
-        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkStaff}, checked:CheckStatusStaff' />
+        <div id="DivCommitteeEmailAdmin" class="chklist">
+            <label class="chklistcontainer"><input type="checkbox" disabled><span class="checkmarkcommittee"></span></label>
+        </div>
+        <div id="DivCommitteeChkEmailAdmin" class="chklist" style="display:none">
+            <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkStaff}, checked:CheckStatusStaff' />
+        </div>
     </div>
     <div class="col-sm-1">
-        <div id="DivCommitteeSubscribe" class="chklist" style="display:none">
+        <div id="DivCommitteeSubscribe" class="chklist">
+            <label class="chklistcontainer"><input type="checkbox" disabled><span class="checkmarkcommittee"></span></label>
+        </div>
+        <div id="DivCommitteeChkSubscribe" class="chklist" style="display:none">
             <label class="chklistcontainer"><input type="checkbox" checked disabled><span class="checkmark"></span></label>
         </div>
     </div>
@@ -54,13 +62,21 @@
         <label class="niceLabel committelbl"> Vice Chair</label>
     </div>
     <div class='col-sm-2'>
-        <input type="text" class="chosen form-control" style="width:300px;" id="GroupViceChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectViceChair ,minLength: 3 }" />
+        <input type="text" class="chosen form-control" id="GroupViceChair" data-bind="ko_autocomplete: { source: getLanguages, select: selectViceChair ,minLength: 3 }" />
     </div>
     <div class='col-sm-1'>
-        <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkGroupUser}, checked:CheckStatusGroupUser' />
+        <div id="DivCommitteeStaffEmailAdmin" class="chklist">
+            <label class="chklistcontainer"><input type="checkbox" disabled><span class="checkmarkcommittee"></span></label>
+        </div>
+        <div id="DivCommitteeChkStaffEmailAdmin" class="chklist" style="display:none">
+            <input type='checkbox' name='EmailAdmin' style='padding-left:1px;' data-bind='event:{ change: $data.selectchkGroupUser}, checked:CheckStatusGroupUser' />
+        </div>
     </div>
     <div class="col-sm-1">
-        <div id="DivCommitteeStaffSubscribe" class="chklist" style="display:none">
+        <div id="DivCommitteeStaffSubscribe" class="chklist">
+            <label class="chklistcontainer"><input type="checkbox" disabled><span class="checkmarkcommittee"></span></label>
+        </div>
+        <div id="DivCommitteeChkStaffSubscribe" class="chklist" style="display:none">
             <label class="chklistcontainer"><input type="checkbox" checked disabled><span class="checkmark"></span></label>
         </div>
     </div>

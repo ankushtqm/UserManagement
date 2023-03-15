@@ -70,6 +70,7 @@
         width: 13px;
         border-radius: 2px;
         background-color: #777 !important;
+        pointer-events:none;
     }
 
     .chklist .chklistcontainer:hover input ~ .checkmark {
@@ -100,6 +101,22 @@
         -webkit-transform: rotate(45deg);
         -ms-transform: rotate(45deg);
         transform: rotate(40deg);
+    }
+
+    .chklist .checkmarkcommittee {
+        position: absolute;
+        height: 13px;
+        width: 13px;
+        border-radius: 2px;
+        background-color: #777 !important;
+    }
+
+    .chklist .chklistcontainer:hover input ~ .checkmarkcommittee {
+        background-color: #ccc;
+    }
+
+    .chklist .chklistcontainer input:checked ~ .checkmarkcommittee {
+        background-color: #2196F3;
     }
 
     .fontgroup {

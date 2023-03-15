@@ -843,7 +843,10 @@ var AutoCompleteExample;
                     data: dataObject,
                     contentType: 'application/json',
                     success: function (data) {
-                        $('#DivCommitteeSubscribe').show();
+                        $('#DivCommitteeEmailAdmin').hide();
+                        $('#DivCommitteeChkEmailAdmin').show();
+                        $('#DivCommitteeSubscribe').hide();
+                        $('#DivCommitteeChkSubscribe').show();
                         $('.spnMessage').html(ui.item.label + "has been successfully saved as Chair!!").css("color", "green");
                         setTimeout(function () { $('.spnMessage').html(""); }, 6000);
                         ViewModel.prototype.DisablePrimBox();
@@ -931,7 +934,10 @@ var AutoCompleteExample;
                     data: dataObject,
                     contentType: 'application/json',
                     success: function (data) {
-                        $('#DivCommitteeStaffSubscribe').show();
+                        $('#DivCommitteeStaffEmailAdmin').hide();
+                        $('#DivCommitteeChkStaffEmailAdmin').show();
+                        $('#DivCommitteeStaffSubscribe').hide();
+                        $('#DivCommitteeChkStaffSubscribe').show();
                         $('.spnMessage').html(ui.item.label + "has been successfully saved as Vice Chair!!").css("color", "green");
                         setTimeout(function () { $('.spnMessage').html(""); }, 6000);
                         ViewModel.prototype.DisablePrimBox();
@@ -1107,6 +1113,10 @@ var AutoCompleteExample;
                 $('#DivCommitteeMsg').hide();
                 $('#DivInformationalContactMsg').hide();
                 $('#DivSaveInformationalContactMsg').hide();
+                $('#DivCommitteeEmailAdmin').show();
+                $('#DivCommitteeChkEmailAdmin').hide();
+                $('#DivCommitteeSubscribe').show();
+                $('#DivCommitteeChkSubscribe').hide();
                 if (isNaN(ViewModel.prototype.gId())) { gId = $('#hdnGroupId').val(); }
                 else
                     gId = ViewModel.prototype.gId();
@@ -1594,8 +1604,14 @@ function councilCommitteeViewModel(params) {
     self.AltUserValue = ko.observable(t2);
     self.PrimaryID = ko.observable("Prim" + params.Company.replace(/\s/g, ''));
     self.DivPrimaryID = ko.observable("DivPrim" + params.Company.replace(/\s/g, ''));
+    self.DivChkPrimaryID = ko.observable("DivChkPrim" + params.Company.replace(/\s/g, ''));
+    self.DivCommitteePrimaryID = ko.observable("DivCommitteePrim" + params.Company.replace(/\s/g, ''));
+    self.DivCommitteeChkPrimaryID = ko.observable("DivCommitteeChkPrim" + params.Company.replace(/\s/g, ''));
     self.AlternateID = ko.observable("Alt" + params.Company.replace(/\s/g, ''));
     self.DivAlternateID = ko.observable("DivAlt" + params.Company.replace(/\s/g, ''));
+    self.DivChkAlternateID = ko.observable("DivChkAlt" + params.Company.replace(/\s/g, ''));
+    self.DivCommitteeAlternateID = ko.observable("DivCommitteeAlt" + params.Company.replace(/\s/g, ''));
+    self.DivCommitteeChkAlternateID = ko.observable("DivCommitteeChkAlt" + params.Company.replace(/\s/g, ''));
     var CheckStatusPrimary = GetCompanyNamePrimary.get("Prim" + params.Company.replace(/\s/g, ''));
     var CheckStatusAlternate = GetCompanyNameAlternate.get("Alt" + params.Company.replace(/\s/g, ''));
     self.CheckStatusPrimary = ko.observable(CheckStatusPrimary);
@@ -1688,7 +1704,10 @@ function councilCommitteeViewModel(params) {
                     if (undefined !== $('#hdnViceChairComp').val() && $('#hdnViceChairComp').val().replace(/\s/g, '').length > 0 && params.Company === $('#hdnViceChairComp').val()) {
                         $("#Alt" + $('#hdnViceChairComp').val().replace(/\s/g, '')).attr("disabled", "disabled");
                     }
-                    $('#DivPrim' + params.Company.replace(/\s/g, '')).show();
+                    $('#DivCommitteePrim' + params.Company.replace(/\s/g, '')).hide();
+                    $('#DivCommitteeChkPrim' + params.Company.replace(/\s/g, '')).show();
+                    $('#DivPrim' + params.Company.replace(/\s/g, '')).hide();
+                    $('#DivChkPrim' + params.Company.replace(/\s/g, '')).show();
                 },
                 error: function (xhr, status, error) {
                     var err = eval("(" + xhr.responseText + ")");
@@ -1839,8 +1858,10 @@ function councilCommitteeViewModel(params) {
                     if (undefined !== $('#hdnViceChairComp').val() && $('#hdnViceChairComp').val().replace(/\s/g, '').length > 0 && params.Company === $('#hdnViceChairComp').val()) {
                         $("#Prim" + $('#hdnViceChairComp').val().replace(/\s/g, '')).attr("disabled", "disabled");
                     }
-
-                    $('#DivAlt' + params.Company.replace(/\s/g, '')).show();
+                    $('#DivCommitteeAlt' + params.Company.replace(/\s/g, '')).hide();
+                    $('#DivCommitteeChkAlt' + params.Company.replace(/\s/g, '')).show();
+                    $('#DivAlt' + params.Company.replace(/\s/g, '')).hide();
+                    $('#DivChkAlt' + params.Company.replace(/\s/g, '')).show();
                 },
                 error: function (xhr, status, error) {
                     var err = eval("(" + xhr.responseText + ")");
@@ -2326,9 +2347,9 @@ var councilCommitteeGGAViewModel = function () {
                             "sEmptyTable": "No users found!"
                         },
                         aoColumns: [
-                            { mData: "CompanyName"},
+                            { mData: "CompanyName" },
                             { mData: "LastName" },
-                            { mData: "FirstName"},
+                            { mData: "FirstName" },
                             { mData: "Role" },
                         ]
                         , "aoColumnDefs": [
@@ -2782,12 +2803,26 @@ function DisablePrimary() {
 
 function ItemModelPrimary() {
     var t1 = sessionStorage.getItem(self.PrimaryID().replace(/\s/g, ''));
+    if (t1 == "" || t1 == null) {
+        return 1;
+    }
+}
+
+function ItemModelChkPrimary() {
+    var t1 = sessionStorage.getItem(self.PrimaryID().replace(/\s/g, ''));
     if (t1 != "" && t1 != null) {
         return 1;
     }
 }
 
 function ItemModelAlternate() {
+    var t2 = sessionStorage.getItem(self.AlternateID().replace(/\s/g, ''));
+    if (t2 != "" || t2 != null) {
+        return 1;
+    }
+}
+
+function ItemModelChkAlternate() {
     var t2 = sessionStorage.getItem(self.AlternateID().replace(/\s/g, ''));
     if (t2 != "" && t2 != null) {
         return 1;
@@ -2810,13 +2845,25 @@ $(document).ready(function () {
         viewModel: councilCommitteeViewModel,
         template: "<div class='row' style='margin-bottom:8px;'>" +
             "<div class='col-sm-1'><span class='niceLabel' data-bind='text: Company'></span></div>" +
-            "<div class='col-sm-2'><input type='text' class='P1 chosen form-control' style='width:300px;' data-bind='value:PrimUserValue,attr: { id:PrimaryID()},ko_autocomplete: { source: getCompanyUsers, select: selectPrimary ,minLength: 3,close: closeSelect }' /></div>" +
-            "<div class='col-sm-1'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkPrimaryID()}, event:{ change: selectCompanyNamePrimary}, checked:CheckStatusPrimary' /></div>" +
-            "<div class='col-sm-1'><div data-bind='attr: { id:DivPrimaryID()}, visible: ItemModelPrimary()' class='chklist' style='display:none'><label class='chklistcontainer'><input type='checkbox' checked disabled><span class='checkmark'></span></label></div></div>" +
+            "<div class='col-sm-2'><input type='text' class='P1 chosen form-control' data-bind='value:PrimUserValue,attr: { id:PrimaryID()},ko_autocomplete: { source: getCompanyUsers, select: selectPrimary ,minLength: 3,close: closeSelect }' /></div>" +
+            "<div class='col-sm-1'>" +
+            "<div data-bind='attr: { id:DivCommitteePrimaryID()}, visible: ItemModelPrimary()' class='chklist'><label class='chklistcontainer'><input type='checkbox' disabled><span class='checkmarkcommittee'></span></label></div>" +
+            "<div data-bind='attr: { id:DivCommitteeChkPrimaryID()}, visible: ItemModelChkPrimary()' style='display: none'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkPrimaryID()}, event:{ change: selectCompanyNamePrimary}, checked:CheckStatusPrimary'/></div>" +
+            "</div>" +
+            "<div class='col-sm-1'>" +
+            "<div data-bind='attr: { id:DivPrimaryID()}, visible: ItemModelPrimary()' class='chklist'><label class='chklistcontainer'><input type='checkbox' disabled><span class='checkmarkcommittee'></span></label></div>" +
+            "<div data-bind='attr: { id:DivChkPrimaryID()}, visible: ItemModelChkPrimary()' class='chklist' style='display:none'><label class='chklistcontainer'><input type='checkbox' checked disabled><span class='checkmark'></span></label></div>" +
+            "</div>" +
             "<div class='col-sm-1'><a href='#' class='text-danger btndelete' style='font-size: 12px;' data-bind='click: $data.removePrimGroupUser'>Delete</a></div>" +
-            "<div class='col-sm-2' style='padding-left:50px'><input type='text' class='A1 chosen form-control' style='width:300px;' data-bind='value:AltUserValue,attr: { id:AlternateID() },ko_autocomplete: { source: getCompanyUsers, select: selectAlternate ,minLength:3,close: closeSelect }' /></div>" +
-            "<div class='col-sm-1' style='padding-left:50px'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkAlternateID()}, event:{ change: selectCompanyNameAlternate}, checked:CheckStatusAlternate' /></div>" +
-            "<div class='col-sm-1'><div data-bind='attr: { id:DivAlternateID()}, visible: ItemModelAlternate()' class='chklist' style='display:none'><label class='chklistcontainer'><input type='checkbox' checked disabled><span class='checkmark'></span></label></div></div>" +
+            "<div class='col-sm-2' style='padding-left:50px'><input type='text' class='A1 chosen form-control' data-bind='value:AltUserValue,attr: { id:AlternateID() },ko_autocomplete: { source: getCompanyUsers, select: selectAlternate ,minLength:3,close: closeSelect }' /></div>" +
+            "<div class='col-sm-1' style='padding-left:50px'>" +
+            "<div data-bind='attr: { id:DivCommitteeAlternateID()}, visible: ItemModelAlternate()' class='chklist'><label class='chklistcontainer'><input type='checkbox' disabled><span class='checkmarkcommittee'></span></label></div>" +
+            "<div data-bind='attr: { id:DivCommitteeChkAlternateID()}, visible: ItemModelChkAlternate()' style='display: none'><input type='checkbox' name='EmailAdmin' style='margin-right:10px' data-bind='attr: { id:ChkAlternateID()}, event:{ change: selectCompanyNameAlternate}, checked:CheckStatusAlternate'/></div>" +
+            "</div>" +
+            "<div class='col-sm-1'>" +
+            "<div data-bind='attr: { id:DivAlternateID()}, visible: ItemModelAlternate()' class='chklist'><label class='chklistcontainer'><input type='checkbox' disabled><span class='checkmarkcommittee'></span></label></div>" +
+            "<div data-bind='attr: { id:DivChkAlternateID()}, visible: ItemModelChkAlternate()' class='chklist' style='display:none'><label class='chklistcontainer'><input type='checkbox' checked disabled><span class='checkmark'></span></label></div>" +
+            "</div>" +
             "<div class='col-sm-1'><a href='#' class='text-danger btndelete' style='font-size: 12px;' data-bind='click: removeAltGroupUser'>Delete</a></div></div>"
     });
 
@@ -2851,10 +2898,16 @@ $(document).ready(function () {
                             $('#DivSubscribeAlternate').show();
                         }
                         else if (result[i].RoleId === 3) {
-                            $('#DivCommitteeSubscribe').show();
+                            $('#DivCommitteeEmailAdmin').hide();
+                            $('#DivCommitteeChkEmailAdmin').show();
+                            $('#DivCommitteeSubscribe').hide();
+                            $('#DivCommitteeChkSubscribe').show();
                         }
                         else if (result[i].RoleId === 4) {
-                            $('#DivCommitteeStaffSubscribe').show();
+                            $('#DivCommitteeStaffEmailAdmin').hide();
+                            $('#DivCommitteeChkStaffEmailAdmin').show();
+                            $('#DivCommitteeStaffSubscribe').hide();
+                            $('#DivCommitteeChkStaffSubscribe').show();
                         }
 
                         if (result[i].RoleId === 1) {
@@ -2896,9 +2949,14 @@ $(document).ready(function () {
                 }
 
                 if (result.length <= 0) {
-                    $('#DivCommitteeSubscribe').hide();
-                    $('#DivCommitteeStaffSubscribe').hide();
-                    /*$('#DivSubscribePrimary').hide();*/
+                    $('#DivCommitteeEmailAdmin').show();
+                    $('#DivCommitteeChkEmailAdmin').hide();
+                    $('#DivCommitteeSubscribe').show();
+                    $('#DivCommitteeChkSubscribe').hide();
+                    $('#DivCommitteeStaffEmailAdmin').show();
+                    $('#DivCommitteeChkStaffEmailAdmin').hide();
+                    $('#DivCommitteeStaffSubscribe').show();
+                    $('#DivCommitteeChkStaffSubscribe').hide();
                     $('#DivSubscribeAlternate').hide();
                 }
             },

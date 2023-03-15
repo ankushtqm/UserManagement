@@ -25,7 +25,7 @@ namespace A4A.UM.Controllers
     public class GroupAPIController : ApiController
     {
         private const string LyrisTopic = "main";
-        protected bool SkipLyrisManager { get { return true; } }
+        protected bool SkipLyrisManager { get { return Conf.SkipLyrisManager; } }
         private LyrisManager2 _lyrisManager = null;
         protected LyrisManager2 LyrisManager2
         {

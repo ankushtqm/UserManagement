@@ -33,6 +33,10 @@
         .option-header > div:last-of-type {
             margin-left: 5rem;
         }
+
+    .my-2 {
+        margin: 15px 0;
+    }
 </style>
 
 @section heading{
@@ -55,7 +59,7 @@
 
     <br />
 
-    <div class="col-sm-12">
+    <div class="col-sm-12 text-center my-2">
         <select id="inpContacts" class="form-control"></select>
         <select id="inpGroupName" class="form-control"></select>
         <span id="DivA4AUsers" style="display:none">
@@ -99,7 +103,7 @@
                 val = $.parseJSON(data);
                 var optionList = '<option>Select Contacts</option>';
                 for (let user in val) {
-                    optionList += `<option value=${val[user].Username}>${val[user].Contacts} </option>`
+                    optionList += `<option value=${val[user].UserId}>${val[user].Contacts} </option>`
                 }
                 $('#inpContacts').html(optionList);
             },
@@ -185,7 +189,7 @@
                 val = $.parseJSON(data);
                 var optionList = '<option>Select Contacts</option>';
                 for (let user in val) {
-                    optionList += `<option value=${val[user].Username}>${val[user].Contacts} </option>`
+                    optionList += `<option value=${val[user].UserId}>${val[user].Contacts} </option>`
                 }
                 $('#inpContacts').html(optionList);
             },
@@ -266,8 +270,9 @@
                             { mData: "Contacts" },
                             { mData: "Details" },
                             { mData: "modifiedby" },
-                            { mData: "TransactionDate" },
+                            { mData: "TransactionDate", "type": "date" },
                         ],
+                        "order": [[4, 'desc']],
                         "bInfo": false,
                         "bLengthChange": false,
                         "oLanguage": {
@@ -280,6 +285,36 @@
             setTimeout(function () { $(".preloader").fadeOut("slow"); }, 30);
         });
     }
+
+    $('#inpContacts').change(function () {
+        var selectBox = document.getElementById("inpContacts");
+        var searchString = selectBox.options[selectBox.selectedIndex].value;
+        var query = "";
+        if ($("#hdnTransactionType").val() == "0") {
+            query = "/api/getcontactstransactionsdtl/?userid=" + searchString + "&count=" + 20;
+        }
+        else {
+            query = "/api/getcontactstransactionsdtl/?userid=" + searchString;
+        }
+        TransactionSelectionSearchDtl(query);
+        getAllGroupUserSearchDtl();
+        getAllA4AStaffSearchDtl();
+    });
+
+    $('#inpGroupName').change(function () {
+        var selectBox = document.getElementById("inpGroupName");
+        var searchString = selectBox.options[selectBox.selectedIndex].text;
+        var query = "";
+        if ($("#hdnTransactionType").val() == "0") {
+            query = "/api/gettransactionsdtl/?groupname=" + searchString + "&count=" + 20;
+        }
+        else {
+            query = "/api/getalltransactionsdtl/?groupname=" + searchString;
+        }
+        TransactionSelectionSearchDtl(query);
+        getAllContactsSearchDtl();
+        getAllA4AStaffSearchDtl();
+    });
 
     function TransactionSelectionSearchDtl(query) {
         $.ajax({
@@ -311,8 +346,9 @@
                             { mData: "Contacts" },
                             { mData: "Details" },
                             { mData: "modifiedby" },
-                            { mData: "TransactionDate" },
+                            { mData: "TransactionDate", "type": "date" },
                         ],
+                        "order": [[4, 'desc']],
                         "bInfo": false,
                         "bLengthChange": false,
                         "oLanguage": {
@@ -323,36 +359,6 @@
             }
         });
     }
-
-    $('#inpContacts').change(function () {
-        var selectBox = document.getElementById("inpContacts");
-        var searchString = selectBox.options[selectBox.selectedIndex].text;
-        var query = "";
-        if ($("#hdnTransactionType").val() == "0") {
-            query = "/api/gettransactionsdtl/?groupname=" + searchString + "&count=" + 20;
-        }
-        else {
-            query = "/api/getalltransactionsdtl/?groupname=" + searchString;
-        }
-        TransactionSelectionSearchDtl(query);
-        getAllGroupUserSearchDtl();
-        getAllA4AStaffSearchDtl();
-    });
-
-    $('#inpGroupName').change(function () {
-        var selectBox = document.getElementById("inpGroupName");
-        var searchString = selectBox.options[selectBox.selectedIndex].text;
-        var query = "";
-        if ($("#hdnTransactionType").val() == "0") {
-            query = "/api/gettransactionsdtl/?groupname=" + searchString + "&count=" + 20;
-        }
-        else {
-            query = "/api/getalltransactionsdtl/?groupname=" + searchString;
-        }
-        TransactionSelectionSearchDtl(query);
-        getAllContactsSearchDtl();
-        getAllA4AStaffSearchDtl();
-    });
 
     $('#inpA4AUsers').change(function () {
         var selectBox = document.getElementById("inpA4AUsers");
@@ -394,8 +400,9 @@
                             { mData: "Contacts" },
                             { mData: "Details" },
                             { mData: "modifiedby" },
-                            { mData: "TransactionDate" },
+                            { mData: "TransactionDate", "type": "date" },
                         ],
+                        "order": [[4, 'desc']],
                         "bInfo": false,
                         "bLengthChange": false,
                         "oLanguage": {
